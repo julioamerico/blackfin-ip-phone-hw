@@ -1,0 +1,636 @@
+| Wirelist created using version 5.4.
+V 5.4
+K 149697956300 a0212_2007
+DW a0217_2008
+Q Case
+|Q ADI_Released:res_standard 2
+AS ADI_Released:res_standard ASSEMBLY_OPTIONS=CONNECTORS,U;LEDS,U;SWITCHES,U;JUMPERS,U
+AS ADI_Released:res_standard PART_SPEC=RESISTOR
+AS ADI_Released:res_standard LEVEL=STD
+AS ADI_Released:res_standard PINOFF
+AS ADI_Released:res_standard PARTS=1
+AS ADI_Released:res_standard REFDES=R?
+AS ADI_Released:res_standard PKG_TYPE=1206
+AS ADI_Released:res_standard VALUE=XXOHMS
+AS ADI_Released:res_standard PINORDER=N1 N2
+AS ADI_Released:res_standard INOV_VER_REC=20:40_1-29-09
+AP ADI_Released:res_standard 1 PINTYPE=BI
+AP ADI_Released:res_standard 1 #=1
+AP ADI_Released:res_standard 2 PINTYPE=BI
+AP ADI_Released:res_standard 2 #=2
+|Q ADI_Released:cap_non_polarized 2
+AS ADI_Released:cap_non_polarized ASSEMBLY_OPTIONS=CONNECTORS,U;LEDS,U;SWITCHES,U;JUMPERS,U
+AS ADI_Released:cap_non_polarized PART_SPEC=CAPACITOR
+AS ADI_Released:cap_non_polarized LEVEL=STD
+AS ADI_Released:cap_non_polarized PARTS=1
+AS ADI_Released:cap_non_polarized PINOFF
+AS ADI_Released:cap_non_polarized REFDES=C?
+AS ADI_Released:cap_non_polarized VALUE=XXUF
+AS ADI_Released:cap_non_polarized PKG_TYPE=CAP
+AS ADI_Released:cap_non_polarized PINORDER=A B
+AS ADI_Released:cap_non_polarized INOV_VER_REC=20:41_1-29-09
+AP ADI_Released:cap_non_polarized 1 PINTYPE=ANALOG
+AP ADI_Released:cap_non_polarized 1 #=1
+AP ADI_Released:cap_non_polarized 2 #=2
+AP ADI_Released:cap_non_polarized 2 PINTYPE=ANALOG
+|Q ADI_Released:msc_test_point 1
+AS ADI_Released:msc_test_point PRT_NUM
+AS ADI_Released:msc_test_point ASSEMBLY_OPTIONS=CONNECTORS,U;LEDS,U;SWITCHES,U;JUMPERS,U
+AS ADI_Released:msc_test_point DESCRIPTION=TESTPOINT
+AS ADI_Released:msc_test_point PART_SPEC=TESTPOINT
+AS ADI_Released:msc_test_point PART=TESTPOINT
+AS ADI_Released:msc_test_point CLASS=DNP
+AS ADI_Released:msc_test_point ROHS=ROHS
+AS ADI_Released:msc_test_point PARTS=1
+AS ADI_Released:msc_test_point PINOFF
+AS ADI_Released:msc_test_point PKG_TYPE=TP
+AS ADI_Released:msc_test_point LEVEL=STD
+AS ADI_Released:msc_test_point REFDES=TP?
+AS ADI_Released:msc_test_point PINORDER=TP
+AS ADI_Released:msc_test_point INOV_VER_REC=15:54_4-17-09
+AP ADI_Released:msc_test_point 1 PINTYPE=BI
+AP ADI_Released:msc_test_point 1 #=1
+|Q ADI_Released:dio_schottky 2
+AS ADI_Released:dio_schottky ASSEMBLY_OPTIONS=CONNECTORS,U;LEDS,U;SWITCHES,U;JUMPERS,U
+AS ADI_Released:dio_schottky PINOFF
+AS ADI_Released:dio_schottky LEVEL=STD
+AS ADI_Released:dio_schottky PARTS=1
+AS ADI_Released:dio_schottky PART=SCHOTTKY
+AS ADI_Released:dio_schottky REFDES=D?
+AS ADI_Released:dio_schottky CURRENT=XX
+AS ADI_Released:dio_schottky PKG_TYPE=DIODE
+AS ADI_Released:dio_schottky PINORDER=ANODE CATHODE
+AS ADI_Released:dio_schottky INOV_VER_REC=18:42_1-30-09
+AP ADI_Released:dio_schottky 1 PINTYPE=ANALOG
+AP ADI_Released:dio_schottky 1 #=A
+AP ADI_Released:dio_schottky 2 PINTYPE=ANALOG
+AP ADI_Released:dio_schottky 2 #=K
+|Q ADI_Released:ind_standard 1
+AS ADI_Released:ind_standard ASSEMBLY_OPTIONS=CONNECTORS,U;LEDS,U;SWITCHES,U;JUMPERS,U
+AS ADI_Released:ind_standard PART_SPEC=INDUCTOR
+AS ADI_Released:ind_standard LEVEL=STD
+AS ADI_Released:ind_standard PINOFF
+AS ADI_Released:ind_standard PARTS=1
+AS ADI_Released:ind_standard VALUE=XXUH
+AS ADI_Released:ind_standard REFDES=L?
+AS ADI_Released:ind_standard PKG_TYPE=1206
+AS ADI_Released:ind_standard PINORDER=A B
+AS ADI_Released:ind_standard INOV_VER_REC=21:50_1-29-09
+AP ADI_Released:ind_standard 1 PINTYPE=ANALOG
+AP ADI_Released:ind_standard 1 #=1
+AP ADI_Released:ind_standard 2 PINTYPE=ANALOG
+AP ADI_Released:ind_standard 2 #=2
+|Q ADI_Released:dio_schottky 3
+AS ADI_Released:dio_schottky ASSEMBLY_OPTIONS=CONNECTORS,U;LEDS,U;SWITCHES,U;JUMPERS,U
+AS ADI_Released:dio_schottky PINOFF
+AS ADI_Released:dio_schottky LEVEL=STD
+AS ADI_Released:dio_schottky PARTS=1
+AS ADI_Released:dio_schottky REFDES=D?
+AS ADI_Released:dio_schottky PART=SCHOTTKY
+AS ADI_Released:dio_schottky CURRENT=XX
+AS ADI_Released:dio_schottky PKG_TYPE=DIODE
+AS ADI_Released:dio_schottky PINORDER=ANODE CATHODE
+AS ADI_Released:dio_schottky INOV_VER_REC=21:29_1-29-09
+AP ADI_Released:dio_schottky 1 PINTYPE=ANALOG
+AP ADI_Released:dio_schottky 1 #=A
+AP ADI_Released:dio_schottky 2 PINTYPE=ANALOG
+AP ADI_Released:dio_schottky 2 #=K
+|Q ADI_Released:dio_schottky 1
+AS ADI_Released:dio_schottky ASSEMBLY_OPTIONS=CONNECTORS,U;LEDS,U;SWITCHES,U;JUMPERS,U
+AS ADI_Released:dio_schottky PINOFF
+AS ADI_Released:dio_schottky LEVEL=STD
+AS ADI_Released:dio_schottky PARTS=1
+AS ADI_Released:dio_schottky PART=SCHOTTKY
+AS ADI_Released:dio_schottky CURRENT=XX
+AS ADI_Released:dio_schottky PKG_TYPE=DIODE
+AS ADI_Released:dio_schottky REFDES=D?
+AS ADI_Released:dio_schottky PINORDER=ANODE CATHODE
+AS ADI_Released:dio_schottky INOV_VER_REC=21:29_1-29-09
+AP ADI_Released:dio_schottky 1 PINTYPE=ANALOG
+AP ADI_Released:dio_schottky 1 #=A
+AP ADI_Released:dio_schottky 2 PINTYPE=ANALOG
+AP ADI_Released:dio_schottky 2 #=K
+|Q ADI_Released:ics_adr550 1
+AS ADI_Released:ics_adr550 ASSEMBLY_OPTIONS=CONNECTORS,U;LEDS,U;SWITCHES,U;JUMPERS,U
+AS ADI_Released:ics_adr550 PARTS=1
+AS ADI_Released:ics_adr550 LEVEL=STD
+AS ADI_Released:ics_adr550 REFDES=U?
+AS ADI_Released:ics_adr550 PART=ADR550
+AS ADI_Released:ics_adr550 PKG_TYPE=SOT-23-3
+AS ADI_Released:ics_adr550 PINORDER=TRIM V+ V-
+AS ADI_Released:ics_adr550 INOV_VER_REC=21:40_1-29-09
+AP ADI_Released:ics_adr550 1 PINTYPE=ANALOG
+AP ADI_Released:ics_adr550 1 #=3
+AP ADI_Released:ics_adr550 2 PINTYPE=ANALOG
+AP ADI_Released:ics_adr550 2 #=1
+AP ADI_Released:ics_adr550 3 PINTYPE=ANALOG
+AP ADI_Released:ics_adr550 3 #=2
+|Q ADI_Released:ics_adp1611 1
+AS ADI_Released:ics_adp1611 ASSEMBLY_OPTIONS=CONNECTORS,U;LEDS,U;SWITCHES,U;JUMPERS,U
+AS ADI_Released:ics_adp1611 PARTS=1
+AS ADI_Released:ics_adp1611 LEVEL=STD
+AS ADI_Released:ics_adp1611 REFDES=VR?
+AS ADI_Released:ics_adp1611 PKG_TYPE=MSOP8
+AS ADI_Released:ics_adp1611 PART=ADP1611
+AS ADI_Released:ics_adp1611 PINORDER=COMP FB GND IN RT SS SW1 ~SD
+AP ADI_Released:ics_adp1611 1 PINTYPE=IN
+AP ADI_Released:ics_adp1611 1 #=1
+AP ADI_Released:ics_adp1611 2 PINTYPE=IN
+AP ADI_Released:ics_adp1611 2 #=2
+AP ADI_Released:ics_adp1611 3 PINTYPE=IN
+AP ADI_Released:ics_adp1611 3 #=4
+AP ADI_Released:ics_adp1611 4 PINTYPE=IN
+AP ADI_Released:ics_adp1611 4 #=6
+AP ADI_Released:ics_adp1611 5 #=7
+AP ADI_Released:ics_adp1611 5 PINTYPE=IN
+AP ADI_Released:ics_adp1611 6 #=8
+AP ADI_Released:ics_adp1611 6 PINTYPE=IN
+AP ADI_Released:ics_adp1611 7 PINTYPE=IN
+AP ADI_Released:ics_adp1611 7 #=5
+AP ADI_Released:ics_adp1611 8 PINTYPE=IN
+AP ADI_Released:ics_adp1611 8 #=3
+|Q ADI_Released:msc_short_jumper 1
+AS ADI_Released:msc_short_jumper ASSEMBLY_OPTIONS=CONNECTORS,U;LEDS,U;SWITCHES,U;JUMPERS,U
+AS ADI_Released:msc_short_jumper PRT_NUM=6000794
+AS ADI_Released:msc_short_jumper ROHS=ROHS
+AS ADI_Released:msc_short_jumper PKG_TYPE=NONE
+AS ADI_Released:msc_short_jumper LEVEL=STD
+AS ADI_Released:msc_short_jumper NC=1,2
+AS ADI_Released:msc_short_jumper PARTS=1
+AS ADI_Released:msc_short_jumper LABEL2=JUMPER
+AS ADI_Released:msc_short_jumper LABEL1=SHORTING
+AS ADI_Released:msc_short_jumper DEFAULT=?&?
+AS ADI_Released:msc_short_jumper REFDES=SJ?
+AS ADI_Released:msc_short_jumper INOV_VER_REC=21:27_1-29-09
+|Q ADI_Released:con_jp_2x1 1
+AS ADI_Released:con_jp_2x1 ASSEMBLY_OPTIONS=CONNECTORS,U;LEDS,U;SWITCHES,U;JUMPERS,I
+AS ADI_Released:con_jp_2x1 PART_SPEC=CONNECTOR
+AS ADI_Released:con_jp_2x1 PARTS=1
+AS ADI_Released:con_jp_2x1 LEVEL=STD
+AS ADI_Released:con_jp_2x1 PKG_TYPE=IDC2X1
+AS ADI_Released:con_jp_2x1 REFDES=JP?
+AS ADI_Released:con_jp_2x1 PINORDER=1 2
+AS ADI_Released:con_jp_2x1 INOV_VER_REC=20:48_1-29-09
+AP ADI_Released:con_jp_2x1 1 #=1
+AP ADI_Released:con_jp_2x1 1 PINTYPE=BI
+AP ADI_Released:con_jp_2x1 2 #=2
+AP ADI_Released:con_jp_2x1 2 PINTYPE=BI
+|Q ADI_Released:res_standard 1
+AS ADI_Released:res_standard ASSEMBLY_OPTIONS=CONNECTORS,U;LEDS,U;SWITCHES,U;JUMPERS,U
+AS ADI_Released:res_standard PART_SPEC=RESISTOR
+AS ADI_Released:res_standard LEVEL=STD
+AS ADI_Released:res_standard PINOFF
+AS ADI_Released:res_standard PARTS=1
+AS ADI_Released:res_standard REFDES=R?
+AS ADI_Released:res_standard PKG_TYPE=1206
+AS ADI_Released:res_standard VALUE=XXOHMS
+AS ADI_Released:res_standard PINORDER=N1 N2
+AS ADI_Released:res_standard INOV_VER_REC=20:40_1-29-09
+AP ADI_Released:res_standard 1 PINTYPE=BI
+AP ADI_Released:res_standard 1 #=1
+AP ADI_Released:res_standard 2 PINTYPE=BI
+AP ADI_Released:res_standard 2 #=2
+|Q ADI_Released:cap_non_polarized 1
+AS ADI_Released:cap_non_polarized ASSEMBLY_OPTIONS=CONNECTORS,U;LEDS,U;SWITCHES,U;JUMPERS,U
+AS ADI_Released:cap_non_polarized LEVEL=STD
+AS ADI_Released:cap_non_polarized PART_SPEC=CAPACITOR
+AS ADI_Released:cap_non_polarized PARTS=1
+AS ADI_Released:cap_non_polarized PINOFF
+AS ADI_Released:cap_non_polarized PKG_TYPE=CAP
+AS ADI_Released:cap_non_polarized REFDES=C?
+AS ADI_Released:cap_non_polarized VALUE=XXUF
+AS ADI_Released:cap_non_polarized PINORDER=A B
+AS ADI_Released:cap_non_polarized INOV_VER_REC=20:55_1-29-09
+AP ADI_Released:cap_non_polarized 1 PINTYPE=ANALOG
+AP ADI_Released:cap_non_polarized 1 #=1
+AP ADI_Released:cap_non_polarized 2 #=2
+AP ADI_Released:cap_non_polarized 2 PINTYPE=ANALOG
+|Q ADI_Released:ind_coupled 1
+AS ADI_Released:ind_coupled ASSEMBLY_OPTIONS=CONNECTORS,U;LEDS,U;SWITCHES,U;JUMPERS,U
+AS ADI_Released:ind_coupled PART_SPEC=INDUCTOR
+AS ADI_Released:ind_coupled LEVEL=STD
+AS ADI_Released:ind_coupled PARTS=1
+AS ADI_Released:ind_coupled PKG_TYPE=INDXXX
+AS ADI_Released:ind_coupled VALUE=XXUH
+AS ADI_Released:ind_coupled REFDES=L?
+AS ADI_Released:ind_coupled PINORDER=1 2 3 4
+AS ADI_Released:ind_coupled INOV_VER_REC=21:24_1-29-09
+AP ADI_Released:ind_coupled 1 PINTYPE=ANALOG
+AP ADI_Released:ind_coupled 1 #=1
+AP ADI_Released:ind_coupled 2 #=2
+AP ADI_Released:ind_coupled 2 PINTYPE=ANALOG
+AP ADI_Released:ind_coupled 3 PINTYPE=ANALOG
+AP ADI_Released:ind_coupled 3 #=3
+AP ADI_Released:ind_coupled 4 #=4
+AP ADI_Released:ind_coupled 4 PINTYPE=ANALOG
+|Q ADI_Released:dio_esd 1
+AS ADI_Released:dio_esd ASSEMBLY_OPTIONS=CONNECTORS,U;LEDS,U;SWITCHES,U;JUMPERS,U
+AS ADI_Released:dio_esd PINOFF
+AS ADI_Released:dio_esd LEVEL=STD
+AS ADI_Released:dio_esd PARTS=1
+AS ADI_Released:dio_esd REFDES=D?
+AS ADI_Released:dio_esd PART=ESD
+AS ADI_Released:dio_esd CURRENT=XX
+AS ADI_Released:dio_esd PKG_TYPE=DIODE
+AS ADI_Released:dio_esd PINORDER=ANODE CATHODE
+AS ADI_Released:dio_esd INOV_VER_REC=18:46_3-17-09
+AP ADI_Released:dio_esd 1 PINTYPE=ANALOG
+AP ADI_Released:dio_esd 1 #=A
+AP ADI_Released:dio_esd 2 PINTYPE=ANALOG
+AP ADI_Released:dio_esd 2 #=K
+|Q ADI_Released:ics_adp1710 1
+AS ADI_Released:ics_adp1710 ASSEMBLY_OPTIONS=CONNECTORS,U;LEDS,U;SWITCHES,U;JUMPERS,U
+AS ADI_Released:ics_adp1710 PARTS=1
+AS ADI_Released:ics_adp1710 LEVEL=STD
+AS ADI_Released:ics_adp1710 PART=ADP1710
+AS ADI_Released:ics_adp1710 PKG_TYPE=TSOT5
+AS ADI_Released:ics_adp1710 REFDES=VR?
+AS ADI_Released:ics_adp1710 PINORDER=ADJ EN GND IN OUT
+AS ADI_Released:ics_adp1710 INOV_VER_REC=21:17_1-29-09
+AP ADI_Released:ics_adp1710 1 PINTYPE=ANALOG
+AP ADI_Released:ics_adp1710 1 #=4
+AP ADI_Released:ics_adp1710 2 PINTYPE=ANALOG
+AP ADI_Released:ics_adp1710 2 #=3
+AP ADI_Released:ics_adp1710 3 PINTYPE=ANALOG
+AP ADI_Released:ics_adp1710 3 #=2
+AP ADI_Released:ics_adp1710 4 #=1
+AP ADI_Released:ics_adp1710 4 PINTYPE=ANALOG
+AP ADI_Released:ics_adp1710 5 PINTYPE=ANALOG
+AP ADI_Released:ics_adp1710 5 #=5
+G 3V
+G GND
+|N 2
+M ADI_Released:res_standard $13I436
+I $13I436 ADI_Released:res_standard $13N359 $13N328 REFDES=R348`PKG_TYPE=0603`VALUE=44.2K`ROHS=ROHS`TOLERANCE=1%`POWER=1/10W`PRT_NUM=7000697`COST=0.0044`
+|R 20:40_1-29-09
+API $13I436 ADI_Released:res_standard 1 #=1
+API $13I436 ADI_Released:res_standard 2 #=2
+|N 2
+M ADI_Released:res_standard $13I401
+I $13I401 ADI_Released:res_standard $13N348 $13N326 COST=0.001`PRT_NUM=7000590`VALUE=100K`POWER=1/16W`TOLERANCE=5%`PKG_TYPE=0402`ROHS=ROHS`REFDES=R350`
+|R 20:40_1-29-09
+API $13I401 ADI_Released:res_standard 1 #=1
+API $13I401 ADI_Released:res_standard 2 #=2
+|N 2
+M ADI_Released:cap_non_polarized $13I400
+I $13I400 ADI_Released:cap_non_polarized $13N326 $13N321 COST=0.0106`PRT_NUM=7000406`TYPE=X7R`VALUE=1000PF`VOLTAGE=50V`TOLERANCE=5%`PKG_TYPE=0603`ROHS=ROHS`REFDES=C207`
+|R 20:41_1-29-09
+API $13I400 ADI_Released:cap_non_polarized 1 #=1
+API $13I400 ADI_Released:cap_non_polarized 2 #=2
+M ADI_Released:msc_test_point $13I288
+I $13I288 ADI_Released:msc_test_point VDDOTP REFDES=TP3`
+|R 15:54_4-17-09
+API $13I288 ADI_Released:msc_test_point 1 #=1
+|N 2
+M ADI_Released:cap_non_polarized $13I87
+I $13I87 ADI_Released:cap_non_polarized VPPOTP GND COST=0.125`PRT_NUM=7000492`TYPE=X5R`VALUE=10UF`VOLTAGE=16V`TOLERANCE=10%`PKG_TYPE=1210`ROHS=ROHS`REFDES=C135`
+|R 20:41_1-29-09
+API $13I87 ADI_Released:cap_non_polarized 1 #=1
+API $13I87 ADI_Released:cap_non_polarized 2 #=2
+|N 2
+M ADI_Released:dio_schottky $13I100
+I $13I100 ADI_Released:dio_schottky VDDOTP 3V COST=0.06`WEB=http://www.onsemi.com/PowerSolutions/product.do?id=MBR130LSF`PRT_NUM=7000641`DESCRIPTION=SCHOTTKY 30V FAST RECVRY`CURRENT=1A`PART=MBR130LSFT1G`PKG_TYPE=SOD-123FL`ROHS=ROHS`REFDES=D2`
+|R 18:42_1-30-09
+API $13I100 ADI_Released:dio_schottky 1 #=A
+API $13I100 ADI_Released:dio_schottky 2 #=K
+|N 2
+M ADI_Released:cap_non_polarized $13I74
+I $13I74 ADI_Released:cap_non_polarized $13N43 GND COST=0.0085`PRT_NUM=7000414`TYPE=X7R`VALUE=2200PF`VOLTAGE=50V`TOLERANCE=5%`PKG_TYPE=0603`ROHS=ROHS`REFDES=C130`
+|R 20:41_1-29-09
+API $13I74 ADI_Released:cap_non_polarized 1 #=1
+API $13I74 ADI_Released:cap_non_polarized 2 #=2
+M ADI_Released:ind_standard $13I93
+I $13I93 ADI_Released:ind_standard PS_5V $13N46 COST=0.33`PRT_NUM=7000642`VALUE=22UH`TOLERANCE=20%`PKG_TYPE=IND018`ROHS=ROHS`REFDES=L1`
+|R 21:50_1-29-09
+API $13I93 ADI_Released:ind_standard 1 #=1
+API $13I93 ADI_Released:ind_standard 2 #=2
+|N 3
+M ADI_Released:dio_schottky $13I101
+I $13I101 ADI_Released:dio_schottky GND $13N77 COST=0.06`WEB=http://www.onsemi.com/PowerSolutions/product.do?id=MBR130LSF`PRT_NUM=7000641`DESCRIPTION=SCHOTTKY 30V FAST RECVRY`CURRENT=1A`PART=MBR130LSFT1G`PKG_TYPE=SOD-123FL`ROHS=ROHS`REFDES=D3`
+|R 21:29_1-29-09
+API $13I101 ADI_Released:dio_schottky 1 #=A
+API $13I101 ADI_Released:dio_schottky 2 #=K
+M ADI_Released:dio_schottky $13I102
+I $13I102 ADI_Released:dio_schottky $13N77 $13N99 COST=0.06`WEB=http://www.onsemi.com/PowerSolutions/product.do?id=MBR130LSF`PRT_NUM=7000641`DESCRIPTION=SCHOTTKY 30V FAST RECVRY`CURRENT=1A`PART=MBR130LSFT1G`PKG_TYPE=SOD-123FL`ROHS=ROHS`REFDES=D4`
+|R 21:29_1-29-09
+API $13I102 ADI_Released:dio_schottky 1 #=A
+API $13I102 ADI_Released:dio_schottky 2 #=K
+M ADI_Released:ics_adr550 $13I60
+I $13I60 ADI_Released:ics_adr550 ? $13N39 $13N78 COST=0.16`REFDES=U11`ROHS=ROHS`PKG_TYPE=SOT23-3`PART=ADR550B`DESCRIPTION=5V VOLTAGE REF`PRT_NUM=30-025769-01`WEB=http://www.analog.com/en/prod/0%2C2877%2CADR550%2C00.html`
+|R 21:40_1-29-09
+API $13I60 ADI_Released:ics_adr550 1 #=3
+API $13I60 ADI_Released:ics_adr550 2 #=1
+API $13I60 ADI_Released:ics_adr550 3 #=2
+M ADI_Released:msc_test_point $13I162
+I $13I162 ADI_Released:msc_test_point VPPOTP REFDES=TP2`
+|R 15:54_4-17-09
+API $13I162 ADI_Released:msc_test_point 1 #=1
+M ADI_Released:ind_standard $13I94
+I $13I94 ADI_Released:ind_standard $13N99 VPPOTP COST=0.19`PRT_NUM=7000643`TOLERANCE=20%`PKG_TYPE=IND019`ROHS=ROHS`VALUE=1UH`REFDES=L2`
+|R 21:50_1-29-09
+API $13I94 ADI_Released:ind_standard 1 #=1
+API $13I94 ADI_Released:ind_standard 2 #=2
+M ADI_Released:ics_adp1611 $13I72
+I $13I72 ADI_Released:ics_adp1611 $13N44 $13N78 GND PS_5V PS_5V $13N47 $13N46 OTP_ENABLE COST=0.01`PRT_NUM=30-025791-01`DESCRIPTION=STEP-UP-DC-DC CONVERTER`PART=ADP1610`PKG_TYPE=MSOP8`ROHS=ROHS`WEB=http://www.analog.com/en/power-management/switching-regulators-integrated-fet-switches/adp1611/products/product.html`REFDES=VR2`
+API $13I72 ADI_Released:ics_adp1611 1 #=1
+API $13I72 ADI_Released:ics_adp1611 2 #=2
+API $13I72 ADI_Released:ics_adp1611 3 #=4
+API $13I72 ADI_Released:ics_adp1611 4 #=6
+API $13I72 ADI_Released:ics_adp1611 5 #=7
+API $13I72 ADI_Released:ics_adp1611 6 #=8
+API $13I72 ADI_Released:ics_adp1611 7 #=5
+API $13I72 ADI_Released:ics_adp1611 8 #=3
+M ADI_Released:dio_schottky $13I366
+I $13I366 ADI_Released:dio_schottky $13N394 $13N359 REFDES=D10`PRT_NUM=7000641`DESCRIPTION=SCHOTTKY 30V FAST RECVRY`CURRENT=1A`PART=MBR130LSFT1G`PKG_TYPE=SOD-123FL`ROHS=ROHS`WEB=http://www.onsemi.com/PowerSolutions/product.do?id=MBR130LSF`COST=0.06`
+|R 21:29_1-29-09
+API $13I366 ADI_Released:dio_schottky 1 #=A
+API $13I366 ADI_Released:dio_schottky 2 #=K
+|N 2
+M ADI_Released:res_standard $13I311
+I $13I311 ADI_Released:res_standard $13N301 GND REFDES=R346`ROHS=ROHS`PKG_TYPE=0603`TOLERANCE=5%`POWER=1/10W`VALUE=0`PRT_NUM=7000371`COST=0.0011`
+|R 20:40_1-29-09
+API $13I311 ADI_Released:res_standard 1 #=1
+API $13I311 ADI_Released:res_standard 2 #=2
+|N 2
+M ADI_Released:res_standard $13I310
+I $13I310 ADI_Released:res_standard $13N402 $13N301 REFDES=R345`ROHS=ROHS`PKG_TYPE=0603`TOLERANCE=5%`POWER=1/10W`VALUE=0`PRT_NUM=7000371`CLASS=DNP`COST=0.0011`
+|R 20:40_1-29-09
+API $13I310 ADI_Released:res_standard 1 #=1
+API $13I310 ADI_Released:res_standard 2 #=2
+|N 2
+M ADI_Released:cap_non_polarized $13I295
+I $13I295 ADI_Released:cap_non_polarized $13N320 GND REFDES=C197`ROHS=ROHS`PKG_TYPE=0402`TOLERANCE=10%`VOLTAGE=25V`VALUE=22000PF`TYPE=X7R`PRT_NUM=7000549`COST=0.0068`
+|R 20:41_1-29-09
+API $13I295 ADI_Released:cap_non_polarized 1 #=1
+API $13I295 ADI_Released:cap_non_polarized 2 #=2
+M ADI_Released:msc_short_jumper $13I268
+I $13I268 ADI_Released:msc_short_jumper COST=0.05`PD2=2PIN_JUMPER_SHORT`PD1=IDC`DESCRIPTION=NO TAB`ROHS=ROHS`PRT_NUM=6000794`REFDES=SJ4`DEFAULT=NOT INSTALLED`BOARDS=KIT`
+|R 21:27_1-29-09
+|N 2
+M ADI_Released:cap_non_polarized $13I404
+I $13I404 ADI_Released:cap_non_polarized PS_5V GND REFDES=C208`PRT_NUM=7000344`TYPE=X5R`VALUE=1UF`VOLTAGE=16V`TOLERANCE=10%`PKG_TYPE=0603`ROHS=ROHS`COST=0.0184`
+|R 20:41_1-29-09
+API $13I404 ADI_Released:cap_non_polarized 1 #=1
+API $13I404 ADI_Released:cap_non_polarized 2 #=2
+|N 2
+M ADI_Released:cap_non_polarized $13I407
+I $13I407 ADI_Released:cap_non_polarized $13N44 GND CLASS=DNP`COST=0.0184`ROHS=ROHS`PKG_TYPE=0603`TOLERANCE=10%`VOLTAGE=16V`VALUE=1UF`TYPE=X5R`PRT_NUM=7000344`REFDES=C209`
+|R 20:41_1-29-09
+API $13I407 ADI_Released:cap_non_polarized 1 #=1
+API $13I407 ADI_Released:cap_non_polarized 2 #=2
+M ADI_Released:con_jp_2x1 $13I177
+I $13I177 ADI_Released:con_jp_2x1 ADC_A0/LED1/MMC_D7/OTP_EN OTP_ENABLE COST=0.063`ROHS=ROHS`PKG_TYPE=IDC2X1`CONFIGURATION=2X1`TYPE=IDC`DESCRIPTION=HEADER`PRT_NUM=6000774`REFDES=JP14`
+|R 20:48_1-29-09
+API $13I177 ADI_Released:con_jp_2x1 1 #=1
+API $13I177 ADI_Released:con_jp_2x1 2 #=2
+|N 2
+M ADI_Released:res_standard $13I68
+I $13I68 ADI_Released:res_standard OTP_ENABLE GND COST=0.001`PRT_NUM=7000280`VALUE=10K`POWER=1/16W`TOLERANCE=5%`PKG_TYPE=0402`ROHS=ROHS`REFDES=R173`
+|R 20:40_1-29-09
+API $13I68 ADI_Released:res_standard 1 #=1
+API $13I68 ADI_Released:res_standard 2 #=2
+M ADI_Released:res_standard $13I91
+I $13I91 ADI_Released:res_standard $13N78 $13N61 COST=0.0031`PRT_NUM=7000466`POWER=1/16W`TOLERANCE=1%`ROHS=ROHS`VALUE=2.0K`PKG_TYPE=0603`REFDES=R182`
+|R 20:40_1-29-09
+API $13I91 ADI_Released:res_standard 1 #=1
+API $13I91 ADI_Released:res_standard 2 #=2
+M ADI_Released:cap_non_polarized $13I90
+I $13I90 ADI_Released:cap_non_polarized $13N61 $13N99 COST=0.0028`PRT_NUM=7000340`TYPE=X7R`VALUE=0.1UF`VOLTAGE=16V`TOLERANCE=10%`PKG_TYPE=0603`ROHS=ROHS`REFDES=C136`
+|R 20:55_1-29-09
+API $13I90 ADI_Released:cap_non_polarized 1 #=1
+API $13I90 ADI_Released:cap_non_polarized 2 #=2
+|N 2
+M ADI_Released:cap_non_polarized $13I54
+I $13I54 ADI_Released:cap_non_polarized 3V GND COST=0.038`PRT_NUM=7000607`TYPE=X7R`VALUE=2.2UF`VOLTAGE=25V`TOLERANCE=10%`PKG_TYPE=0805`ROHS=ROHS`REFDES=C129`
+|R 20:41_1-29-09
+API $13I54 ADI_Released:cap_non_polarized 1 #=1
+API $13I54 ADI_Released:cap_non_polarized 2 #=2
+M ADI_Released:dio_schottky $13I103
+I $13I103 ADI_Released:dio_schottky VDDOTP VPPOTP COST=0.06`WEB=http://www.onsemi.com/PowerSolutions/product.do?id=MBR130LSF`PRT_NUM=7000641`DESCRIPTION=SCHOTTKY 30V FAST RECVRY`CURRENT=1A`PART=MBR130LSFT1G`PKG_TYPE=SOD-123FL`ROHS=ROHS`REFDES=D5`
+|R 21:29_1-29-09
+API $13I103 ADI_Released:dio_schottky 1 #=A
+API $13I103 ADI_Released:dio_schottky 2 #=K
+|N 2
+M ADI_Released:res_standard $13I81
+I $13I81 ADI_Released:res_standard VDDOTP GND COST=0.0013`CLASS=DNP`PRT_NUM=7000364`VALUE=10K`POWER=1/10W`TOLERANCE=5%`PKG_TYPE=0603`ROHS=ROHS`REFDES=R177`
+|R 20:40_1-29-09
+API $13I81 ADI_Released:res_standard 1 #=1
+API $13I81 ADI_Released:res_standard 2 #=2
+M ADI_Released:res_standard $13I92
+I $13I92 ADI_Released:res_standard GND $13N63 COST=0.0018`PRT_NUM=7000401`VALUE=10.0K`POWER=1/10W`TOLERANCE=1%`PKG_TYPE=0603`ROHS=ROHS`REFDES=R183`
+|R 20:40_1-29-09
+API $13I92 ADI_Released:res_standard 1 #=1
+API $13I92 ADI_Released:res_standard 2 #=2
+|N 2
+M ADI_Released:cap_non_polarized $13I282
+I $13I282 ADI_Released:cap_non_polarized PS_5V GND COST=0.125`ROHS=ROHS`PKG_TYPE=1210`TOLERANCE=10%`VOLTAGE=16V`VALUE=10UF`TYPE=X5R`PRT_NUM=7000492`REFDES=C125`
+|R 20:41_1-29-09
+API $13I282 ADI_Released:cap_non_polarized 1 #=1
+API $13I282 ADI_Released:cap_non_polarized 2 #=2
+M ADI_Released:res_standard $13I89
+I $13I89 ADI_Released:res_standard $13N39 $13N99 COST=0.0044`PRT_NUM=7000696`POWER=1/10W`TOLERANCE=1%`ROHS=ROHS`PKG_TYPE=0603`VALUE=140.0K`REFDES=R181`
+|R 20:40_1-29-09
+API $13I89 ADI_Released:res_standard 1 #=1
+API $13I89 ADI_Released:res_standard 2 #=2
+M ADI_Released:res_standard $13I88
+I $13I88 ADI_Released:res_standard $13N39 $13N99 COST=0.065`PRT_NUM=7000698`VALUE=1.91K`POWER=1/10W`TOLERANCE=.1%`PKG_TYPE=0603`ROHS=ROHS`REFDES=R180`
+|R 20:40_1-29-09
+API $13I88 ADI_Released:res_standard 1 #=1
+API $13I88 ADI_Released:res_standard 2 #=2
+|N 2
+M ADI_Released:cap_non_polarized $13I283
+I $13I283 ADI_Released:cap_non_polarized $13N99 GND COST=0.125`ROHS=ROHS`PKG_TYPE=1210`TOLERANCE=10%`VOLTAGE=16V`VALUE=10UF`TYPE=X5R`PRT_NUM=7000492`REFDES=C126`
+|R 20:41_1-29-09
+API $13I283 ADI_Released:cap_non_polarized 1 #=1
+API $13I283 ADI_Released:cap_non_polarized 2 #=2
+|N 2
+M ADI_Released:cap_non_polarized $13I80
+I $13I80 ADI_Released:cap_non_polarized VDDOTP GND COST=0.038`REFDES=C132`ROHS=ROHS`PKG_TYPE=0805`TOLERANCE=10%`VOLTAGE=25V`VALUE=2.2UF`TYPE=X7R`PRT_NUM=7000607`
+|R 20:41_1-29-09
+API $13I80 ADI_Released:cap_non_polarized 1 #=1
+API $13I80 ADI_Released:cap_non_polarized 2 #=2
+|N 2
+M ADI_Released:cap_non_polarized $13I308
+I $13I308 ADI_Released:cap_non_polarized $13N402 GND REFDES=C199`PRT_NUM=7000344`TYPE=X5R`VALUE=1UF`VOLTAGE=16V`TOLERANCE=10%`PKG_TYPE=0603`ROHS=ROHS`COST=0.0184`
+|R 20:41_1-29-09
+API $13I308 ADI_Released:cap_non_polarized 1 #=1
+API $13I308 ADI_Released:cap_non_polarized 2 #=2
+|N 2
+M ADI_Released:cap_non_polarized $13I430
+I $13I430 ADI_Released:cap_non_polarized $13N402 GND CLASS=DNP`COST=0.0184`ROHS=ROHS`PKG_TYPE=0603`TOLERANCE=10%`VOLTAGE=16V`VALUE=1UF`TYPE=X5R`PRT_NUM=7000344`REFDES=C210`
+|R 20:41_1-29-09
+API $13I430 ADI_Released:cap_non_polarized 1 #=1
+API $13I430 ADI_Released:cap_non_polarized 2 #=2
+|N 2
+M ADI_Released:res_standard $13I307
+I $13I307 ADI_Released:res_standard $13N321 $13N317 REFDES=R344`ROHS=ROHS`PKG_TYPE=0402`TOLERANCE=1%`POWER=1/16W`VALUE=20.0K`PRT_NUM=7000701`COST=0.0016`
+|R 20:40_1-29-09
+API $13I307 ADI_Released:res_standard 1 #=1
+API $13I307 ADI_Released:res_standard 2 #=2
+|N 2
+M ADI_Released:cap_non_polarized $13I306
+I $13I306 ADI_Released:cap_non_polarized $13N317 GND REFDES=C198`ROHS=ROHS`PKG_TYPE=0603`TOLERANCE=5%`VOLTAGE=50V`VALUE=3300PF`TYPE=X7R`PRT_NUM=7000694`COST=0.006`
+|R 20:41_1-29-09
+API $13I306 ADI_Released:cap_non_polarized 1 #=1
+API $13I306 ADI_Released:cap_non_polarized 2 #=2
+M ADI_Released:cap_non_polarized $13I370
+I $13I370 ADI_Released:cap_non_polarized $13N303 $13N394 COST=0.038`ROHS=ROHS`PKG_TYPE=0805`TOLERANCE=10%`VOLTAGE=25V`VALUE=2.2UF`TYPE=X7R`PRT_NUM=7000607`REFDES=C204`
+|R 20:55_1-29-09
+API $13I370 ADI_Released:cap_non_polarized 1 #=1
+API $13I370 ADI_Released:cap_non_polarized 2 #=2
+M ADI_Released:cap_non_polarized $13I384
+I $13I384 ADI_Released:cap_non_polarized $13N303 $13N382 REFDES=C206`PRT_NUM=7000607`TYPE=X7R`VALUE=2.2UF`VOLTAGE=25V`TOLERANCE=10%`PKG_TYPE=0805`ROHS=ROHS`COST=0.038`
+|R 20:55_1-29-09
+API $13I384 ADI_Released:cap_non_polarized 1 #=1
+API $13I384 ADI_Released:cap_non_polarized 2 #=2
+|N 2
+M ADI_Released:cap_non_polarized $13I347
+I $13I347 ADI_Released:cap_non_polarized $13N348 GND COST=0.125`ROHS=ROHS`PKG_TYPE=1210`TOLERANCE=10%`VOLTAGE=16V`VALUE=10UF`TYPE=X5R`PRT_NUM=7000492`REFDES=C201`
+|R 20:41_1-29-09
+API $13I347 ADI_Released:cap_non_polarized 1 #=1
+API $13I347 ADI_Released:cap_non_polarized 2 #=2
+|N 2
+M ADI_Released:cap_non_polarized $13I346
+I $13I346 ADI_Released:cap_non_polarized -12V GND REFDES=C200`PRT_NUM=7000492`TYPE=X5R`VALUE=10UF`VOLTAGE=16V`TOLERANCE=10%`PKG_TYPE=1210`ROHS=ROHS`COST=0.125`
+|R 20:41_1-29-09
+API $13I346 ADI_Released:cap_non_polarized 1 #=1
+API $13I346 ADI_Released:cap_non_polarized 2 #=2
+|N 2
+M ADI_Released:cap_non_polarized $13I362
+I $13I362 ADI_Released:cap_non_polarized $13N359 GND REFDES=C203`PRT_NUM=7000492`TYPE=X5R`VALUE=10UF`VOLTAGE=16V`TOLERANCE=10%`PKG_TYPE=1210`ROHS=ROHS`COST=0.125`
+|R 20:41_1-29-09
+API $13I362 ADI_Released:cap_non_polarized 1 #=1
+API $13I362 ADI_Released:cap_non_polarized 2 #=2
+|N 2
+M ADI_Released:cap_non_polarized $13I360
+I $13I360 ADI_Released:cap_non_polarized +12V GND COST=0.125`ROHS=ROHS`PKG_TYPE=1210`TOLERANCE=10%`VOLTAGE=16V`VALUE=10UF`TYPE=X5R`PRT_NUM=7000492`REFDES=C202`
+|R 20:41_1-29-09
+API $13I360 ADI_Released:cap_non_polarized 1 #=1
+API $13I360 ADI_Released:cap_non_polarized 2 #=2
+|N 2
+M ADI_Released:cap_non_polarized $13I371
+I $13I371 ADI_Released:cap_non_polarized PS_5V GND COST=0.125`ROHS=ROHS`PKG_TYPE=1210`TOLERANCE=10%`VOLTAGE=16V`VALUE=10UF`TYPE=X5R`PRT_NUM=7000492`REFDES=C205`
+|R 20:41_1-29-09
+API $13I371 ADI_Released:cap_non_polarized 1 #=1
+API $13I371 ADI_Released:cap_non_polarized 2 #=2
+M ADI_Released:ind_standard $13I343
+I $13I343 ADI_Released:ind_standard $13N348 -12V REFDES=L6`ROHS=ROHS`PKG_TYPE=IND019`TOLERANCE=20%`VALUE=1UH`PRT_NUM=7000643`COST=0.19`
+|R 21:50_1-29-09
+API $13I343 ADI_Released:ind_standard 1 #=1
+API $13I343 ADI_Released:ind_standard 2 #=2
+M ADI_Released:ind_coupled $13I434
+I $13I434 ADI_Released:ind_coupled PS_5V GND $13N303 $13N394 PRT_NUM=7000691`TOLERANCE=20%`PKG_TYPE=IND024`ROHS=ROHS`WEB=http://www.coilcraft.com/msd7342.cfm`COST=0.73`VALUE=22UH`REFDES=L9`
+|R 21:24_1-29-09
+API $13I434 ADI_Released:ind_coupled 1 #=1
+API $13I434 ADI_Released:ind_coupled 2 #=2
+API $13I434 ADI_Released:ind_coupled 3 #=3
+API $13I434 ADI_Released:ind_coupled 4 #=4
+|N 2
+M ADI_Released:res_standard $13I73
+I $13I73 ADI_Released:res_standard $13N44 $13N43 COST=0.0034`PRT_NUM=7000695`VALUE=24.0K`POWER=1/10W`TOLERANCE=1%`PKG_TYPE=0603`ROHS=ROHS`REFDES=R176`
+|R 20:40_1-29-09
+API $13I73 ADI_Released:res_standard 1 #=1
+API $13I73 ADI_Released:res_standard 2 #=2
+|N 2
+M ADI_Released:res_standard $13I329
+I $13I329 ADI_Released:res_standard $13N328 GND COST=0.002`PRT_NUM=7000452`POWER=1/16W`TOLERANCE=1%`ROHS=ROHS`VALUE=4.99K`PKG_TYPE=0603`REFDES=R347`
+|R 20:40_1-29-09
+API $13I329 ADI_Released:res_standard 1 #=1
+API $13I329 ADI_Released:res_standard 2 #=2
+|N 2
+M ADI_Released:res_standard $13I372
+I $13I372 ADI_Released:res_standard PS_5V $13N402 REFDES=R349`ROHS=ROHS`PKG_TYPE=0603`TOLERANCE=5%`POWER=1/10W`VALUE=10`PRT_NUM=7000374`COST=0.0013`
+|R 20:40_1-29-09
+API $13I372 ADI_Released:res_standard 1 #=1
+API $13I372 ADI_Released:res_standard 2 #=2
+|N 2
+M ADI_Released:res_standard $13I416
+I $13I416 ADI_Released:res_standard VDDOTP $13N63 COST=0.0013`PRT_NUM=7000640`POWER=1/10W`TOLERANCE=1%`ROHS=ROHS`VALUE=21.5K`PKG_TYPE=0603`REFDES=R352`
+|R 20:40_1-29-09
+API $13I416 ADI_Released:res_standard 1 #=1
+API $13I416 ADI_Released:res_standard 2 #=2
+M ADI_Released:ics_adp1611 $13I296
+I $13I296 ADI_Released:ics_adp1611 $13N321 $13N328 GND $13N402 $13N301 $13N320 $13N303 $13N402 REFDES=VR6`WEB=http://www.analog.com/en/prod/0,,766_824_ADP1611,00.html`ROHS=ROHS`PKG_TYPE=MSOP8`PART=ADP1611`DESCRIPTION=STEP-UP-DC-DC CONVERTER`PRT_NUM=30-025763-01`COST=0.23`
+API $13I296 ADI_Released:ics_adp1611 1 #=1
+API $13I296 ADI_Released:ics_adp1611 2 #=2
+API $13I296 ADI_Released:ics_adp1611 3 #=4
+API $13I296 ADI_Released:ics_adp1611 4 #=6
+API $13I296 ADI_Released:ics_adp1611 5 #=7
+API $13I296 ADI_Released:ics_adp1611 6 #=8
+API $13I296 ADI_Released:ics_adp1611 7 #=5
+API $13I296 ADI_Released:ics_adp1611 8 #=3
+M ADI_Released:ind_coupled $13I433
+I $13I433 ADI_Released:ind_coupled PS_5V $13N348 $13N303 $13N382 PRT_NUM=7000691`TOLERANCE=20%`PKG_TYPE=IND024`ROHS=ROHS`WEB=http://www.coilcraft.com/msd7342.cfm`COST=0.73`VALUE=22UH`REFDES=L8`
+|R 21:24_1-29-09
+API $13I433 ADI_Released:ind_coupled 1 #=1
+API $13I433 ADI_Released:ind_coupled 2 #=2
+API $13I433 ADI_Released:ind_coupled 3 #=3
+API $13I433 ADI_Released:ind_coupled 4 #=4
+M ADI_Released:dio_schottky $13I354
+I $13I354 ADI_Released:dio_schottky $13N382 GND COST=0.06`WEB=http://www.onsemi.com/PowerSolutions/product.do?id=MBR130LSF`ROHS=ROHS`PKG_TYPE=SOD-123FL`PART=MBR130LSFT1G`CURRENT=1A`DESCRIPTION=SCHOTTKY 30V FAST RECVRY`PRT_NUM=7000641`REFDES=D9`
+|R 21:29_1-29-09
+API $13I354 ADI_Released:dio_schottky 1 #=A
+API $13I354 ADI_Released:dio_schottky 2 #=K
+M ADI_Released:ind_standard $13I361
+I $13I361 ADI_Released:ind_standard $13N359 +12V COST=0.19`PRT_NUM=7000643`VALUE=1UH`TOLERANCE=20%`PKG_TYPE=IND019`ROHS=ROHS`REFDES=L7`
+|R 21:50_1-29-09
+API $13I361 ADI_Released:ind_standard 1 #=1
+API $13I361 ADI_Released:ind_standard 2 #=2
+M ADI_Released:res_standard $13I84
+I $13I84 ADI_Released:res_standard $13N63 VPPOTP CLASS=DNP`COST=0.0013`PRT_NUM=7000640`POWER=1/10W`TOLERANCE=1%`ROHS=ROHS`PKG_TYPE=0603`VALUE=21.5K`REFDES=R179`
+|R 20:40_1-29-09
+API $13I84 ADI_Released:res_standard 1 #=1
+API $13I84 ADI_Released:res_standard 2 #=2
+M ADI_Released:res_standard $13I83
+I $13I83 ADI_Released:res_standard $13N42 VPPOTP COST=0.0013`CLASS=DNP`PRT_NUM=7000364`VALUE=10K`POWER=1/10W`TOLERANCE=5%`PKG_TYPE=0603`ROHS=ROHS`REFDES=R178`
+|R 20:40_1-29-09
+API $13I83 ADI_Released:res_standard 1 #=1
+API $13I83 ADI_Released:res_standard 2 #=2
+M ADI_Released:cap_non_polarized $13I82
+I $13I82 ADI_Released:cap_non_polarized $13N63 $13N42 COST=0.0184`CLASS=DNP`PRT_NUM=7000344`TYPE=X5R`VALUE=1UF`VOLTAGE=16V`TOLERANCE=10%`PKG_TYPE=0603`ROHS=ROHS`REFDES=C133`
+|R 20:55_1-29-09
+API $13I82 ADI_Released:cap_non_polarized 1 #=1
+API $13I82 ADI_Released:cap_non_polarized 2 #=2
+M ADI_Released:dio_esd $13I437
+I $13I437 ADI_Released:dio_esd GND VDDOTP COST=0.046`WEB=http://www.onsemi.com/PowerSolutions/product.do?id=ESD5Z`ROHS=ROHS`PKG_TYPE=SOD-523`PART=ESD5Z2.5T1`CURRENT=40A`DESCRIPTION=ESD SUPPRESSOR-2.5V,1.8V`PRT_NUM=7000720`REFDES=D11`
+|R 18:46_3-17-09
+API $13I437 ADI_Released:dio_esd 1 #=A
+API $13I437 ADI_Released:dio_esd 2 #=K
+|N 2
+M ADI_Released:cap_non_polarized $13I75
+I $13I75 ADI_Released:cap_non_polarized $13N47 GND COST=0.0068`PRT_NUM=7000549`TYPE=X7R`VALUE=22000PF`VOLTAGE=25V`TOLERANCE=10%`PKG_TYPE=0402`ROHS=ROHS`REFDES=C131`
+|R 20:41_1-29-09
+API $13I75 ADI_Released:cap_non_polarized 1 #=1
+API $13I75 ADI_Released:cap_non_polarized 2 #=2
+|N 2
+M ADI_Released:res_standard $13I411
+I $13I411 ADI_Released:res_standard $13N78 GND CLASS=DNP`REFDES=R351`PKG_TYPE=0603`VALUE=0`ROHS=ROHS`TOLERANCE=5%`POWER=1/10W`PRT_NUM=7000371`COST=0.0011`
+|R 20:40_1-29-09
+API $13I411 ADI_Released:res_standard 1 #=1
+API $13I411 ADI_Released:res_standard 2 #=2
+|N 2
+M ADI_Released:res_standard $13I96
+I $13I96 ADI_Released:res_standard $13N78 GND COST=0.061`PRT_NUM=7000699`POWER=1/10W`TOLERANCE=.1%`ROHS=ROHS`VALUE=3.01K`PKG_TYPE=0603`REFDES=R184`
+|R 20:40_1-29-09
+API $13I96 ADI_Released:res_standard 1 #=1
+API $13I96 ADI_Released:res_standard 2 #=2
+M ADI_Released:cap_non_polarized $13I284
+I $13I284 ADI_Released:cap_non_polarized $13N46 $13N77 COST=0.125`ROHS=ROHS`PKG_TYPE=1210`TOLERANCE=10%`VOLTAGE=16V`VALUE=10UF`TYPE=X5R`PRT_NUM=7000492`REFDES=C127`
+|R 20:55_1-29-09
+API $13I284 ADI_Released:cap_non_polarized 1 #=1
+API $13I284 ADI_Released:cap_non_polarized 2 #=2
+|N 3
+M ADI_Released:dio_schottky $13I438
+I $13I438 ADI_Released:dio_schottky GND VDDOTP COST=0.08`WEB=http://www.diodes.com/datasheets/ds13002.pdf`ROHS=ROHS`PKG_TYPE=DO-214AA`PART=SK12`CURRENT=1A`DESCRIPTION=SCHOTTKY`PRT_NUM=7000317`REFDES=D16`
+|R 21:29_1-29-09
+API $13I438 ADI_Released:dio_schottky 1 #=A
+API $13I438 ADI_Released:dio_schottky 2 #=K
+M ADI_Released:ics_adp1710 $13I86
+I $13I86 ADI_Released:ics_adp1710 $13N63 3V GND 3V VDDOTP COST=0.12`REFDES=VR3`ROHS=ROHS`PKG_TYPE=TSOT5`PART=ADP1710`DESCRIPTION=ADJ 150MA 0.8V-5V`PRT_NUM=30-025768-01`WEB=http://www.analog.com/en/prod/0%2C2877%2CADP1710%2C00.html`
+|R 21:17_1-29-09
+API $13I86 ADI_Released:ics_adp1710 1 #=4
+API $13I86 ADI_Released:ics_adp1710 2 #=3
+API $13I86 ADI_Released:ics_adp1710 3 #=2
+API $13I86 ADI_Released:ics_adp1710 4 #=1
+API $13I86 ADI_Released:ics_adp1710 5 #=5
+EW
