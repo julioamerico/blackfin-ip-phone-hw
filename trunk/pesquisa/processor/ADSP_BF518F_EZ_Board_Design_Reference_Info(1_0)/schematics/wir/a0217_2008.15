@@ -1,0 +1,316 @@
+| Wirelist created using version 5.4.
+V 5.4
+K 179955775200 a0217_2008
+DW a0217_2008
+Q Case
+SA @SHEETTOTAL=15 
+SA @SHEET=15 
+SA @DATETIME=5-14-2009_9:45 
+|Q ADI_Released:rnet_4series 1
+AS ADI_Released:rnet_4series ASSEMBLY_OPTIONS=CONNECTORS,U;LEDS,U;SWITCHES,U;JUMPERS,U
+AS ADI_Released:rnet_4series PART_SPEC=RESISTOR_NETWORK
+AS ADI_Released:rnet_4series PARTS=1
+AS ADI_Released:rnet_4series LEVEL=STD
+AS ADI_Released:rnet_4series VALUE=XXOHMS
+AS ADI_Released:rnet_4series REFDES=RN?
+AS ADI_Released:rnet_4series PKG_TYPE=RNET8
+AS ADI_Released:rnet_4series PINORDER=R1A R1B R2A R2B R3A R3B R4A R4B
+AS ADI_Released:rnet_4series INOV_VER_REC=21:26_1-29-09
+AP ADI_Released:rnet_4series 1 PINTYPE=BI
+AP ADI_Released:rnet_4series 1 #=1
+AP ADI_Released:rnet_4series 2 #=8
+AP ADI_Released:rnet_4series 2 PINTYPE=BI
+AP ADI_Released:rnet_4series 3 PINTYPE=BI
+AP ADI_Released:rnet_4series 3 #=2
+AP ADI_Released:rnet_4series 4 PINTYPE=BI
+AP ADI_Released:rnet_4series 4 #=7
+AP ADI_Released:rnet_4series 5 PINTYPE=BI
+AP ADI_Released:rnet_4series 5 #=3
+AP ADI_Released:rnet_4series 6 #=6
+AP ADI_Released:rnet_4series 6 PINTYPE=BI
+AP ADI_Released:rnet_4series 7 PINTYPE=BI
+AP ADI_Released:rnet_4series 7 #=4
+AP ADI_Released:rnet_4series 8 PINTYPE=BI
+AP ADI_Released:rnet_4series 8 #=5
+|Q ADI_Released:msc_mounting_hole_nc 1
+AS ADI_Released:msc_mounting_hole_nc ASSEMBLY_OPTIONS=CONNECTORS,U;LEDS,U;SWITCHES,U;JUMPERS,U
+AS ADI_Released:msc_mounting_hole_nc NC=1
+AS ADI_Released:msc_mounting_hole_nc ROHS=ROHS
+AS ADI_Released:msc_mounting_hole_nc PART=HOLE
+AS ADI_Released:msc_mounting_hole_nc PART_SPEC=HOLE
+AS ADI_Released:msc_mounting_hole_nc DESCRIPTION=MOUNTING HOLE
+AS ADI_Released:msc_mounting_hole_nc CLASS=DNP
+AS ADI_Released:msc_mounting_hole_nc PARTS=1
+AS ADI_Released:msc_mounting_hole_nc PINOFF
+AS ADI_Released:msc_mounting_hole_nc LEVEL=STD
+AS ADI_Released:msc_mounting_hole_nc PKG_TYPE=MSC004
+AS ADI_Released:msc_mounting_hole_nc REFDES=MH?
+AS ADI_Released:msc_mounting_hole_nc INOV_VER_REC=14:27_5-11-09
+M ADI_Released:rnet_4series $15I269
+I $15I269 ADI_Released:rnet_4series A1_Z A1 A2_Z A2 A3_Z A3 A4_Z A4 COST=0.0078`ROHS=ROHS`PKG_TYPE=RNS005`TOLERANCE=5%`POWER=1/32W`VALUE=33`DESCRIPTION=SERIES`PRT_NUM=7000661`REFDES=RN6`
+|R 21:26_1-29-09
+API $15I269 ADI_Released:rnet_4series 1 #=1
+API $15I269 ADI_Released:rnet_4series 2 #=8
+API $15I269 ADI_Released:rnet_4series 3 #=2
+API $15I269 ADI_Released:rnet_4series 4 #=7
+API $15I269 ADI_Released:rnet_4series 5 #=3
+API $15I269 ADI_Released:rnet_4series 6 #=6
+API $15I269 ADI_Released:rnet_4series 7 #=4
+API $15I269 ADI_Released:rnet_4series 8 #=5
+M ADI_Released:rnet_4series $15I270
+I $15I270 ADI_Released:rnet_4series TFS0/SD_D3_Z TFS0/SD_D3 RFS0/SD_D2_Z RFS0/SD_D2 RSCLK0/SD_D1_Z RSCLK0/SD_D1 DR0PRI/SD_D0_Z DR0PRI/SD_D0 REFDES=RN7`PRT_NUM=7000661`DESCRIPTION=SERIES`VALUE=33`POWER=1/32W`TOLERANCE=5%`PKG_TYPE=RNS005`ROHS=ROHS`COST=0.0078`
+|R 21:26_1-29-09
+API $15I270 ADI_Released:rnet_4series 1 #=1
+API $15I270 ADI_Released:rnet_4series 2 #=8
+API $15I270 ADI_Released:rnet_4series 3 #=2
+API $15I270 ADI_Released:rnet_4series 4 #=7
+API $15I270 ADI_Released:rnet_4series 5 #=3
+API $15I270 ADI_Released:rnet_4series 6 #=6
+API $15I270 ADI_Released:rnet_4series 7 #=4
+API $15I270 ADI_Released:rnet_4series 8 #=5
+M ADI_Released:rnet_4series $15I267
+I $15I267 ADI_Released:rnet_4series A9_Z A9 A10_Z A10 A11_Z A11 A12_Z A12 REFDES=RN4`PRT_NUM=7000661`DESCRIPTION=SERIES`VALUE=33`POWER=1/32W`TOLERANCE=5%`PKG_TYPE=RNS005`ROHS=ROHS`COST=0.0078`
+|R 21:26_1-29-09
+API $15I267 ADI_Released:rnet_4series 1 #=1
+API $15I267 ADI_Released:rnet_4series 2 #=8
+API $15I267 ADI_Released:rnet_4series 3 #=2
+API $15I267 ADI_Released:rnet_4series 4 #=7
+API $15I267 ADI_Released:rnet_4series 5 #=3
+API $15I267 ADI_Released:rnet_4series 6 #=6
+API $15I267 ADI_Released:rnet_4series 7 #=4
+API $15I267 ADI_Released:rnet_4series 8 #=5
+M ADI_Released:rnet_4series $15I265
+I $15I265 ADI_Released:rnet_4series D0 D0_ZZ D1 D1_ZZ D2 D2_ZZ D3 D3_ZZ REFDES=RN2`PRT_NUM=7000693`DESCRIPTION=SERIES`VALUE=22`POWER=1/32W`TOLERANCE=5%`PKG_TYPE=RNS005`ROHS=ROHS`COST=0.0083`
+|R 21:26_1-29-09
+API $15I265 ADI_Released:rnet_4series 1 #=1
+API $15I265 ADI_Released:rnet_4series 2 #=8
+API $15I265 ADI_Released:rnet_4series 3 #=2
+API $15I265 ADI_Released:rnet_4series 4 #=7
+API $15I265 ADI_Released:rnet_4series 5 #=3
+API $15I265 ADI_Released:rnet_4series 6 #=6
+API $15I265 ADI_Released:rnet_4series 7 #=4
+API $15I265 ADI_Released:rnet_4series 8 #=5
+M ADI_Released:rnet_4series $15I272
+I $15I272 ADI_Released:rnet_4series PB1/DR1PRI/MMC_D4_Z PB1/DR1PRI/MMC_D4 PB2/RFS1/MMC_D5_Z PB2/RFS1/MMC_D5 RSCLK1/MMC_D6_Z RSCLK1/MMC_D6 ADC_A0/LED1/MMC_D7/OTP_EN_Z ADC_A0/LED1/MMC_D7/OTP_EN COST=0.0078`ROHS=ROHS`PKG_TYPE=RNS005`TOLERANCE=5%`POWER=1/32W`VALUE=33`DESCRIPTION=SERIES`PRT_NUM=7000661`REFDES=RN9`
+|R 21:26_1-29-09
+API $15I272 ADI_Released:rnet_4series 1 #=1
+API $15I272 ADI_Released:rnet_4series 2 #=8
+API $15I272 ADI_Released:rnet_4series 3 #=2
+API $15I272 ADI_Released:rnet_4series 4 #=7
+API $15I272 ADI_Released:rnet_4series 5 #=3
+API $15I272 ADI_Released:rnet_4series 6 #=6
+API $15I272 ADI_Released:rnet_4series 7 #=4
+API $15I272 ADI_Released:rnet_4series 8 #=5
+M ADI_Released:rnet_4series $15I273
+I $15I273 ADI_Released:rnet_4series ~AMS0_Z ~AMS0 ~AWE_Z ~AWE ~ARE_Z ~ARE ~AMS1_Z ~AMS1 REFDES=RN10`PRT_NUM=7000661`DESCRIPTION=SERIES`VALUE=33`POWER=1/32W`TOLERANCE=5%`PKG_TYPE=RNS005`ROHS=ROHS`COST=0.0078`
+|R 21:26_1-29-09
+API $15I273 ADI_Released:rnet_4series 1 #=1
+API $15I273 ADI_Released:rnet_4series 2 #=8
+API $15I273 ADI_Released:rnet_4series 3 #=2
+API $15I273 ADI_Released:rnet_4series 4 #=7
+API $15I273 ADI_Released:rnet_4series 5 #=3
+API $15I273 ADI_Released:rnet_4series 6 #=6
+API $15I273 ADI_Released:rnet_4series 7 #=4
+API $15I273 ADI_Released:rnet_4series 8 #=5
+M ADI_Released:rnet_4series $15I274
+I $15I274 ADI_Released:rnet_4series SCKE_Z SCKE ~SMS_Z ~SMS ~SCAS_Z ~SCAS ~SRAS_Z ~SRAS COST=0.0078`ROHS=ROHS`PKG_TYPE=RNS005`TOLERANCE=5%`POWER=1/32W`VALUE=33`DESCRIPTION=SERIES`PRT_NUM=7000661`REFDES=RN11`
+|R 21:26_1-29-09
+API $15I274 ADI_Released:rnet_4series 1 #=1
+API $15I274 ADI_Released:rnet_4series 2 #=8
+API $15I274 ADI_Released:rnet_4series 3 #=2
+API $15I274 ADI_Released:rnet_4series 4 #=7
+API $15I274 ADI_Released:rnet_4series 5 #=3
+API $15I274 ADI_Released:rnet_4series 6 #=6
+API $15I274 ADI_Released:rnet_4series 7 #=4
+API $15I274 ADI_Released:rnet_4series 8 #=5
+M ADI_Released:rnet_4series $15I275
+I $15I275 ADI_Released:rnet_4series ~SWE_Z ~SWE SA10_Z SA10 ABE0#/SDQM0_Z ABE0#/SDQM0 ABE1#/SDQM1_Z ABE1#/SDQM1 REFDES=RN12`PRT_NUM=7000661`DESCRIPTION=SERIES`VALUE=33`POWER=1/32W`TOLERANCE=5%`PKG_TYPE=RNS005`ROHS=ROHS`COST=0.0078`
+|R 21:26_1-29-09
+API $15I275 ADI_Released:rnet_4series 1 #=1
+API $15I275 ADI_Released:rnet_4series 2 #=8
+API $15I275 ADI_Released:rnet_4series 3 #=2
+API $15I275 ADI_Released:rnet_4series 4 #=7
+API $15I275 ADI_Released:rnet_4series 5 #=3
+API $15I275 ADI_Released:rnet_4series 6 #=6
+API $15I275 ADI_Released:rnet_4series 7 #=4
+API $15I275 ADI_Released:rnet_4series 8 #=5
+M ADI_Released:rnet_4series $15I393
+I $15I393 ADI_Released:rnet_4series D11 D11_Z D10 D10_Z D9 D9_Z D8 D8_Z REFDES=RN15`PRT_NUM=7000693`DESCRIPTION=SERIES`VALUE=22`POWER=1/32W`TOLERANCE=5%`PKG_TYPE=RNS005`ROHS=ROHS`COST=0.0083`
+|R 21:26_1-29-09
+API $15I393 ADI_Released:rnet_4series 1 #=1
+API $15I393 ADI_Released:rnet_4series 2 #=8
+API $15I393 ADI_Released:rnet_4series 3 #=2
+API $15I393 ADI_Released:rnet_4series 4 #=7
+API $15I393 ADI_Released:rnet_4series 5 #=3
+API $15I393 ADI_Released:rnet_4series 6 #=6
+API $15I393 ADI_Released:rnet_4series 7 #=4
+API $15I393 ADI_Released:rnet_4series 8 #=5
+M ADI_Released:rnet_4series $15I392
+I $15I392 ADI_Released:rnet_4series D15 D15_Z D14 D14_Z D13 D13_Z D12 D12_Z COST=0.0083`ROHS=ROHS`PKG_TYPE=RNS005`TOLERANCE=5%`POWER=1/32W`VALUE=22`DESCRIPTION=SERIES`PRT_NUM=7000693`REFDES=RN16`
+|R 21:26_1-29-09
+API $15I392 ADI_Released:rnet_4series 1 #=1
+API $15I392 ADI_Released:rnet_4series 2 #=8
+API $15I392 ADI_Released:rnet_4series 3 #=2
+API $15I392 ADI_Released:rnet_4series 4 #=7
+API $15I392 ADI_Released:rnet_4series 5 #=3
+API $15I392 ADI_Released:rnet_4series 6 #=6
+API $15I392 ADI_Released:rnet_4series 7 #=4
+API $15I392 ADI_Released:rnet_4series 8 #=5
+M ADI_Released:rnet_4series $15I397
+I $15I397 ADI_Released:rnet_4series SPI0_MOSI_Z SPI0_MOSI SPI0_MISO_Z SPI0_MISO SPI0_SCK_Z SPI0_SCK ~AMS2_Z ~AMS2 COST=0.0078`ROHS=ROHS`PKG_TYPE=RNS005`TOLERANCE=5%`POWER=1/32W`VALUE=33`DESCRIPTION=SERIES`PRT_NUM=7000661`REFDES=RN17`
+|R 21:26_1-29-09
+API $15I397 ADI_Released:rnet_4series 1 #=1
+API $15I397 ADI_Released:rnet_4series 2 #=8
+API $15I397 ADI_Released:rnet_4series 3 #=2
+API $15I397 ADI_Released:rnet_4series 4 #=7
+API $15I397 ADI_Released:rnet_4series 5 #=3
+API $15I397 ADI_Released:rnet_4series 6 #=6
+API $15I397 ADI_Released:rnet_4series 7 #=4
+API $15I397 ADI_Released:rnet_4series 8 #=5
+M ADI_Released:rnet_4series $15I396
+I $15I396 ADI_Released:rnet_4series UART0_RX_Z UART0_RX UART0_TX_Z UART0_TX TSCLK0/SD_CLK_Z TSCLK0/SD_CLK DT0PRI/SD_CMD_Z DT0PRI/SD_CMD REFDES=RN18`PRT_NUM=7000661`DESCRIPTION=SERIES`VALUE=33`POWER=1/32W`TOLERANCE=5%`PKG_TYPE=RNS005`ROHS=ROHS`COST=0.0078`
+|R 21:26_1-29-09
+API $15I396 ADI_Released:rnet_4series 1 #=1
+API $15I396 ADI_Released:rnet_4series 2 #=8
+API $15I396 ADI_Released:rnet_4series 3 #=2
+API $15I396 ADI_Released:rnet_4series 4 #=7
+API $15I396 ADI_Released:rnet_4series 5 #=3
+API $15I396 ADI_Released:rnet_4series 6 #=6
+API $15I396 ADI_Released:rnet_4series 7 #=4
+API $15I396 ADI_Released:rnet_4series 8 #=5
+M ADI_Released:rnet_4series $15I437
+I $15I437 ADI_Released:rnet_4series D11_ZZ D11 D10_ZZ D10 D9_ZZ D9 D8_ZZ D8 REFDES=RN20`PRT_NUM=7000693`DESCRIPTION=SERIES`VALUE=22`POWER=1/32W`TOLERANCE=5%`PKG_TYPE=RNS005`ROHS=ROHS`COST=0.0083`
+|R 21:26_1-29-09
+API $15I437 ADI_Released:rnet_4series 1 #=1
+API $15I437 ADI_Released:rnet_4series 2 #=8
+API $15I437 ADI_Released:rnet_4series 3 #=2
+API $15I437 ADI_Released:rnet_4series 4 #=7
+API $15I437 ADI_Released:rnet_4series 5 #=3
+API $15I437 ADI_Released:rnet_4series 6 #=6
+API $15I437 ADI_Released:rnet_4series 7 #=4
+API $15I437 ADI_Released:rnet_4series 8 #=5
+M ADI_Released:rnet_4series $15I433
+I $15I433 ADI_Released:rnet_4series A15_Z A15 A14_Z A14 A13_Z A13 ? ? COST=0.0078`ROHS=ROHS`PKG_TYPE=RNS005`TOLERANCE=5%`POWER=1/32W`VALUE=33`DESCRIPTION=SERIES`PRT_NUM=7000661`REFDES=RN19`
+|R 21:26_1-29-09
+API $15I433 ADI_Released:rnet_4series 1 #=1
+API $15I433 ADI_Released:rnet_4series 2 #=8
+API $15I433 ADI_Released:rnet_4series 3 #=2
+API $15I433 ADI_Released:rnet_4series 4 #=7
+API $15I433 ADI_Released:rnet_4series 5 #=3
+API $15I433 ADI_Released:rnet_4series 6 #=6
+API $15I433 ADI_Released:rnet_4series 7 #=4
+API $15I433 ADI_Released:rnet_4series 8 #=5
+M ADI_Released:rnet_4series $15I438
+I $15I438 ADI_Released:rnet_4series D15_ZZ D15 D14_ZZ D14 D13_ZZ D13 D12_ZZ D12 COST=0.0083`ROHS=ROHS`PKG_TYPE=RNS005`TOLERANCE=5%`POWER=1/32W`VALUE=22`DESCRIPTION=SERIES`PRT_NUM=7000693`REFDES=RN21`
+|R 21:26_1-29-09
+API $15I438 ADI_Released:rnet_4series 1 #=1
+API $15I438 ADI_Released:rnet_4series 2 #=8
+API $15I438 ADI_Released:rnet_4series 3 #=2
+API $15I438 ADI_Released:rnet_4series 4 #=7
+API $15I438 ADI_Released:rnet_4series 5 #=3
+API $15I438 ADI_Released:rnet_4series 6 #=6
+API $15I438 ADI_Released:rnet_4series 7 #=4
+API $15I438 ADI_Released:rnet_4series 8 #=5
+M ADI_Released:rnet_4series $15I264
+I $15I264 ADI_Released:rnet_4series D2 D2_Z D3 D3_Z D1 D1_Z D0 D0_Z COST=0.0083`ROHS=ROHS`PKG_TYPE=RNS005`TOLERANCE=5%`POWER=1/32W`VALUE=22`DESCRIPTION=SERIES`PRT_NUM=7000693`REFDES=RN1`
+|R 21:26_1-29-09
+API $15I264 ADI_Released:rnet_4series 1 #=1
+API $15I264 ADI_Released:rnet_4series 2 #=8
+API $15I264 ADI_Released:rnet_4series 3 #=2
+API $15I264 ADI_Released:rnet_4series 4 #=7
+API $15I264 ADI_Released:rnet_4series 5 #=3
+API $15I264 ADI_Released:rnet_4series 6 #=6
+API $15I264 ADI_Released:rnet_4series 7 #=4
+API $15I264 ADI_Released:rnet_4series 8 #=5
+M ADI_Released:rnet_4series $15I268
+I $15I268 ADI_Released:rnet_4series A5_Z A5 A6_Z A6 A8_Z A8 A7_Z A7 REFDES=RN5`PRT_NUM=7000661`DESCRIPTION=SERIES`VALUE=33`POWER=1/32W`TOLERANCE=5%`PKG_TYPE=RNS005`ROHS=ROHS`COST=0.0078`
+|R 21:26_1-29-09
+API $15I268 ADI_Released:rnet_4series 1 #=1
+API $15I268 ADI_Released:rnet_4series 2 #=8
+API $15I268 ADI_Released:rnet_4series 3 #=2
+API $15I268 ADI_Released:rnet_4series 4 #=7
+API $15I268 ADI_Released:rnet_4series 5 #=3
+API $15I268 ADI_Released:rnet_4series 6 #=6
+API $15I268 ADI_Released:rnet_4series 7 #=4
+API $15I268 ADI_Released:rnet_4series 8 #=5
+M ADI_Released:rnet_4series $15I513
+I $15I513 ADI_Released:rnet_4series D7_ZZ D7 D6_ZZ D6 D5_ZZ D5 D4_ZZ D4 COST=0.0083`ROHS=ROHS`PKG_TYPE=RNS005`TOLERANCE=5%`POWER=1/32W`VALUE=22`DESCRIPTION=SERIES`PRT_NUM=7000693`REFDES=RN3`
+|R 21:26_1-29-09
+API $15I513 ADI_Released:rnet_4series 1 #=1
+API $15I513 ADI_Released:rnet_4series 2 #=8
+API $15I513 ADI_Released:rnet_4series 3 #=2
+API $15I513 ADI_Released:rnet_4series 4 #=7
+API $15I513 ADI_Released:rnet_4series 5 #=3
+API $15I513 ADI_Released:rnet_4series 6 #=6
+API $15I513 ADI_Released:rnet_4series 7 #=4
+API $15I513 ADI_Released:rnet_4series 8 #=5
+M ADI_Released:rnet_4series $15I395
+I $15I395 ADI_Released:rnet_4series A19_Z A19 A18_Z A18 A17_Z A17 A16_Z A16 REFDES=RN13`PRT_NUM=7000661`DESCRIPTION=SERIES`VALUE=33`POWER=1/32W`TOLERANCE=5%`PKG_TYPE=RNS005`ROHS=ROHS`COST=0.0078`
+|R 21:26_1-29-09
+API $15I395 ADI_Released:rnet_4series 1 #=1
+API $15I395 ADI_Released:rnet_4series 2 #=8
+API $15I395 ADI_Released:rnet_4series 3 #=2
+API $15I395 ADI_Released:rnet_4series 4 #=7
+API $15I395 ADI_Released:rnet_4series 5 #=3
+API $15I395 ADI_Released:rnet_4series 6 #=6
+API $15I395 ADI_Released:rnet_4series 7 #=4
+API $15I395 ADI_Released:rnet_4series 8 #=5
+M ADI_Released:rnet_4series $15I266
+I $15I266 ADI_Released:rnet_4series D7 D7_Z D6 D6_Z D5 D5_Z D4 D4_Z COST=0.0083`ROHS=ROHS`PKG_TYPE=RNS005`TOLERANCE=5%`POWER=1/32W`VALUE=22`DESCRIPTION=SERIES`PRT_NUM=7000693`REFDES=RN14`
+|R 21:26_1-29-09
+API $15I266 ADI_Released:rnet_4series 1 #=1
+API $15I266 ADI_Released:rnet_4series 2 #=8
+API $15I266 ADI_Released:rnet_4series 3 #=2
+API $15I266 ADI_Released:rnet_4series 4 #=7
+API $15I266 ADI_Released:rnet_4series 5 #=3
+API $15I266 ADI_Released:rnet_4series 6 #=6
+API $15I266 ADI_Released:rnet_4series 7 #=4
+API $15I266 ADI_Released:rnet_4series 8 #=5
+M ADI_Released:rnet_4series $15I271
+I $15I271 ADI_Released:rnet_4series CUD/SD_CD_Z CUD/SD_CD CDG/ADC_A1/LED2_Z CDG/ADC_A1/LED2 CZM/ADC_A2/LED3_Z CZM/ADC_A2/LED3 DR1SEC_Z DR1SEC COST=0.0078`ROHS=ROHS`PKG_TYPE=RNS005`TOLERANCE=5%`POWER=1/32W`VALUE=33`DESCRIPTION=SERIES`PRT_NUM=7000661`REFDES=RN8`
+|R 21:26_1-29-09
+API $15I271 ADI_Released:rnet_4series 1 #=1
+API $15I271 ADI_Released:rnet_4series 2 #=8
+API $15I271 ADI_Released:rnet_4series 3 #=2
+API $15I271 ADI_Released:rnet_4series 4 #=7
+API $15I271 ADI_Released:rnet_4series 5 #=3
+API $15I271 ADI_Released:rnet_4series 6 #=6
+API $15I271 ADI_Released:rnet_4series 7 #=4
+API $15I271 ADI_Released:rnet_4series 8 #=5
+M ADI_Released:msc_mounting_hole_nc $15I514
+I $15I514 ADI_Released:msc_mounting_hole_nc PKG_TYPE=MSC004A`REFDES=MH1`
+|R 14:27_5-11-09
+M ADI_Released:msc_mounting_hole_nc $15I515
+I $15I515 ADI_Released:msc_mounting_hole_nc PKG_TYPE=MSC004A`REFDES=MH2`
+|R 14:27_5-11-09
+M ADI_Released:msc_mounting_hole_nc $15I516
+I $15I516 ADI_Released:msc_mounting_hole_nc PKG_TYPE=MSC004A`REFDES=MH3`
+|R 14:27_5-11-09
+M ADI_Released:msc_mounting_hole_nc $15I517
+I $15I517 ADI_Released:msc_mounting_hole_nc PKG_TYPE=MSC004A`REFDES=MH4`
+|R 14:27_5-11-09
+M ADI_Released:msc_mounting_hole_nc $15I518
+I $15I518 ADI_Released:msc_mounting_hole_nc PKG_TYPE=MSC004A`REFDES=MH5`
+|R 14:27_5-11-09
+M ADI_Released:msc_mounting_hole_nc $15I519
+I $15I519 ADI_Released:msc_mounting_hole_nc PKG_TYPE=MSC004A`REFDES=MH6`
+|R 14:27_5-11-09
+M ADI_Released:msc_mounting_hole_nc $15I520
+I $15I520 ADI_Released:msc_mounting_hole_nc PKG_TYPE=MSC004A`REFDES=MH7`
+|R 14:27_5-11-09
+M ADI_Released:msc_mounting_hole_nc $15I521
+I $15I521 ADI_Released:msc_mounting_hole_nc PKG_TYPE=MSC004A`REFDES=MH8`
+|R 14:27_5-11-09
+M ADI_Released:msc_mounting_hole_nc $15I522
+I $15I522 ADI_Released:msc_mounting_hole_nc PKG_TYPE=MSC004A`REFDES=MH9`
+|R 14:27_5-11-09
+M ADI_Released:msc_mounting_hole_nc $15I523
+I $15I523 ADI_Released:msc_mounting_hole_nc PKG_TYPE=MSC004A`REFDES=MH10`
+|R 14:27_5-11-09
+M ADI_Released:msc_mounting_hole_nc $15I524
+I $15I524 ADI_Released:msc_mounting_hole_nc PKG_TYPE=MSC004A`REFDES=MH11`
+|R 14:27_5-11-09
+M ADI_Released:msc_mounting_hole_nc $15I525
+I $15I525 ADI_Released:msc_mounting_hole_nc PKG_TYPE=MSC004A`REFDES=MH12`
+|R 14:27_5-11-09
+EW
