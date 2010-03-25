@@ -108,7 +108,7 @@ ClassGenCCAutoRoomEnabled=1
 ClassGenNCAutoScope=None
 
 [Document7]
-DocumentPath=..\sch\blackfin_e_power.SchDoc
+DocumentPath=..\sch\blackfin_e_lcd_keypad.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
@@ -122,6 +122,20 @@ ClassGenCCAutoRoomEnabled=1
 ClassGenNCAutoScope=None
 
 [Document8]
+DocumentPath=..\sch\blackfin_f_power.SchDoc
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=1
+ClassGenNCAutoScope=None
+
+[Document9]
 DocumentPath=..\pcb\blackfin_pcb.PcbDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
