@@ -38,7 +38,7 @@ ClassGenCCAutoRoomEnabled=1
 ClassGenNCAutoScope=None
 
 [Document2]
-DocumentPath=..\sch\blackfin_b_flash.SchDoc
+DocumentPath=..\sch\blackfin_b_flash_jtag_serial.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
