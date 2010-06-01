@@ -9,3 +9,7 @@ http://www.hardwaresecrets.com/article/317/3
 AMPLIFICADORES DE ÁUDIO
 
 http://www.analog.com/en/audiovideo-products/audio-amplifiers/products/index.html#Portable_Audio_Products
+
+THE SCIENTIST'S AND ENGINEER'S GUIDE TO DIGITAL SIGNAL PROCESSING
+
+http://www.dspguide.com/
