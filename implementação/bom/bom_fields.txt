@@ -1,0 +1,16 @@
+A BOM deve conter os seguintes campos que associam o sch ao template:
+
+
+- Comment       (*)
+- Designator
+- eVendor
+- eVendorPart#
+- eVendorPrice
+- Footprint     (*)
+- Manufacturer
+- MOQ
+- MSRP
+- Part#         (*)
+- Quantity
+
+(*) Componentes devem ser diferenciados por esses campos.
