@@ -149,6 +149,9 @@ ClassGenCCAutoEnabled=1
 ClassGenCCAutoRoomEnabled=1
 ClassGenNCAutoScope=None
 
+[GeneratedDocument1]
+DocumentPath=ProjectOutputs\Board Information - blackfin_pcb.html
+
 [OutputGroup1]
 Name=Netlist Outputs
 Description=
