@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+NCDrill File Report For: blackfin_pcb.PcbDoc   24/01/2011  00:57:52
+---------------------------------------------------------------------------
+
+Layer Pair : Top Layer to Bottom Layer
+ASCII RoundHoles File : blackfin_pcb-RoundHoles.TXT
+ASCII SlotHoles File : blackfin_pcb-SlotHoles.TXT
+EIA File   : blackfin_pcb.DRL
+
+Tool         Hole Size           Hole Type     Hole Count Plated       Tool Travel
+---------------------------------------------------------------------------
+T1        0.3mm (11.811mil)        Round          566              2107.97 mm (82.99 Inch)
+T2        0.33mm (12.992mil)       Round          29               81.29 mm (3.20 Inch)
+T3        0.8mm (31.496mil)        Round          40               274.08 mm (10.79 Inch)
+T4        0.9mm (35.433mil)        Round          2                1.90 mm (0.07 Inch)
+T5        1mm (39.37mil)           Round          4                6.50 mm (0.26 Inch)
+T6        1mm (39.37mil)           Slot           3                7352.44 mm (289.47 Inch)
+T7        1.1mm (43.307mil)        Round          12               34.36 mm (1.35 Inch)
+T8        1.4mm (55.118mil)        Round          2                16.25 mm (0.64 Inch)
+T9        1.5mm (59.055mil)        Round          2                4.00 mm (0.16 Inch)
+T10       1.71mm (67.323mil)       Round          2                15.75 mm (0.62 Inch)
+T11       1.9mm (74.803mil)        Round          2                16.25 mm (0.64 Inch)
+T12       2.3mm (90.551mil)        Round          6                203.63 mm (8.02 Inch)
+T13       2.5mm (98.425mil)        Round          8                403.71 mm (15.89 Inch)
+T14       3.3mm (129.921mil)       Round          2                11.43 mm (0.45 Inch)
+---------------------------------------------------------------------------
+Totals                                            680              10529.56 mm (414.55 Inch)
+
+Total Processing Time (hh:mm:ss) : 00:00:01
