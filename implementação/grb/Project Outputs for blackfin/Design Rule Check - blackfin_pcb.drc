@@ -1,0 +1,58 @@
+Protel Design System Design Rule Check
+PCB File : C:\Projetos\Blackfin IP Phone\implementação\pcb\blackfin_pcb.PcbDoc
+Date     : 24/01/2011
+Time     : 00:44:10
+
+Processing Rule : Matched Net Lengths(Tolerance=20mil) (Disabled)(InNet('NetR117_1') or InNet('NetR119_1') or InNet('NetR121_1') or InNet('NetR123_1') or InNet('NetR125_1') or InNet('NetR127_1') or InNet('NetR129_1') or InNet('NetR131_1') or InNet('NetR101_1') or InNet('NetR103_1') or InNet('NetR105_1') or In
+Rule Violations :0
+
+Processing Rule : Short-Circuit Constraint (Allowed=No) (All),(All)
+Rule Violations :0
+
+Processing Rule : Un-Routed Net Constraint ( (All) )
+   Violation between Isolated copper: Split Plane  (VCC3V3)  on POWER. Dead copper detected. Copper area is : 2,1E2 sq. mils
+   Violation between Isolated copper: Split Plane  (VCC1V3)  on POWER. Dead copper detected. Copper area is : 2,1E2 sq. mils
+   Violation between Isolated copper: Split Plane  (VCC1V3)  on POWER. Dead copper detected. Copper area is : 2,1E2 sq. mils
+   Violation between Isolated copper: Split Plane  (VCC1V3)  on POWER. Dead copper detected. Copper area is : 2,1E2 sq. mils
+   Violation between Isolated copper: Split Plane  (VCC1V3)  on POWER. Dead copper detected. Copper area is : 2,1E2 sq. mils
+   Violation between Isolated copper: Split Plane  (VCC1V3)  on POWER. Dead copper detected. Copper area is : 2,1E2 sq. mils
+   Violation between Isolated copper: Split Plane  (VCC1V3)  on POWER. Dead copper detected. Copper area is : 2,1E2 sq. mils
+   Violation between Isolated copper: Split Plane  (VCC1V3)  on POWER. Dead copper detected. Copper area is : 2,1E2 sq. mils
+   Violation between Isolated copper: Split Plane  (VCC1V3)  on POWER. Dead copper detected. Copper area is : 2,1E2 sq. mils
+   Violation between Isolated copper: Split Plane  (VCC1V3)  on POWER. Dead copper detected. Copper area is : 2,1E2 sq. mils
+   Violation between Isolated copper: Split Plane  (VCC1V3)  on POWER. Dead copper detected. Copper area is : 2,1E2 sq. mils
+   Violation between Isolated copper: Split Plane  (VCC1V3)  on POWER. Dead copper detected. Copper area is : 2,1E2 sq. mils
+   Violation between Isolated copper: Split Plane  (VCC1V3)  on POWER. Dead copper detected. Copper area is : 2,1E2 sq. mils
+   Violation between Isolated copper: Split Plane  (VCC1V3)  on POWER. Dead copper detected. Copper area is : 2,1E2 sq. mils
+   Violation between Isolated copper: Split Plane  (VCC1V3)  on POWER. Dead copper detected. Copper area is : 2,1E2 sq. mils
+   Violation between Isolated copper: Split Plane  (VCC1V3)  on POWER. Dead copper detected. Copper area is : 2,1E2 sq. mils
+   Violation between Isolated copper: Split Plane  (VCC1V3)  on POWER. Dead copper detected. Copper area is : 2,1E2 sq. mils
+Rule Violations :17
+
+Processing Rule : Clearance Constraint (Gap=6mil) (All),(All)
+Rule Violations :0
+
+Processing Rule : Power Plane Connect Rule(Direct Connect )(Expansion=20mil) (Conductor Width=20mil) (Air Gap=10mil) (Entries=4) (All)
+Rule Violations :0
+
+Processing Rule : Width Constraint (Min=7.619mil) (Max=11.555mil) (Preferred=9.418mil) (All)
+Rule Violations :0
+
+Processing Rule : Height Constraint (Min=0mil) (Max=2000mil) (Prefered=500mil) (All)
+Rule Violations :0
+
+Processing Rule : Hole Size Constraint (Min=1mil) (Max=137.795mil) (All)
+Rule Violations :0
+
+Processing Rule : Clearance Constraint (Gap=5mil) ((InComponent('U402'))),(All)
+Rule Violations :0
+
+Processing Rule : Width Constraint (Min=10mil) (Max=100mil) (Preferred=10mil) (InNet('VCC3V3') OR InNet('AVCC5V') OR InNet('GND') OR InNet('NetR600_1') OR IsArc OR InNet('TD_N') OR InNet('TD_P'))
+Rule Violations :0
+
+Processing Rule : Matched Net Lengths(Tolerance=20mil) (Disabled)(InNetClass('A[1..19]') or InNet('SA10'))
+Rule Violations :0
+
+
+Violations Detected : 17
+Time Elapsed        : 00:00:03

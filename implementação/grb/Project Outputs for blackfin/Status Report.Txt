@@ -1,0 +1,14 @@
+Output: NC Drill Files
+Type  : NC Drill
+From  : Project [blackfin.PrjPCB]
+   Generated File[blackfin_pcb-RoundHoles.TXT]
+   Generated File[blackfin_pcb-SlotHoles.TXT]
+   Generated File[blackfin_pcb.DRL]
+   Generated File[blackfin_pcb.LDP]
+   Generated File[blackfin_pcb.DRR]
+
+
+Files Generated   : 5
+Documents Printed : 0
+
+Finished Output Generation At 00:57:53 On 24/01/2011

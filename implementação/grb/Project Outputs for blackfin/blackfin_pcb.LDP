@@ -1,0 +1,3 @@
+Layer Pairs Export File for PCB: C:\Projetos\Blackfin IP Phone\implementação\pcb\blackfin_pcb.PcbDoc
+LayersSetName=Top_Bot_Thru_Holes|DrillFile=blackfin_pcb-roundholes.txt|LayerPairs=gtl,gbl
+LayersSetName=Top_Bot_Slot_Holes|DrillFile=blackfin_pcb-slotholes.txt|LayerPairs=gtl,gbl
