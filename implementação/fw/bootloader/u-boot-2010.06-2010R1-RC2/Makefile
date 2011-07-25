@@ -3538,6 +3538,9 @@ BFIN_BOARDS += bf537-minotaur bf537-srv1 bf561-acvilon blackstamp ip04
 # I-SYST Micromodule
 BFIN_BOARDS += ibf-dsp561
 
+# Blackfin IP Phone Board
+BFIN_BOARDS += bf518-ip_phone
+
 $(BFIN_BOARDS:%=%_config)	: unconfig
 	@$(MKCONFIG) $(@:_config=) blackfin blackfin $(@:_config=)
 
