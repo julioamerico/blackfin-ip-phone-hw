@@ -2,8 +2,8 @@
  * U-boot - Configuration file for Blackfin IP Phone Board
  */
 
-#ifndef __CONFIG_BF518F_IP_PHONE_H__
-#define __CONFIG_BF518F_IP_PHONE_H__
+#ifndef __CONFIG_BF518_IPPHONE_H__
+#define __CONFIG_BF518_IPPHONE_H__
 
 #include <asm/config-pre.h>
 
@@ -13,6 +13,12 @@
  */
 #define CONFIG_BFIN_CPU             bf518-0.1
 #define CONFIG_BFIN_BOOT_MODE       BFIN_BOOT_SPI_MASTER
+
+/*
+#define CONFIG_DEBUG_SERIAL
+#define CONFIG_DEBUG_EARLY_SERIAL
+#define DEBUG
+*/
 
 
 /*
@@ -42,12 +48,13 @@
 /*
  * Memory Settings
  */
-/* This board has a MT48LC16M16A2P */
+/* This board has a MT48LC16M16A2P-75 */
 #define CONFIG_MEM_ADD_WDTH	9
 #define CONFIG_MEM_SIZE		32
 
-#define CONFIG_EBIU_SDRRC_VAL	0x0096
-#define CONFIG_EBIU_SDGCTL_VAL	(SCTLE | CL_3 | PASR_ALL | TRAS_6 | TRP_3 | TRCD_3 | TWR_2 | PSS)
+#define CONFIG_EBIU_SDRRC_VAL	0x0305
+#define CONFIG_EBIU_SDGCTL_VAL	0x8091118D
+#define CONFIG_EBIU_SDBCTL_VAL  0x0013
 
 #define CONFIG_EBIU_AMGCTL_VAL	(AMCKEN | AMBEN_ALL)
 #define CONFIG_EBIU_AMBCTL0_VAL	(B1WAT_15 | B1RAT_15 | B1HT_3 | B1RDYPOL | B0WAT_15 | B0RAT_15 | B0HT_3 | B0RDYPOL)
@@ -63,7 +70,7 @@
 #if !defined(__ADSPBF512__) && !defined(__ADSPBF514__)
 #define ADI_CMDS_NETWORK	1
 #define CONFIG_BFIN_MAC
-#define CONFIG_BFIN_MAC_PINS \
+/*#define CONFIG_BFIN_MAC_PINS \
 	{ \
 	P_MII0_ETxD0, \
 	P_MII0_ETxD1, \
@@ -82,53 +89,41 @@
 	P_MII0_CRS, \
 	P_MII0_MDC, \
 	P_MII0_MDIO, \
-	0 }
+	0 }*/
 #define CONFIG_NETCONSOLE	1
 #define CONFIG_NET_MULTI	1
 #endif
-#define CONFIG_HOSTNAME		bf518f-ezbrd
-#define CONFIG_PHY_ADDR		3
+#define CONFIG_HOSTNAME		bf518-ipphone
+#define CONFIG_PHY_ADDR		1
 /* Uncomment next line to use fixed MAC address */
-/* #define CONFIG_ETHADDR	02:80:ad:20:31:e8 */
+#define CONFIG_ETHADDR	02:80:ad:20:31:e8
 
-
-/*
- * Flash Settings
- */
-#define CONFIG_FLASH_CFI_DRIVER
-#define CONFIG_SYS_FLASH_BASE		0x20000000
-#define CONFIG_SYS_FLASH_CFI
-#define CONFIG_SYS_FLASH_PROTECTION
-#define CONFIG_SYS_MAX_FLASH_BANKS	1
-#define CONFIG_SYS_MAX_FLASH_SECT	71
+#define CONFIG_SYS_NO_FLASH
 
 
 /*
  * SPI Settings
  */
 #define CONFIG_BFIN_SPI
-#define CONFIG_ENV_SPI_MAX_HZ	30000000
-#define CONFIG_SF_DEFAULT_SPEED	30000000
 #define CONFIG_SPI_FLASH
-#define CONFIG_SPI_FLASH_SST
-#define CONFIG_SPI_FLASH_STMICRO
+#define CONFIG_CMD_SF
+#define CONFIG_SF_DEFAULT_SPEED	50000000
+
+#define CONFIG_ENV_IS_IN_SPI_FLASH
+#define CONFIG_ENV_SPI_MAX_HZ	50000000
+#define CONFIG_ENV_SPI_BUS  0
+#define CONFIG_ENV_SPI_CS   2
+
+#define CONFIG_SPI_FLASH_SPANSION
 
 
 /*
  * Env Storage Settings
  */
-#if (CONFIG_BFIN_BOOT_MODE == BFIN_BOOT_SPI_MASTER)
 #define CONFIG_ENV_IS_IN_SPI_FLASH
 #define CONFIG_ENV_OFFSET	0x10000
 #define CONFIG_ENV_SIZE		0x2000
 #define CONFIG_ENV_SECT_SIZE	0x10000
-#else
-#define CONFIG_ENV_IS_IN_FLASH
-#define CONFIG_ENV_OFFSET	0x4000
-#define CONFIG_ENV_ADDR		(CONFIG_SYS_FLASH_BASE + CONFIG_ENV_OFFSET)
-#define CONFIG_ENV_SIZE		0x2000
-#define CONFIG_ENV_SECT_SIZE	0x2000
-#endif
 #define CONFIG_ENV_IS_EMBEDDED_IN_LDR
 
 
@@ -152,10 +147,10 @@
 /*
  * Misc Settings
  */
-#define CONFIG_BOARD_EARLY_INIT_F
-#define CONFIG_MISC_INIT_R
 #define CONFIG_RTC_BFIN
+
 #define CONFIG_UART_CONSOLE	0
+#define CONFIG_BAUDRATE    115200
 
 
 /*

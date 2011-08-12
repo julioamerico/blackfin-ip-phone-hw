@@ -3528,6 +3528,9 @@ microblaze-generic_config:	unconfig
 BFIN_BOARDS = bf518f-ezbrd bf526-ezbrd bf527-ezkit bf533-ezkit bf533-stamp \
 	bf537-pnav bf537-stamp bf538f-ezkit bf548-ezkit bf561-ezkit bf527-ad7160-eval
 
+# Blackfin IP Phone Board
+BFIN_BOARDS += bf518-ipphone
+
 # Bluetechnix tinyboards
 BFIN_BOARDS += cm-bf527 cm-bf533 cm-bf537e cm-bf537u cm-bf548 cm-bf561 \
 	tcm-bf518 tcm-bf537
@@ -3537,9 +3540,6 @@ BFIN_BOARDS += bf537-minotaur bf537-srv1 bf561-acvilon blackstamp ip04
 
 # I-SYST Micromodule
 BFIN_BOARDS += ibf-dsp561
-
-# Blackfin IP Phone Board
-BFIN_BOARDS += bf518-ip_phone
 
 $(BFIN_BOARDS:%=%_config)	: unconfig
 	@$(MKCONFIG) $(@:_config=) blackfin blackfin $(@:_config=)

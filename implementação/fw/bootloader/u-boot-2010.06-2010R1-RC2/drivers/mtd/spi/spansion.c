@@ -52,6 +52,9 @@
 #define SPSN_ID_S25FL128P	0x2018
 #define SPSN_EXT_ID_S25FL128P_256KB	0x0300
 #define SPSN_EXT_ID_S25FL128P_64KB	0x0301
+/* Suporte a flash SPI S25FL032P */
+#define SPSN_ID_S25FL032P		0x0215
+#define SPSN_EXT_ID_S25FL032P_64KB	0x4D00
 
 #define SPANSION_SR_WIP		(1 << 0)	/* Write-in-Progress */
 
@@ -99,6 +102,15 @@ static const struct spansion_spi_flash_params spansion_spi_flash_table[] = {
 		.pages_per_sector = 256,
 		.nr_sectors = 64,
 		.name = "S25FL032A",
+	},
+/* Suporte a flash SPI S25FL032P */
+	{
+		.idcode1 = SPSN_ID_S25FL032P,
+		.idcode2 = SPSN_EXT_ID_S25FL032P_64KB,
+		.page_size = 256,
+		.pages_per_sector = 256,
+		.nr_sectors = 64,
+		.name = "S25FL032P",
 	},
 	{
 		.idcode1 = SPSN_ID_S25FL064A,
