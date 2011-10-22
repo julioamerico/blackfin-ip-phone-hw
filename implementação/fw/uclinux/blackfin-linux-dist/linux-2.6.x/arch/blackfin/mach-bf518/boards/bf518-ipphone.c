@@ -11,8 +11,10 @@
 #include <linux/spi/flash.h>
 
 #include <linux/i2c.h>
+#include <linux/i2c/adp5588.h>
 #include <linux/irq.h>
 #include <linux/interrupt.h>
+#include <linux/input.h>
 #include <asm/dma.h>
 #include <asm/bfin5xx_spi.h>
 #include <asm/reboot.h>
@@ -347,7 +349,6 @@ static struct spi_board_info bfin_spi_board_info[] __initdata = {
 
 /* SPI controller data */
 #if defined(CONFIG_SPI_BFIN) || defined(CONFIG_SPI_BFIN_MODULE)
-/* SPI (0) */
 static struct bfin5xx_spi_master bfin_spi0_info = {
 	.num_chipselect = 6,
 	.enable_dma = 1,  /* master has the ability to do dma transfer */
@@ -379,41 +380,6 @@ static struct platform_device bfin_spi0_device = {
 	.resource = bfin_spi0_resource,
 	.dev = {
 		.platform_data = &bfin_spi0_info, /* Passed to driver */
-	},
-};
-
-/* SPI (1) */
-static struct bfin5xx_spi_master bfin_spi1_info = {
-	.num_chipselect = 6,
-	.enable_dma = 1,  /* master has the ability to do dma transfer */
-	.pin_req = {P_SPI1_SCK, P_SPI1_MISO, P_SPI1_MOSI, 0},
-};
-
-static struct resource bfin_spi1_resource[] = {
-	[0] = {
-		.start = SPI1_REGBASE,
-		.end   = SPI1_REGBASE + 0xFF,
-		.flags = IORESOURCE_MEM,
-		},
-	[1] = {
-		.start = CH_SPI1,
-		.end   = CH_SPI1,
-		.flags = IORESOURCE_DMA,
-	},
-	[2] = {
-		.start = IRQ_SPI1,
-		.end   = IRQ_SPI1,
-		.flags = IORESOURCE_IRQ,
-	},
-};
-
-static struct platform_device bfin_spi1_device = {
-	.name = "bfin-spi",
-	.id = 1, /* Bus number */
-	.num_resources = ARRAY_SIZE(bfin_spi1_resource),
-	.resource = bfin_spi1_resource,
-	.dev = {
-		.platform_data = &bfin_spi1_info, /* Passed to driver */
 	},
 };
 #endif  /* spi master and devices */
@@ -562,13 +528,14 @@ static struct platform_device bfin_sir1_device = {
 #endif
 #endif
 
+/*
 #if defined(CONFIG_SND_BF5XX_I2S) || defined(CONFIG_SND_BF5XX_I2S_MODULE)
 static struct platform_device bfin_i2s = {
 	.name = "bfin-i2s",
 	.id = CONFIG_SND_BF5XX_SPORT_NUM,
-	/* TODO: add platform data here */
 };
 #endif
+*/
 
 #if defined(CONFIG_I2C_BLACKFIN_TWI) || defined(CONFIG_I2C_BLACKFIN_TWI_MODULE)
 static struct resource bfin_twi0_resource[] = {
@@ -592,134 +559,111 @@ static struct platform_device i2c_bfin_twi_device = {
 };
 #endif
 
-static struct i2c_board_info __initdata bfin_i2c_board_info[] = {
-#if defined(CONFIG_BFIN_TWI_LCD) || defined(CONFIG_BFIN_TWI_LCD_MODULE)
-	{
-		I2C_BOARD_INFO("pcf8574_lcd", 0x22),
-	},
-#endif
-#if defined(CONFIG_INPUT_PCF8574) || defined(CONFIG_INPUT_PCF8574_MODULE)
-	{
-		I2C_BOARD_INFO("pcf8574_keypad", 0x27),
-		.irq = IRQ_PF8,
-	},
-#endif
-#if defined(CONFIG_SND_SOC_SSM2602) || defined(CONFIG_SND_SOC_SSM2602_MODULE)
-	{
-		I2C_BOARD_INFO("ssm2602", 0x1b),
-	},
-#endif
+/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */
+
+/* Suporte ao AD73311 */
+
+/* TODO: Criar dependência da configuração realizada no menu de configuração */
+
+static const unsigned ad73311_gpio[] = {
+	GPIO_PG4,
 };
 
-#if defined(CONFIG_SERIAL_BFIN_SPORT) || defined(CONFIG_SERIAL_BFIN_SPORT_MODULE)
-#ifdef CONFIG_SERIAL_BFIN_SPORT0_UART
-static struct resource bfin_sport0_uart_resources[] = {
-	{
-		.start = SPORT0_TCR1,
-		.end = SPORT0_MRCS3+4,
-		.flags = IORESOURCE_MEM,
-	},
-	{
-		.start = IRQ_SPORT0_RX,
-		.end = IRQ_SPORT0_RX+1,
-		.flags = IORESOURCE_IRQ,
-	},
-	{
-		.start = IRQ_SPORT0_ERROR,
-		.end = IRQ_SPORT0_ERROR,
-		.flags = IORESOURCE_IRQ,
-	},
-};
-
-unsigned short bfin_sport0_peripherals[] = {
-	P_SPORT0_TFS, P_SPORT0_DTPRI, P_SPORT0_TSCLK, P_SPORT0_RFS,
-	P_SPORT0_DRPRI, P_SPORT0_RSCLK, P_SPORT0_DRSEC, P_SPORT0_DTSEC, 0
-};
-
-static struct platform_device bfin_sport0_uart_device = {
-	.name = "bfin-sport-uart",
-	.id = 0,
-	.num_resources = ARRAY_SIZE(bfin_sport0_uart_resources),
-	.resource = bfin_sport0_uart_resources,
-	.dev = {
-		.platform_data = &bfin_sport0_peripherals, /* Passed to driver */
-	},
-};
-#endif
-#ifdef CONFIG_SERIAL_BFIN_SPORT1_UART
-static struct resource bfin_sport1_uart_resources[] = {
-	{
-		.start = SPORT1_TCR1,
-		.end = SPORT1_MRCS3+4,
-		.flags = IORESOURCE_MEM,
-	},
-	{
-		.start = IRQ_SPORT1_RX,
-		.end = IRQ_SPORT1_RX+1,
-		.flags = IORESOURCE_IRQ,
-	},
-	{
-		.start = IRQ_SPORT1_ERROR,
-		.end = IRQ_SPORT1_ERROR,
-		.flags = IORESOURCE_IRQ,
-	},
-};
-
-unsigned short bfin_sport1_peripherals[] = {
-	P_SPORT1_TFS, P_SPORT1_DTPRI, P_SPORT1_TSCLK, P_SPORT1_RFS,
-	P_SPORT1_DRPRI, P_SPORT1_RSCLK, P_SPORT1_DRSEC, P_SPORT1_DTSEC, 0
-};
-
-static struct platform_device bfin_sport1_uart_device = {
-	.name = "bfin-sport-uart",
+static struct platform_device bfin_ad73311_machine = {
+	.name = "bfin-snd-ad73311",
 	.id = 1,
-	.num_resources = ARRAY_SIZE(bfin_sport1_uart_resources),
-	.resource = bfin_sport1_uart_resources,
 	.dev = {
-		.platform_data = &bfin_sport1_peripherals, /* Passed to driver */
+		.platform_data = (void *)ad73311_gpio,
 	},
 };
-#endif
-#endif
 
-#if defined(CONFIG_KEYBOARD_GPIO) || defined(CONFIG_KEYBOARD_GPIO_MODULE)
-#include <linux/input.h>
-#include <linux/gpio_keys.h>
-
-static struct gpio_keys_button bfin_gpio_keys_table[] = {
-	{BTN_0, GPIO_PG0, 1, "gpio-keys: BTN0"},
-	{BTN_1, GPIO_PG13, 1, "gpio-keys: BTN1"},
+static struct platform_device bfin_ad73311_codec_device = {
+	.name = "ad73311",
+	.id = -1,
 };
 
-static struct gpio_keys_platform_data bfin_gpio_keys_data = {
-	.buttons        = bfin_gpio_keys_table,
-	.nbuttons       = ARRAY_SIZE(bfin_gpio_keys_table),
+/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */
+
+/* Suporte ao ADP5588 (keypad) */
+
+#if defined(CONFIG_KEYBOARD_ADP5588) || defined(CONFIG_KEYBOARD_ADP5588_MODULE)
+static const unsigned short adp5588_keymap[ADP5588_KEYMAPSIZE] = {
+        [0]      = KEY_1,
+        [1]      = KEY_2,
+        [2]      = KEY_3,
+	[10]     = KEY_4,
+	[11]     = KEY_5,
+        [12]     = KEY_6,
+        [20]	 = KEY_7,
+	[21]	 = KEY_8,
+	[22]	 = KEY_9,
+	[30]	 = KEY_KPASTERISK,
+	[31]	 = KEY_0,
+	[32]	 = KEY_DOT,
 };
 
-static struct platform_device bfin_device_gpiokeys = {
-	.name      = "gpio-keys",
-	.dev = {
-		.platform_data = &bfin_gpio_keys_data,
+static const struct adp5588_gpi_map adp5588_gpimap[] = {
+        /* Navigation Switch (TPA511GLFS) */
+        {
+                .pin    = GPI_PIN_ROW4, /* left */
+		.sw_evt = 1,
+        }, {
+                .pin    = GPI_PIN_ROW5, /* right */
+		.sw_evt = 2,
+        }, {
+                .pin    = GPI_PIN_ROW6, /* down */
+		.sw_evt = 3,
+        }, {
+                .pin    = GPI_PIN_ROW7, /* up */
+		.sw_evt = 4,
+        }, {
+                .pin    = GPI_PIN_COL9, /* select */
+		.sw_evt = 5,
+        }, {
+        /* GP Buttons */
+                .pin    = GPI_PIN_COL6, /* right GP button (designator S502)*/
+		.sw_evt = 6,
+        }, {
+                .pin    = GPI_PIN_COL7, /* left GP button (designator S503)*/
+		.sw_evt = 7,
+        }
+};
+
+static const struct adp5588_gpio_platform_data adp5588_gpomap = {
+        .gpio_start = 50,
+};
+
+static struct adp5588_kpad_platform_data adp5588_kpad_data = {
+	.rows		= 4,
+	.cols		= 3,
+	.keymap		= adp5588_keymap,
+	.keymapsize	= ARRAY_SIZE(adp5588_keymap),
+	.repeat		= 0,
+	.gpimap		= adp5588_gpimap,
+	.gpimapsize	= ARRAY_SIZE(adp5588_gpimap),
+	.gpio_data	= &adp5588_gpomap,
+};
+#endif
+
+/* Declaração de todos os dispositivos associados ao barramento I2C */
+
+static struct i2c_board_info __initdata bfin_i2c_board_info[] = {
+#if defined(CONFIG_KEYBOARD_ADP5588) || defined(CONFIG_KEYBOARD_ADP5588_MODULE)
+	{
+		I2C_BOARD_INFO("adp5588-keys", 0x34),
+		.irq = IRQ_PH6,
+		.platform_data = (void *)&adp5588_kpad_data,
 	},
-};
 #endif
-
-#if defined(CONFIG_SDH_BFIN) || defined(CONFIG_SDH_BFIN_MODULE)
-
-static struct bfin_sd_host bfin_sdh_data = {
-	.dma_chan = CH_RSI,
-	.irq_int0 = IRQ_RSI_INT0,
-	.pin_req = {P_RSI_DATA0, P_RSI_DATA1, P_RSI_DATA2, P_RSI_DATA3, P_RSI_CMD, P_RSI_CLK, 0},
 };
 
-static struct platform_device bf51x_sdh_device = {
-	.name = "bfin-sdh",
-	.id = 0,
-	.dev = {
-		.platform_data = &bfin_sdh_data,
-	},
-};
-#endif
+/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */
 
 static const unsigned int cclk_vlev_datasheet[] =
 {
@@ -747,6 +691,10 @@ static struct platform_device *stamp_devices[] __initdata = {
 
 	&bfin_dpmc,
 
+/* TODO: Criar dependência da configuração realizada no menu de configuração */
+	&bfin_ad73311_machine,
+	&bfin_ad73311_codec_device,
+
 #if defined(CONFIG_RTC_DRV_BFIN) || defined(CONFIG_RTC_DRV_BFIN_MODULE)
 	&rtc_device,
 #endif
@@ -761,7 +709,7 @@ static struct platform_device *stamp_devices[] __initdata = {
 
 #if defined(CONFIG_SPI_BFIN) || defined(CONFIG_SPI_BFIN_MODULE)
 	&bfin_spi0_device,
-	&bfin_spi1_device,
+	/*&bfin_spi1_device,*/
 #endif
 
 #if defined(CONFIG_SERIAL_BFIN) || defined(CONFIG_SERIAL_BFIN_MODULE)
@@ -786,10 +734,13 @@ static struct platform_device *stamp_devices[] __initdata = {
 	&i2c_bfin_twi_device,
 #endif
 
+/*
 #if defined(CONFIG_SND_BF5XX_I2S) || defined(CONFIG_SND_BF5XX_I2S_MODULE)
 	&bfin_i2s,
 #endif
+*/
 
+/*
 #if defined(CONFIG_SERIAL_BFIN_SPORT) || defined(CONFIG_SERIAL_BFIN_SPORT_MODULE)
 #ifdef CONFIG_SERIAL_BFIN_SPORT0_UART
 	&bfin_sport0_uart_device,
@@ -798,13 +749,10 @@ static struct platform_device *stamp_devices[] __initdata = {
 	&bfin_sport1_uart_device,
 #endif
 #endif
+*/
 
 #if defined(CONFIG_KEYBOARD_GPIO) || defined(CONFIG_KEYBOARD_GPIO_MODULE)
 	&bfin_device_gpiokeys,
-#endif
-
-#if defined(CONFIG_SDH_BFIN) || defined(CONFIG_SDH_BFIN_MODULE)
-	&bf51x_sdh_device,
 #endif
 
 #if defined(CONFIG_MTD_PHYSMAP) || defined(CONFIG_MTD_PHYSMAP_MODULE)
@@ -830,6 +778,7 @@ static int __init ezbrd_init(void)
 arch_initcall(ezbrd_init);
 
 static struct platform_device *ezbrd_early_devices[] __initdata = {
+
 #if defined(CONFIG_SERIAL_BFIN_CONSOLE) || defined(CONFIG_EARLY_PRINTK)
 #ifdef CONFIG_SERIAL_BFIN_UART0
 	&bfin_uart0_device,
@@ -839,6 +788,7 @@ static struct platform_device *ezbrd_early_devices[] __initdata = {
 #endif
 #endif
 
+/*
 #if defined(CONFIG_SERIAL_BFIN_SPORT_CONSOLE)
 #ifdef CONFIG_SERIAL_BFIN_SPORT0_UART
 	&bfin_sport0_uart_device,
@@ -847,6 +797,7 @@ static struct platform_device *ezbrd_early_devices[] __initdata = {
 	&bfin_sport1_uart_device,
 #endif
 #endif
+*/
 };
 
 void __init native_machine_early_platform_add_devices(void)
