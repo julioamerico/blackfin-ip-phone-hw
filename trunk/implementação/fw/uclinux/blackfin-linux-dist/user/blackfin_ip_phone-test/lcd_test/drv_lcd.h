@@ -11,6 +11,15 @@
  *	- PIC16F690 serial communication
  */
 
+/*
+ * Optional TODO's:
+ * command - move cursor right one space
+ * command - backspace
+ * command - load custom character
+ * command - shift display to the left
+ * command - shift display to the right
+*/
+
 #ifndef DRV_LCD_H
 #define DRV_LCD_H
 
@@ -30,6 +39,9 @@
 
 #define LCD_MAX_COL				0x14
 #define LCD_MAX_ROW				0x04
+
+#define LCD_TOGGLE_ON				0x01
+#define LCD_TOGGLE_OFF				0x00
 
 #define LCD_CURSOR_POS_R1_C1			0x00
 #define LCD_CURSOR_POS_R2_C1			0x40
@@ -117,19 +129,22 @@ int drv_lcd_init(void)
     return -1;
   }
 
-  drv_lcd_display_on();
+  drv_lcd_display(LCD_TOGGLE_ON);
   drv_lcd_clear_screen();
   drv_lcd_brightness(8);
+  drv_lcd_contrast(28);
 }
 
 void drv_lcd_write(const int row, const int col, const char *data, int len)
+/* row = [1..4]  */
+/* col = [1..20] */
 {
     char wData[1];
 
     if (col < 1 || col > 20)
 	printf ("ERROR: invalid LCD column number\n");        
-    if (len > (LCD_MAX_COL - col))
-	printf ("ERROR: data length exceeds columns left in row\n");
+    if (len > (LCD_MAX_COL - col + 1))
+	printf ("ERROR: data length exceeds columns left in row %d \n", row);
 
     switch (row) {
     case 1:
@@ -168,14 +183,12 @@ void drv_lcd_contrast(int contrast)
   drv_lcd_send_command(LCD_CMD_SET_CONTRAST, wData, 1);
 }
 
-void drv_lcd_display_on(void)
+void drv_lcd_display(int cmd)
 {
-  drv_lcd_send_command(LCD_CMD_DISPLAY_ON, NULL, 0);
-}
-
-void drv_lcd_display_off(void)
-{
-  drv_lcd_send_command(LCD_CMD_DISPLAY_OFF, NULL, 0);
+  if (cmd)
+    drv_lcd_send_command(LCD_CMD_DISPLAY_ON, NULL, 0);
+  else
+    drv_lcd_send_command(LCD_CMD_DISPLAY_OFF, NULL, 0);
 }
 
 void drv_lcd_clear_screen(void)
@@ -183,9 +196,30 @@ void drv_lcd_clear_screen(void)
   drv_lcd_send_command(LCD_CMD_CLEAR_SCREEN, NULL, 0);
 }
 
+void drv_lcd_cursor(int cmd)
+{
+  if (cmd)
+    drv_lcd_send_command(LCD_CMD_UNDERLINE_CURSOR_ON, NULL, 0);
+  else
+    drv_lcd_send_command(LCD_CMD_UNDERLINE_CURSOR_OFF, NULL, 0);
+}
+
+void drv_lcd_cursor_blink(int cmd)
+{
+  if (cmd)
+    drv_lcd_send_command(LCD_CMD_BLINKING_CURSOR_ON, NULL, 0);
+  else
+    drv_lcd_send_command(LCD_CMD_BLINKING_CURSOR_OFF, NULL, 0);
+}
+
 void drv_lcd_display_i2c_address(void)
 {
   drv_lcd_send_command(LCD_CMD_DISPLAY_I2C_ADDRESS, NULL, 0);
+}
+
+void drv_lcd_display_fw_version(void)
+{
+  drv_lcd_send_command(LCD_CMD_DISPLAY_FW_VERSION, NULL, 0);
 }
 
 #endif /* DRV_LCD_H */
