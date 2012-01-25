@@ -51,3 +51,10 @@ typedef struct state_machine {
 	fsm_state_t		state;
 	fsm_func_t		function[EVNT_QTY];
 } fsm_t;
+
+/*
+**	Function prototypes
+*/
+void fsm_init(fsm_t *fsm);
+void fsm_st_idle(fsm_t *fsm, fsm_evnt_t evnt);
+void fsm_st_settings(fsm_t *fsm, fsm_evnt_t evnt);
