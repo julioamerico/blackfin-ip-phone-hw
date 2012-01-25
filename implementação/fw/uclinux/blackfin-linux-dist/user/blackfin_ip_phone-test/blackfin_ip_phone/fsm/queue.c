@@ -13,19 +13,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "fsm.h"
 #include "queue.h"
 
 /*
 **	Returns a queue that has only one node with its pointers properly initialized.
 */
-queue_t queue_create(void)
+void queue_init(queue_t *queue)
 {
-	queue_t queue;
-
-	queue.pqueue_front = NULL;
-	queue.pqueue_back	= NULL;
-
-	return queue;
+	queue->pqueue_front = NULL;
+	queue->pqueue_back	= NULL;
 }
 
 /*
@@ -43,16 +40,15 @@ void queue_insert(queue_t *queue, fsm_event_t new_event)
 	{
     new_node->event = new_event;
     new_node->next_node = NULL;
+		queue->pqueue_back = new_node;
 
 		if (queue_is_empty(queue)) /* queue is empty */
 		{
 			queue->pqueue_front = new_node;
-			queue->pqueue_back	= new_node;
 		}
 		else
 		{
 			queue->pqueue_back->next_node = new_node;
-			queue->pqueue_back = new_node;
 		}
 	}
 }

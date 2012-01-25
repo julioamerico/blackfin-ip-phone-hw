@@ -1,68 +1,32 @@
 /*
- * Project: BLACKFIN IP PHONE
+ *	Project: BLACKFIN IP PHONE
  * 
- * main.c - Main application file.
+ *	main.c - Main application file.
  */
 
-#include <sys/ioctl.h>
-#include <sys/types.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <fcntl.h>
-#include <linux/ioctl.h>
-#include <errno.h>
-#include <unistd.h>
-#include <getopt.h>
-#include <strings.h>
 
-#include "drivers/lcd/linux/i2c-dev.h"
-#include "drivers/lcd/drv_lcd.h"
+#include "fsm/fsm.h"
+#include "fsm/queue.h"
 
 int main (void)
 {
 	fsm_t fsm;
-
+	queue_t event_queue;
+	
 	fsm_init(&fsm);
+	queue_init(&event_queue);
+
   while (1)
 	{
+		fsm_evnt_t	event;
 		
-		VERIFICA BUFFER DE EVENTOS
-		DESLOCAR ÍNDICE DO BUFFER DE EVENTOS
+		queue_insert(&event_queue, FSM_EVNT_RIGHT_BUTTON); /* TESTE! */
 
-		fsm.function[fsm.state](fsm.evnt_buffer[index]);
+		event = queue_read(&event_queue);
+		queue_delete(&event_queue);
 
-
-		usleep(20000);
+		fsm.function[fsm.state](&fsm, event);
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-  char lcd_string[20];
-
-  drv_lcd_open();
-  drv_lcd_init();
-
-  drv_lcd_cursor(LCD_TOGGLE_OFF);
-  drv_lcd_cursor_blink(LCD_TOGGLE_OFF);
-
-  strcpy (lcd_string, "A VIDA EH SURF...");
-  drv_lcd_write(2, 3, lcd_string, strlen(lcd_string));
-  strcpy (lcd_string, "O RESTO EH ONDA!  ");
-  drv_lcd_write(3, 3, lcd_string, strlen(lcd_string));
-
-  drv_lcd_close();
-*/
-

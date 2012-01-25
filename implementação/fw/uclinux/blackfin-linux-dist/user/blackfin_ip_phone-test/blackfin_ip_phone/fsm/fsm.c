@@ -1,54 +1,44 @@
-/*
+				/*
  * Project: BLACKFIN IP PHONE
  * 
  * fsm.c - Finite state machine.
  */
 
-#include <sys/ioctl.h>
-#include <sys/types.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <fcntl.h>
-#include <linux/ioctl.h>
-#include <errno.h>
-#include <unistd.h>
-#include <getopt.h>
-#include <strings.h>
+
+#include "fsm.h"
+#include "queue.h"
 
 void fsm_init(fsm_t *fsm)
 {
+	printf("FILA DE EVENTOS INICIALIZADA COM SUCESSO\n");
 	fsm->state = FSM_ST_IDLE;
 	fsm->function[FSM_ST_IDLE]				= fsm_st_idle;
-	fsm->function[FSM_ST_SPEED_DIAL]  = fsm_speed_dial;
 	fsm->function[FSM_ST_SETTINGS] 		= fsm_st_settings;
+}
 
-	for (int i = 0; i < fsm->event_buffer.buffer_size; i++)
+void fsm_st_idle(fsm_t *fsm, fsm_evnt_t evnt)
+{
+	printf("ESTADO ATUAL = IDLE\n");
+	switch (evnt)
 	{
-		fsm->event_buffer.buffer[i] = FSM_EVNT_NULL;
+		case FSM_EVNT_RIGHT_BUTTON:
+				fsm->state = FSM_ST_IDLE;
+				printf("BOTÃO DIREITO APERTADO!");
+				break;
+		case FSM_EVNT_LEFT_BUTTON:
+				fsm->state = FSM_ST_SETTINGS;
+				printf("BOTÃO ESQUERDO APERTADO!\n");
+				break;
+		default:
+				printf("PROBLEMA!!!\n");
+				break;
 	}
 }
 
-void fsm_write_buffer(fsm_evnt_t event, evnt_buffer_t *event_buffer)
+void fsm_st_settings(fsm_t *fsm, fsm_evnt_t evnt)
 {
-	event_buffer->index = (event_buffer->index++ % buffer_size);
-	event_buffer->buffer[event_buffer->index] = event;
+	printf("ESTADO ATUAL = SETTINGS\n");
+	fsm->state = FSM_ST_IDLE;
 }
-
-void fsm_st_idle(fsm_evnt_t evnt)
-{
-}
-
-void fsm_st_speed_dial(fsm_evnt_t evnt)
-{
-}
-
-void fsm_st_settings(fsm_evnt_t evnt)
-{
-}
-
-
-
-
-
-
-
