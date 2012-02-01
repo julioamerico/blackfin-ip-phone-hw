@@ -20,12 +20,14 @@ int main (void)
   while (1)
 	{
 		fsm_evnt_t	event;
+		fsm_state_t fsm_state;
 		
 		queue_insert(&event_queue, FSM_EVNT_RIGHT_BUTTON); /* TESTE! */
 
 		event = queue_read(&event_queue);
 		queue_delete(&event_queue);
-
-		fsm.function[fsm.state](&fsm, event);
+		
+		fsm_state = fsm.state;
+		fsm.state = fsm.function[fsm_state](fsm_state, event);
 	}
 }
