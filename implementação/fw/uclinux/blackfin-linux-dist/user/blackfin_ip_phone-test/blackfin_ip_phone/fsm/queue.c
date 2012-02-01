@@ -33,7 +33,7 @@ void queue_insert(queue_t *queue, fsm_evnt_t new_event)
 {
 	queue_node_t	*new_node;
 
-	if (new_node = malloc(sizeof(queue_node_t)) == NULL)
+	if ((new_node = (queue_node_t*)malloc(sizeof(queue_node_t))) == NULL)
 	{
 		printf("ERROR (queue.c) - problems with memory allocation\n");
 	}
@@ -59,7 +59,7 @@ void queue_insert(queue_t *queue, fsm_evnt_t new_event)
 */
 void queue_delete(queue_t *queue)
 {
-	queue_t *pointer;
+	queue_node_t *pointer;
 
 	if (!queue_is_empty(queue))
 	{
@@ -70,7 +70,7 @@ void queue_delete(queue_t *queue)
 		}
 		else
 		{
-			pointer = queue->pqueu_front->next_node;
+			pointer = queue->pqueue_front->next_node;
 			free(queue->pqueue_front);
 			queue->pqueue_front = pointer;
 		}
@@ -95,7 +95,7 @@ fsm_evnt_t queue_read(queue_t *queue)
 /*
 **	Returns TRUE if the queue is empty, else FALSE.
 */
-int queue_is_empty(queue_t queue)
+int queue_is_empty(queue_t *queue)
 {
-	return (queue.pqueue_front == NULL);
+	return (queue->pqueue_front == NULL);
 }
