@@ -4,6 +4,9 @@
  *	queue.h - Event queue.
  */
 
+#ifndef QUEUE_H
+#define QUEUE_H
+
 #include "fsm.h"
 
 /*
@@ -30,4 +33,6 @@ void queue_init(queue_t *queue);
 void queue_insert(queue_t *queue, fsm_evnt_t new_event);
 void queue_delete(queue_t *queue);
 fsm_evnt_t queue_read(queue_t *queue);
-int queue_is_empty(queue_t queue);
+int queue_is_empty(queue_t *queue);
+
+#endif

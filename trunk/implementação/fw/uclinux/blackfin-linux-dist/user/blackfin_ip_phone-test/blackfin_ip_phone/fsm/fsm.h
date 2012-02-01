@@ -4,6 +4,9 @@
  *	fsm.h - Finite state machine.
  */
 
+#ifndef FSM_H
+#define FSM_H
+
 typedef enum {
 	FSM_ST_IDLE,
 	FSM_ST_SETTINGS,  
@@ -58,3 +61,5 @@ typedef struct state_machine {
 void fsm_init(fsm_t *fsm);
 fsm_state_t fsm_st_idle(fsm_state_t st, fsm_evnt_t evnt);
 fsm_state_t fsm_st_settings(fsm_state_t st, fsm_evnt_t evnt);
+
+#endif
