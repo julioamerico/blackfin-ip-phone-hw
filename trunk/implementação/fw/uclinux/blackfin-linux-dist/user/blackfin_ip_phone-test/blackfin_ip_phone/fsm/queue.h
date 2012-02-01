@@ -1,7 +1,7 @@
 /*
- * Project: BLACKFIN IP PHONE
+ *	Project: BLACKFIN IP PHONE
  * 
- * queue.h - Event queue.
+ *	queue.h - Event queue.
  */
 
 #include "fsm.h"
@@ -10,7 +10,7 @@
 **  Structure to hold event and pointer for the next element on the queue.
 */
 typedef struct queue_node {
-  fsm_event_t event;
+  fsm_evnt_t event;
   struct queue_node *next_node;
 } queue_node_t;
 
@@ -27,7 +27,7 @@ typedef struct queue_pointers {
 **	Function prototypes
 */
 void queue_init(queue_t *queue);
-void queue_insert(queue_t *queue, fsm_event_t new_event);
+void queue_insert(queue_t *queue, fsm_evnt_t new_event);
 void queue_delete(queue_t *queue);
 fsm_evnt_t queue_read(queue_t *queue);
 int queue_is_empty(queue_t queue);

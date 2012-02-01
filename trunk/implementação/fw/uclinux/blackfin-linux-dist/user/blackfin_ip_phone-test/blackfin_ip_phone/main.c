@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "fsm/fsm.h"
 #include "fsm/queue.h"
 
 int main (void)

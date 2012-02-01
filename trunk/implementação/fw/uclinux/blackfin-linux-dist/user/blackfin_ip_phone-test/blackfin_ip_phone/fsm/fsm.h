@@ -1,7 +1,7 @@
 /*
- * Project: BLACKFIN IP PHONE
+ *	Project: BLACKFIN IP PHONE
  * 
- * fsm.h - Finite state machine.
+ *	fsm.h - Finite state machine.
  */
 
 typedef enum {

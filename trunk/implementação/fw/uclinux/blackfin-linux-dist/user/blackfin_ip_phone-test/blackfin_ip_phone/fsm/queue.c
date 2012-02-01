@@ -29,7 +29,7 @@ void queue_init(queue_t *queue)
 /*
 **	Adds a new event to back of the queue.
 */
-void queue_insert(queue_t *queue, fsm_event_t new_event)
+void queue_insert(queue_t *queue, fsm_evnt_t new_event)
 {
 	queue_node_t	*new_node;
 
