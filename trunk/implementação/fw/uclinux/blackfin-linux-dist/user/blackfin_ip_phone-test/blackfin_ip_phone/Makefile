@@ -1,22 +1,18 @@
 EXEC = main
 OBJS = main.o
-
-CC = bfin-uclinux-gcc
+SUBDIR = ./fsm
 
 all: $(EXEC)
 
-$(EXEC): $(OBJS) dep_files
-	$(CC) $(LDFLAGS) -o $@ $(OBJS) fsm/queue.o fsm/fsm.o $(LDLIBS$(LDLIBS_$@))
+$(EXEC): $(OBJS) make_fsm
+	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(SUBDIR)/queue.o $(SUBDIR)/fsm.o $(LDLIBS$(LDLIBS_$@))
 
 make_fsm:
-	(cd /fsm;$(MAKE))
+	(cd $(SUBDIR);$(MAKE))
 
 romfs:
 	$(ROMFSINST) /bin/$(EXEC)
 
-dep_files:
-	true
-
 clean:
 	-rm -f $(EXEC) *.elf *.gdb *.o
- 
+	cd $(SUBDIR); $(MAKE) clean;
