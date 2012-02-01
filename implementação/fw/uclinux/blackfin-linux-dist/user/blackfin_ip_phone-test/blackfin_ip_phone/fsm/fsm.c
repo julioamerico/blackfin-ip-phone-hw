@@ -18,18 +18,18 @@ void fsm_init(fsm_t *fsm)
 	fsm->function[FSM_ST_SETTINGS] 		= fsm_st_settings;
 }
 
-void fsm_st_idle(fsm_t *fsm, fsm_evnt_t evnt)
+fsm_state_t fsm_st_idle(fsm_state_t st, fsm_evnt_t evnt)
 {
 	printf("ESTADO ATUAL = IDLE\n");
 	switch (evnt)
 	{
 		case FSM_EVNT_RIGHT_BUTTON:
-				fsm->state = FSM_ST_IDLE;
 				printf("BOTÃO DIREITO APERTADO!");
+				return (FSM_ST_IDLE);
 				break;
 		case FSM_EVNT_LEFT_BUTTON:
-				fsm->state = FSM_ST_SETTINGS;
 				printf("BOTÃO ESQUERDO APERTADO!\n");
+				return (FSM_ST_SETTINGS);
 				break;
 		default:
 				printf("PROBLEMA!!!\n");
@@ -37,8 +37,8 @@ void fsm_st_idle(fsm_t *fsm, fsm_evnt_t evnt)
 	}
 }
 
-void fsm_st_settings(fsm_t *fsm, fsm_evnt_t evnt)
+fsm_state_t fsm_st_settings(fsm_state_t st, fsm_evnt_t evnt)
 {
 	printf("ESTADO ATUAL = SETTINGS\n");
-	fsm->state = FSM_ST_IDLE;
+	return (FSM_ST_IDLE);
 }
