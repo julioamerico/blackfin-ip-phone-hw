@@ -48,7 +48,7 @@ typedef enum {
 
 #define EVNT_QTY	FSM_EVNT_NULL
 
-typedef fsm_state_t (*fsm_func_t)(fsm_state_t st, fsm_evnt_t evnt);
+typedef fsm_state_t (*fsm_func_t)(fsm_evnt_t evnt);
 
 typedef struct state_machine {
 	fsm_state_t		state;
@@ -59,7 +59,10 @@ typedef struct state_machine {
 **	Function prototypes
 */
 void fsm_init(fsm_t *fsm);
-fsm_state_t fsm_st_idle(fsm_state_t st, fsm_evnt_t evnt);
-fsm_state_t fsm_st_settings(fsm_state_t st, fsm_evnt_t evnt);
+fsm_state_t fsm_st_idle(fsm_evnt_t evnt);
+fsm_state_t fsm_st_settings(fsm_evnt_t evnt);
+fsm_state_t fsm_st_speed_dial(fsm_evnt_t evnt);
+fsm_state_t fsm_st_contact_list(fsm_evnt_t evnt);
+fsm_state_t fsm_st_lost_calls(fsm_evnt_t evnt);
 
 #endif
