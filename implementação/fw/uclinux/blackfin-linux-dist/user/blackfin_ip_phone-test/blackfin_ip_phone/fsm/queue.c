@@ -41,15 +41,16 @@ void queue_insert(queue_t *queue, fsm_evnt_t new_event)
 	{
     new_node->event = new_event;
     new_node->next_node = NULL;
-		queue->pqueue_back = new_node;
 
-		if (queue_is_empty(queue)) /* queue is empty */
+		if (queue_is_empty(queue))
 		{
 			queue->pqueue_front = new_node;
+			queue->pqueue_back = new_node;
 		}
 		else
 		{
 			queue->pqueue_back->next_node = new_node;
+			queue->pqueue_back = new_node;
 		}
 	}
 }
