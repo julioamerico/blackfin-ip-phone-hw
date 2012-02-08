@@ -6,32 +6,27 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-#include "fsm/queue.h"
+#include "drivers/lcd/drv_lcd.h"
+#include "drivers/lcd/lcd.h"
 
 int main (void)
 {
-	fsm_t fsm;
-	queue_t event_queue;
-	
-	fsm_init(&fsm);
-	queue_init(&event_queue);	
+	printf("O programa está sendo executado!!\n");
 
-	queue_insert(&event_queue, FSM_EVNT_KEYPAD); /* TESTE! */
-	queue_insert(&event_queue, FSM_EVNT_JOYSTICK); /* TESTE! */
-	queue_insert(&event_queue, FSM_EVNT_RIGHT_BUTTON); /* TESTE! */
-	queue_insert(&event_queue, FSM_EVNT_LEFT_BUTTON); /* TESTE! */
-	queue_insert(&event_queue, FSM_EVNT_SD_DETECT); /* TESTE! */
+  lcd_init();
 
-  while (1)
-	{
-		fsm_evnt_t	fsm_event;
-		fsm_state_t fsm_state;
+	drv_lcd_clear_screen();
 
-		fsm_event = queue_read(&event_queue);
-		queue_delete(&event_queue);
-		
-		fsm_state = fsm.state;
-		fsm.state = fsm.function[fsm_state](fsm_event);
-	}
+	lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, 1, "XUXA M.");
+	lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED, 1, "1002");
+  lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 2, "17:05");
+	lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 3, "SUN, 10/05/2012");
+	lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, 4, "MENU");
+	lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED, 4, "CONTACTS");
+
+  drv_lcd_close();
+
+	return 0;
 }

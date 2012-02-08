@@ -4,31 +4,38 @@
  *	fsm.h - Finite state machine.
  */
 
-#ifndef FSM_H
-#define FSM_H
+#ifndef BLACKFIN_IP_PHONE_FSM_H
+#define BLACKFIN_IP_PHONE_FSM_H
 
 typedef enum {
 	FSM_ST_IDLE,
-	FSM_ST_SETTINGS,  
-	FSM_ST_SPEED_DIAL,
-  FSM_ST_CONTACT_LIST,
-	FSM_ST_LOST_CALLS,
-  
+
 	FSM_ST_INCOMING_CALL,
-	FSM_ST_CALL_IN_PROGRESS,
-	
-	FSM_ST_SETTINGS_HISTORY,
-	FSM_ST_SETTINGS_HISTORY_INCOMING,
-	FSM_ST_SETTINGS_HISTORY_OUTCOMING,
-	FSM_ST_SETTINGS_HISTORY_LOST,
-  
-	FSM_ST_SETTINGS_CONFIG,
-	FSM_ST_SETTINGS_CONFIG_ACCOUNT,
-  FSM_ST_SETTINGS_CONFIG_TIME,
-	FSM_ST_SETTINGS_CONFIG_NETWORK,
-	FSM_ST_SETTINGS_CONFIG_SPEED_DIAL,
-	FSM_ST_SETTINGS_CONFIG_AUDIO,
-	
+	FSM_ST_DIALING,
+	FSM_ST_CALL_STARTED,
+
+	FSM_ST_FILLING_FIELD,
+	FSM_ST_DELETE_CONTACT,	
+
+	FSM_ST_MENU,
+	FSM_ST_MENU_CONTACTS,
+	FSM_ST_MENU_CALL_LOGS,
+	FSM_ST_MENU_SETTINGS,
+
+	FSM_ST_CONTACTS_LIST,
+	FSM_ST_CONTACTS_EDIT,
+	FSM_ST_CONTACT_FIELDS,
+
+	FSM_ST_CALL_LOGS_MISSED,
+	FSM_ST_CALL_LOGS_RECEIVED,
+	FSM_ST_CALL_LOGS_OUTGOING,
+
+	FSM_ST_RECENT_LOST_CALLS,
+
+	FSM_ST_SETTINGS_ACCOUNT,
+	FSM_ST_SETTINGS_TIME,
+	FSM_ST_SETTINGS_NETWORK,
+	FSM_ST_SETTINGS_AUDIO,
 	FSM_ST_SETTINGS_INFO,
 	
 	FSM_ST_NULL
@@ -36,7 +43,11 @@ typedef enum {
 
 typedef enum {
 	FSM_EVNT_KEYPAD,
-  FSM_EVNT_JOYSTICK,
+  FSM_EVNT_JOYSTICK_UP,
+	FSM_EVNT_JOYSTICK_DOWN,
+	FSM_EVNT_JOYSTICK_RIGHT,
+	FSM_EVNT_JOYSTICK_LEFT,
+	FSM_EVNT_JOYSTICK_PUSH,
 	FSM_EVNT_RIGHT_BUTTON,
 	FSM_EVNT_LEFT_BUTTON,
 	FSM_EVNT_SD_DETECT,
@@ -60,9 +71,9 @@ typedef struct state_machine {
 */
 void fsm_init(fsm_t *fsm);
 fsm_state_t fsm_st_idle(fsm_evnt_t evnt);
-fsm_state_t fsm_st_settings(fsm_evnt_t evnt);
-fsm_state_t fsm_st_speed_dial(fsm_evnt_t evnt);
-fsm_state_t fsm_st_contact_list(fsm_evnt_t evnt);
-fsm_state_t fsm_st_lost_calls(fsm_evnt_t evnt);
+fsm_state_t fsm_st_menu(fsm_evnt_t evnt);
+fsm_state_t fsm_st_menu_contacts(fsm_evnt_t evnt);
+fsm_state_t fsm_st_menu_call_logs(fsm_evnt_t evnt);
+fsm_state_t fsm_st_menu_settings(fsm_evnt_t evnt);
 
-#endif
+#endif /* BLACKFIN_IP_PHONE_FSM_H */
