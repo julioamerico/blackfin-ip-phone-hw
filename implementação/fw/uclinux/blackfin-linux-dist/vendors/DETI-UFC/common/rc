@@ -109,7 +109,7 @@ cat /etc/motd
 #
 echo 22 > /sys/class/gpio/export
 
-cont = 0
+cont=0
 if [ $cont=100 ] ; then
 	cont=$(($cont+1));
 fi
