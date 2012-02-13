@@ -3,6 +3,12 @@
 
 menu "Blackfin IP Phone test programs"
 
+config USER_BLACKFIN_IP_PHONE_MAIN_APP
+        bool "Blackfin IP Phone Main Application"
+        help
+	        This is the Blackfin IP Phone Main Application. The
+	        blackfin_ip_phone-test directory is being used only during
+	        development.
 config USER_BLACKFIN_IP_PHONE_AD73311_TEST
         bool "AD73311 test program"
         help
