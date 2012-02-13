@@ -75,6 +75,9 @@ config DEFAULTS_CYBERGUARD
 config DEFAULTS_CYTEK
   bool "Cytek"
 
+config DEFAULTS_DETI_UFC
+  bool "DETI-UFC"
+
 config DEFAULTS_EMAC
   bool "EMAC"
 
@@ -345,6 +348,9 @@ config DEFAULTS_ANALOGDEVICES_BF548_EZKIT
 
 config DEFAULTS_ANALOGDEVICES_BF561_EZKIT
 	bool "BF561-EZKIT"
+
+config DEFAULTS_ANALOGDEVICES_BF561_EZKIT_SMP
+	bool "BF561-EZKIT-SMP"
 
 config DEFAULTS_ANALOGDEVICES_PNAV_10
 	bool "PNAV-10"
@@ -642,6 +648,18 @@ choice
 
 config DEFAULTS_CYTEK_NETMP3
 	bool "NETmp3"
+
+endchoice
+
+##############################################################
+
+choice
+	prompt "DETI-UFC Products"
+	depends on DEFAULTS_DETI_UFC
+	default DEFAULTS_DETI_UFC_BF518_IPPHONE
+
+config DEFAULTS_DETI_UFC_BF518_IPPHONE
+	bool "BF518-IPPHONE"
 
 endchoice
 
@@ -1398,6 +1416,9 @@ choice
 
 config DEFAULTS_SSV_DNP5280
 	bool "DNP5280"
+
+config DEFAULTS_SSV_DNP5370
+	bool "DNP5370"
 
 endchoice
 
