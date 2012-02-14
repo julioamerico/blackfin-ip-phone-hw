@@ -391,17 +391,17 @@ static struct platform_device i2c_bfin_twi_device = {
 
 #if defined(CONFIG_KEYBOARD_ADP5588) || defined(CONFIG_KEYBOARD_ADP5588_MODULE)
 static const unsigned short adp5588_keymap[ADP5588_KEYMAPSIZE] = {
-        [0]      = KEY_1,
-        [1]      = KEY_2,
-        [2]      = KEY_3,
-	[10]     = KEY_4,
-	[11]     = KEY_5,
-        [12]     = KEY_6,
-        [20]	 = KEY_7,
-	[21]	 = KEY_8,
-	[22]	 = KEY_9,
+        [0]      = KEY_F1,
+        [1]      = KEY_F2,
+        [2]      = KEY_F3,
+	[10]     = KEY_F4,
+	[11]     = KEY_F5,
+        [12]     = KEY_F6,
+        [20]	 = KEY_F7,
+	[21]	 = KEY_F8,
+	[22]	 = KEY_F9,
 	[30]	 = KEY_KPASTERISK,
-	[31]	 = KEY_0,
+	[31]	 = KEY_F10,
 	[32]	 = KEY_DOT,
 };
 
@@ -409,26 +409,26 @@ static const struct adp5588_gpi_map adp5588_gpimap[] = {
         /* Navigation Switch (TPA511GLFS) */
         {
                 .pin    = GPI_PIN_ROW4, /* left */
-		.sw_evt = 1,
+		.sw_evt = KEY_1,
         }, {
                 .pin    = GPI_PIN_ROW5, /* right */
-		.sw_evt = 2,
+		.sw_evt = KEY_2,
         }, {
                 .pin    = GPI_PIN_ROW6, /* down */
-		.sw_evt = 3,
+		.sw_evt = KEY_3,
         }, {
                 .pin    = GPI_PIN_ROW7, /* up */
-		.sw_evt = 4,
+		.sw_evt = KEY_4,
         }, {
                 .pin    = GPI_PIN_COL9, /* select */
-		.sw_evt = 5,
+		.sw_evt = KEY_5,
         }, {
         /* GP Buttons */
                 .pin    = GPI_PIN_COL6, /* right GP button (designator S502)*/
-		.sw_evt = 6,
+		.sw_evt = KEY_6,
         }, {
                 .pin    = GPI_PIN_COL7, /* left GP button (designator S503)*/
-		.sw_evt = 7,
+		.sw_evt = KEY_7,
         }
 };
 
