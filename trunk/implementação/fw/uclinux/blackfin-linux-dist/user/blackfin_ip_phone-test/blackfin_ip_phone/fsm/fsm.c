@@ -22,10 +22,34 @@ void fsm_init(fsm_t *fsm)
 
 fsm_state_t fsm_st_idle(fsm_evnt_t evnt)
 {
+	switch (evnt)
+	{
+		case FSM_EVNT_GPBUTTON_RIGHT:
+			return FSM_ST_IDLE;
+		case FSM_EVNT_GPBUTTON_LEFT:
+			printf("estado atual = MENU\n");
+			return FSM_ST_MENU;
+		case FSM_EVNT_NULL:
+			return FSM_ST_IDLE;
+		default:
+			return FSM_ST_IDLE;
+	}
 }
 
 fsm_state_t fsm_st_menu(fsm_evnt_t evnt)
 {
+  switch (evnt)
+  {
+    case FSM_EVNT_GPBUTTON_RIGHT:
+			printf("estado atual = IDLE\n");
+			return FSM_ST_IDLE;
+    case FSM_EVNT_GPBUTTON_LEFT:
+			return FSM_ST_IDLE;
+		case FSM_EVNT_NULL:
+			return FSM_ST_IDLE;
+    default:
+			return FSM_ST_IDLE;
+  }
 }
 
 fsm_state_t fsm_st_menu_contacts(fsm_evnt_t evnt)
