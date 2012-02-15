@@ -333,15 +333,15 @@ char **names[EV_MAX + 1] = {
 #define LONG(x) ((x)/BITS_PER_LONG)
 #define test_bit(bit, array)	((array[LONG(bit)] >> OFF(bit)) & 1)
 
+#define PATH_EVNT "/dev/input/event0"
+
 int main (int argc, char **argv)
 {
-	int fd, rd, i, j, k;
+	int fd, rd, i;
 	struct input_event ev[64];
 	int version;
 	unsigned short id[4];
-	unsigned long bit[EV_MAX][NBITS(KEY_MAX)];
 	char name[256] = "Unknown";
-	int abs[6] = {0};
 
 	if (argc < 2) {
 		printf("Usage: evtest /dev/input/eventX\n");
@@ -349,7 +349,9 @@ int main (int argc, char **argv)
 		return 1;
 	}
 
-	if ((fd = open(argv[argc - 1], O_RDONLY)) < 0) {
+/*	if ((fd = open(argv[argc - 1], O_NONBLOCK | O_RDONLY)) < 0) {*/
+	if ((fd = open(PATH_EVNT, O_NONBLOCK | O_RDONLY)) < 0)
+	{
 		perror("evtest");
 		return 1;
 	}
@@ -369,59 +371,29 @@ int main (int argc, char **argv)
 	ioctl(fd, EVIOCGNAME(sizeof(name)), name);
 	printf("Input device name: \"%s\"\n", name);
 
-	memset(bit, 0, sizeof(bit));
-	ioctl(fd, EVIOCGBIT(0, EV_MAX), bit[0]);
-	printf("Supported events:\n");
-
-	for (i = 0; i < EV_MAX; i++)
-		if (test_bit(i, bit[0])) {
-			printf("  Event type %d (%s)\n", i, events[i] ? events[i] : "?");
-			if (!i) continue;
-			ioctl(fd, EVIOCGBIT(i, KEY_MAX), bit[i]);
-			for (j = 0; j < KEY_MAX; j++) 
-				if (test_bit(j, bit[i])) {
-					printf("    Event code %d (%s)\n", j, names[i] ? (names[i][j] ? names[i][j] : "?") : "?");
-					if (i == EV_ABS) {
-						ioctl(fd, EVIOCGABS(j), abs);
-						for (k = 0; k < 6; k++)
-							if ((k < 3) || abs[k])
-								printf("      %s %6d\n", absval[k], abs[k]);
-					}
-				}
-		}
-		
-
 	printf("Testing ... (interrupt to exit)\n");
 
-	while (1) {
+	while (1)
+	{
+	 	printf("começou a dormir\n");
+		
+		sleep(10);
+		
+		printf("terminou de dormir\n");
+
 		rd = read(fd, ev, sizeof(struct input_event) * 64);
-
-		if (rd < (int) sizeof(struct input_event)) {
-			printf("yyy\n");
-			perror("\nevtest: error reading");
-			return 1;
+	
+		if (rd != -1)
+		{
+			for (i = 0; i < rd / sizeof(struct input_event); i++)
+			{
+				if (ev[i].type != EV_SYN)
+				{
+					printf("Valor/borda: %s/%d\n",
+						names[ev[i].type] ? (names[ev[i].type][ev[i].code] ? names[ev[i].type][ev[i].code] : "?") : "?",
+						ev[i].value);
+				}
+			}
 		}
-
-		for (i = 0; i < rd / sizeof(struct input_event); i++)
-
-			if (ev[i].type == EV_SYN) {
-				printf("Event: time %ld.%06ld, -------------- %s ------------\n",
-					ev[i].time.tv_sec, ev[i].time.tv_usec, ev[i].code ? "Config Sync" : "Report Sync" );
-			} else if (ev[i].type == EV_MSC && (ev[i].code == MSC_RAW || ev[i].code == MSC_SCAN)) {
-				printf("Event: time %ld.%06ld, type %d (%s), code %d (%s), value %02x\n",
-					ev[i].time.tv_sec, ev[i].time.tv_usec, ev[i].type,
-					events[ev[i].type] ? events[ev[i].type] : "?",
-					ev[i].code,
-					names[ev[i].type] ? (names[ev[i].type][ev[i].code] ? names[ev[i].type][ev[i].code] : "?") : "?",
-					ev[i].value);
-			} else {
-				printf("Event: time %ld.%06ld, type %d (%s), code %d (%s), value %d\n",
-					ev[i].time.tv_sec, ev[i].time.tv_usec, ev[i].type,
-					events[ev[i].type] ? events[ev[i].type] : "?",
-					ev[i].code,
-					names[ev[i].type] ? (names[ev[i].type][ev[i].code] ? names[ev[i].type][ev[i].code] : "?") : "?",
-					ev[i].value);
-			}	
-
 	}
 }
