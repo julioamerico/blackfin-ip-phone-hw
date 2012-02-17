@@ -87,5 +87,6 @@ fsm_state_t fsm_st_menu(fsm_evnt_t evnt);
 fsm_state_t fsm_st_menu_contacts(fsm_evnt_t evnt);
 fsm_state_t fsm_st_menu_call_logs(fsm_evnt_t evnt);
 fsm_state_t fsm_st_menu_settings(fsm_evnt_t evnt);
+void fsm_error(fsm_state_t state);
 
 #endif /* BLACKFIN_IP_PHONE_FSM_H */
