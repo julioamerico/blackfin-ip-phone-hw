@@ -83,7 +83,7 @@ void queue_delete(queue_t *queue)
 */
 fsm_evnt_t queue_read(queue_t *queue)
 {
-	fsm_evnt_t ev = FSM_EVNT_NULL;
+	fsm_evnt_t ev = FSM_EVNT_QUEUE_IS_EMPTY;
 
 	if (!queue_is_empty(queue))
 	{

@@ -24,8 +24,6 @@ void expander_init(void)
 		printf("ERROR: can't find /dev/input/event0\n");
 	}
 }
-/*
-void expander_close(void)*/
 
 int expander_read(queue_t *queue)
 {
