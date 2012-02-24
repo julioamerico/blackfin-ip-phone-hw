@@ -65,7 +65,8 @@ typedef enum {
 	FSM_EVNT_GPBUTTON_LEFT,
 
 	FSM_EVNT_LINPHONE,
-	
+
+	FSM_EVNT_QUEUE_IS_EMPTY,	
 	FSM_EVNT_NULL
 } fsm_evnt_t;
 

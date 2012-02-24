@@ -22,19 +22,17 @@ int main (void)
 	queue_init(&event_queue);
 
 	while(1)
-	{
-		int ev_qty;
-		
+	{		
     fsm_evnt_t		fsm_event;
 	  fsm_state_t		fsm_state;
 
 		usleep(20000);
 
-		ev_qty = expander_read(&event_queue);
-		
-		if (ev_qty)
+		expander_read(&event_queue);
+		fsm_event = queue_read(&event_queue);
+
+		if (fsm_event != FSM_EVNT_QUEUE_IS_EMPTY)
 		{
-	   	fsm_event = queue_read(&event_queue);
   	 	queue_delete(&event_queue);
 
  			fsm_state = fsm.state;
