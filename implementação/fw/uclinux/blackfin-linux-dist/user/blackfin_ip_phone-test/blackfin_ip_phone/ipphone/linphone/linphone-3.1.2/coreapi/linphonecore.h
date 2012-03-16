@@ -186,7 +186,8 @@ typedef struct _LinphoneCall
 	struct _sdp_context *sdpctx;
 	time_t start_time;
 	LCState	state;
-	bool_t auth_pending;	
+	bool_t auth_pending;
+	time_t running_time;	
 } LinphoneCall;
 
 LinphoneCall * linphone_call_new_outgoing(struct _LinphoneCore *lc, const osip_from_t *from, const osip_to_t *to);
@@ -538,6 +539,10 @@ typedef struct _LinphoneCore
 	int rsvp_enable;
 	int rpc_enable;
 #endif
+	int max_friend_list;
+	MSList *m_calls;
+	MSList *r_calls;
+	MSList *d_numbers;
 } LinphoneCore;
 
 
