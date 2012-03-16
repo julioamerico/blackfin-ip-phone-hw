@@ -78,6 +78,7 @@ int lc_callback_obj_invoke(LCCallbackObj *obj, LinphoneCore *lc){
 static void  linphone_call_init_common(LinphoneCall *call, char *from, char *to){
 	call->state=LCStateInit;
 	call->start_time=time(NULL);
+	call->running_time = 0;
 	call->log=linphone_call_log_new(call, from, to);
 	linphone_core_notify_all_friends(call->core,LINPHONE_STATUS_ONTHEPHONE);
 	if (linphone_core_get_firewall_policy(call->core)==LINPHONE_POLICY_USE_STUN) 
@@ -181,8 +182,9 @@ LinphoneCallLog * linphone_call_log_new(LinphoneCall *call, char *from, char *to
 	return cl;
 }
 void linphone_call_log_completed(LinphoneCallLog *calllog, LinphoneCall *call){
+	MSList **tmp;
 	LinphoneCore *lc=call->core;
-	calllog->duration=time(NULL)-call->start_time;
+	calllog->duration=call->running_time;
 	switch(call->state){
 		case LCStateInit:
 			calllog->status=LinphoneCallAborted;
@@ -204,16 +206,33 @@ void linphone_call_log_completed(LinphoneCallLog *calllog, LinphoneCall *call){
 			calllog->status=LinphoneCallSuccess;
 			break;
 	}
-	lc->call_logs=ms_list_append(lc->call_logs,(void *)calllog);
-	if (ms_list_size(lc->call_logs)>lc->max_call_logs){
-		MSList *elem;
-		elem=lc->call_logs;
-		linphone_call_log_destroy((LinphoneCallLog*)elem->data);
-		lc->call_logs=ms_list_remove_link(lc->call_logs,elem);
+	
+	switch(calllog->dir){
+		case LinphoneCallIncoming:
+			if(calllog->status == LinphoneCallMissed)
+				tmp = &(lc->m_calls);
+			else 
+			if(calllog->status == LinphoneCallSuccess)
+				tmp = &(lc->r_calls);
+			break;
+		case LinphoneCallOutgoing:
+			tmp = &(lc->d_numbers);
+			break;
 	}
-	if (lc->vtable.call_log_updated!=NULL){
+	if (!(ms_list_size(*tmp) < lc->max_call_logs)){
+		MSList *elem = *tmp;
+		while(ms_list_next(elem) != NULL){
+			elem = ms_list_next(elem);
+		}
+		linphone_call_log_destroy((LinphoneCallLog*)elem->data);
+		*tmp=ms_list_remove_link(*tmp,elem);
+	}
+	*tmp = ms_list_prepend(*tmp,(void *)calllog);
+	lc->data->type_call_log = *tmp;
+	if (lc->vtable.call_log_updated!=NULL){		
 		lc->vtable.call_log_updated(lc,calllog);
 	}
+
 }
 
 char * linphone_call_log_to_str(LinphoneCallLog *cl){
@@ -700,7 +719,8 @@ void linphone_core_init (LinphoneCore * lc, const LinphoneCoreVTable *vtable, co
 	lc->prev_mode=LINPHONE_STATUS_ONLINE;
 	lc->presence_mode=LINPHONE_STATUS_ONLINE;
 	lc->max_call_logs=15;
-	ui_config_read(lc);
+	lc->max_friend_list=15;
+	//ui_config_read(lc);
 	ms_mutex_init(&lc->lock,NULL);
 	lc->vtable.display_status(lc,_("Ready"));
         gstate_new_state(lc, GSTATE_POWER_ON, NULL);
@@ -1041,6 +1061,7 @@ void linphone_core_iterate(LinphoneCore *lc)
 			}
 		}else if (call->state==LCStateAVRunning){
 			if (one_second_elapsed){
+				call->running_time++;
 				RtpSession *as=NULL,*vs=NULL;
 				lc->prevtime=curtime;
 				if (lc->audiostream!=NULL)
