@@ -14,7 +14,7 @@
 int main (void)
 {
 	fsm_t fsm;
-	queue_t	event_queue;
+	main_queue_t	event_queue;
 
 	lcd_init();
 	expander_init();

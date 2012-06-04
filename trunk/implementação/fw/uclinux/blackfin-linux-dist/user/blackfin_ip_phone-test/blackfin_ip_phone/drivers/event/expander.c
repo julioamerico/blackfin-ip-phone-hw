@@ -25,7 +25,7 @@ void expander_init(void)
 	}
 }
 
-int expander_read(queue_t *queue)
+int expander_read(main_queue_t *queue)
 {
 	struct input_event ev[64];
 	int rd, index;

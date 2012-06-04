@@ -5,6 +5,6 @@
 #include "../../fsm/queue.h"
 
 void expander_init(void);
-int expander_read(queue_t *queue);
+int expander_read(main_queue_t *queue);
 
 #endif

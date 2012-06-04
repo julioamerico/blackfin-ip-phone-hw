@@ -20,7 +20,7 @@
 /*
 **	Returns a queue that has only one node with its pointers properly initialized.
 */
-void queue_init(queue_t *queue)
+void queue_init(main_queue_t *queue)
 {
 	queue->pqueue_front = NULL;
 	queue->pqueue_back	= NULL;
@@ -29,7 +29,7 @@ void queue_init(queue_t *queue)
 /*
 **	Adds a new event to back of the queue.
 */
-void queue_insert(queue_t *queue, fsm_evnt_t new_event)
+void queue_insert(main_queue_t *queue, fsm_evnt_t new_event)
 {
 	queue_node_t	*new_node;
 
@@ -58,7 +58,7 @@ void queue_insert(queue_t *queue, fsm_evnt_t new_event)
 /*
 **	Removes an event from front of the queue, discarding it.
 */
-void queue_delete(queue_t *queue)
+void queue_delete(main_queue_t *queue)
 {
 	queue_node_t *pointer;
 
@@ -81,7 +81,7 @@ void queue_delete(queue_t *queue)
 /*
 **	Returns an event that is in front of the queue without changing the queue.
 */
-fsm_evnt_t queue_read(queue_t *queue)
+fsm_evnt_t queue_read(main_queue_t *queue)
 {
 	fsm_evnt_t ev = FSM_EVNT_QUEUE_IS_EMPTY;
 
@@ -96,7 +96,7 @@ fsm_evnt_t queue_read(queue_t *queue)
 /*
 **	Returns TRUE if the queue is empty, else FALSE.
 */
-int queue_is_empty(queue_t *queue)
+int queue_is_empty(main_queue_t *queue)
 {
 	return (queue->pqueue_front == NULL);
 }
