@@ -9,6 +9,7 @@
 
 #include "drv_lcd.h"
 #include "../../fsm/fsm.h"
+#include "ipphone.h"
 
 typedef enum {
 	LCD_WRITE_LEFT_JUSTIFIED,
@@ -36,10 +37,68 @@ typedef struct hor_scroll_screen_fields {
 	fsm_state_t *options_map;
 } hor_scroll_screen_fields_t;
 
+#define LEFT 0
+#define RIGHT 1
+#define UP 2
+#define DOWN 3
+
+typedef struct _vertical_scroll{
+	char *key;
+	int size;
+}vertical_scroll;
+
+typedef enum _text_transform_types{
+	UPPERCASE,
+	LOWERCASE,
+	CAPITALIZE,
+	ONLYNUMBERS,
+}text_transform_types;
+
+typedef struct{
+	text_transform_types type;
+	int control;
+}text_transform;
+
+typedef struct{
+	int offset;
+	int size;
+	int cursor;
+}slicer;
+
+typedef struct _alphanumeric_buffer{
+	char *buffer;
+	int size_buffer;
+	int cursor;
+	int last_element_position;
+	int index;
+	fsm_evnt_t previous_event;
+	vertical_scroll *map;
+	bool_t is_init;
+	struct timeval previous_time;
+	slicer slice;
+	text_transform text;
+}alphanumeric_buffer;
+
+typedef struct{
+	int row;
+	int offset;
+	int size;
+	const char **fields;	
+	const alphanumeric_buffer *vet_buffer;
+}edit_screen;
+
 void lcd_init(void);
 int lcd_write_justified(lcd_write_justified_t lcd_op, int row, char str[]);
 void lcd_screen_idle(char *name, char *identity, char *time, char *day, char *left, char *right);
 
 /*void lcd_screen_hor_scroll(char field_screen[], char field_left[], char field_right[], int option_index);*/
+
+void edit_screen_init(edit_screen *edit, alphanumeric_buffer *buffer, int size_vet_buffer, int size_buffer, char **edit_fields);
+void edit_screen_uninit(edit_screen *edit);
+void print_edit_screen(edit_screen *edit);
+void edit_screen_move_cursor(edit_screen *edit, int pos);
+void edit_screen_add(edit_screen *edit, fsm_evnt_t event);
+void edit_screen_delete(edit_screen *edit);
+void edit_screen_text_transform(edit_screen *edit);
 
 #endif /* BLACKFIN_IP_PHONE_LCD_H */
