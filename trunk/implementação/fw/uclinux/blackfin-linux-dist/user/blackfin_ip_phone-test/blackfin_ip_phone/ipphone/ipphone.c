@@ -1,12 +1,23 @@
-#include <linphonecore.h>
+#include <eXosip2/eXosip.h>
+#include "linphonecore.h"
 #include "ipphone.h"
-#include "../fsm/queue.h"
+#include "queue.h"
 
+const char *missed_calls = "/missed_calls";
+const char *received_calls = "/received_calls";
+const char *dialed_numbers = "/dialed_numbers";
+const char *friend_list = "/friend_list";
+const char *config_path = "/home/.linphonerc";
+const char *password;
 static void ipphone_call_received(LinphoneCore *lc, const char *from){
-	queue_insert(lc->data->event_queue, FSM_EVNT_CALL_IN_INVITE);
-	//estudar a melhor maneira de passar a string 'from' para o aplicação
+	queue_insert((main_queue_t *)lc->data, FSM_EVNT_CALL_IN_INVITE);
 }
-
+void ipphone_set_passwd(const char *passwd){
+	password = passwd;
+}
+const char *ipphone_get_passwd(){
+	return password;
+}
 static void ipphone_prompt_for_auth(LinphoneCore *lc, const char *realm, const char *username){
 	time_t dt, previous_time = time(NULL);
 	LinphoneAuthInfo *auth;
@@ -35,7 +46,7 @@ static void ipphone_display_something(LinphoneCore *lc, const char *something){
 	else
 		if(!strcmp(something, "Could not reach destination."))
 			new_event = FSM_EVNT_COULD_NOT_REACH_DESTINATION;
-	queue_insert(lc->data->event_queue, new_event);
+	queue_insert((main_queue_t *)lc->data, new_event);
 		
 }
 
@@ -50,7 +61,7 @@ static void ipphone_notify_received(LinphoneCore *lc,LinphoneFriend *lf, const c
 static void ipphone_new_unknown_subscriber(LinphoneCore *lc, LinphoneFriend *lf, const char *url){
 }
 static void ipphone_bye_received(LinphoneCore *lc, const char *from){
-	queue_insert(lc->data->event_queue, FSM_EVNT_CALL_END);
+	queue_insert((main_queue_t *)lc->data, FSM_EVNT_CALL_END);
 	//passar a informação from
 }
 static void ipphone_text_received(LinphoneCore *lc, LinphoneChatRoom *cr, const char *from, const char *msg){
@@ -67,7 +78,7 @@ static void ipphone_display_status(LinphoneCore *lc, const char *something){
 	else
 	if(!strcmp(something, "Call declined."))
 		new_event = FSM_EVNT_CALL_DECLINED;
-	queue_insert(lc->data->event_queue, new_event);
+	queue_insert((main_queue_t *)lc->data, new_event);
 }
 
 static void ipphone_general_state(LinphoneCore *lc, LinphoneGeneralState *gstate){
@@ -85,6 +96,7 @@ static void ipphone_general_state(LinphoneCore *lc, LinphoneGeneralState *gstate
 		case GSTATE_REG_NONE:
 			break;
 		case GSTATE_REG_OK:
+			printf("registrado\n");
 			break;
 		case GSTATE_REG_FAILED:
 			new_event = FSM_EVNT_REG_FAILED;
@@ -104,9 +116,9 @@ static void ipphone_general_state(LinphoneCore *lc, LinphoneGeneralState *gstate
 			break;
 		case GSTATE_CALL_ERROR:
 			break;
-		default:
 	}
-	queue_insert(lc->data->event_queue, new_event);
+	printf("estado: %d\n", gstate->new_state);
+	queue_insert((main_queue_t *)lc->data, new_event);
 }
 
 static void ipphone_dtmf_received(LinphoneCore *lc, int dtmf){
@@ -116,7 +128,20 @@ static void print_prompt(LinphoneCore *lc){
 }
 
 static void ipphone_call_log_updated(LinphoneCore *lc, LinphoneCallLog *calllog){
-	write_call_log_to_file(LinphoneCore *lc, 12received_file, missed_file, dialed_file);//Definir a forma de passar path
+	MSList **tmp;
+	switch(calllog->dir){
+		case LinphoneCallIncoming:
+			if(calllog->status == LinphoneCallMissed)
+				tmp = &(lc->m_calls);
+			else 
+			if(calllog->status == LinphoneCallSuccess)
+				tmp = &(lc->r_calls);
+			break;
+		case LinphoneCallOutgoing:
+			tmp = &(lc->d_numbers);
+			break;
+	}
+	write_call_log_to_file(lc, *tmp);
 }
 
 const char *ipphone_version = IP_PHONE_VERSION;
@@ -138,18 +163,17 @@ const LinphoneCoreVTable vtable = {
         .general_state = ipphone_general_state,
 	.dtmf_received = ipphone_dtmf_received
 };
-//Avaliar a alternativa de passar diretamente a fila de eventos como prâmetro e montar a struct GenericData dentro de ipphone_init
-void ipphone_init(LinphoneCore *lc, const char *config_path, const char *friend_list, const char *missed_calls, const char *received_calls, const char  		  *dialed_numbers, void * userdata)
+
+void ipphone_init(LinphoneCore *lc, void * userdata)
 {
 	linphone_core_init(lc, &vtable, config_path, userdata);
 	read_call_log_from_file(lc, missed_calls, received_calls, dialed_numbers);
 	read_friend_list_from_file(lc, friend_list);
 }
 
-void ipphone_uninit(LinphoneCore *lc, SubList *sub){
+void ipphone_uninit(LinphoneCore *lc){
 	ipphone_call_log_free(lc, ALL);
-	sublist_free(sub);
-	linphone_core_destroy(lc);
+	//linphone_core_destroy(lc);
 }
 
 void ipphone_iterate(LinphoneCore *lc){
@@ -183,8 +207,8 @@ LinphoneProxyConfig * ipphone_proxy_config_new(){
 /*Quando o valor retornado for 0 as strings de entrada deverão ser desalocadas*/
 int ipphone_proxy_config_set_server_addr(LinphoneProxyConfig *cfg, const char *server_addr){
 	if(linphone_proxy_config_set_server_addr(cfg, server_addr) < 0){
-		if (obj->reg_proxy != NULL) ms_free(obj->reg_proxy);
-		obj->reg_proxy=NULL;
+		if (cfg->reg_proxy != NULL) ms_free(cfg->reg_proxy);
+		cfg->reg_proxy=NULL;
 		return 1;
 	}
 	return 0;
@@ -208,7 +232,7 @@ int ipphone_proxy_config_set_route(LinphoneProxyConfig *cfg, const char *route){
 	return (cfg->reg_route) ? 0 : 1;
 }
 
-int ipphone_core_add_proxy_config(LinphoneCore *lc, LinphoneProxyConfig *cfg){
+static int ipphone_core_add_proxy_config(LinphoneCore *lc, LinphoneProxyConfig *cfg){
 	MSList *proxy_list = linphone_core_get_proxy_config_list(lc);
 	LinphoneProxyConfig* proxy_cfg;
 
@@ -268,7 +292,7 @@ int ipphone_proxy_delete(LinphoneCore *lc){
 		linphone_core_remove_proxy_config(lc, proxy_cfg);
 		linphone_proxy_config_destroy(proxy_cfg);		
 	}
-	ipphone_auth_delete();
+	//ipphone_auth_delete();
 	return 0;
 	
 }
@@ -313,13 +337,13 @@ static int friend_cmp(const void *data, const void* data_list){
 	return strcmp(linphone_friend_get_name(data_friend), linphone_friend_get_name(data_friend_list));	
 }
 
-int ipphone_core_add_friend_sorted(LinphoneCore *lc, LinphoneFriend *lf, int (*compare_func)(const void *, const void*))
+static int ipphone_core_add_friend_sorted(LinphoneCore *lc, LinphoneFriend *lf, int (*compare_func)(const void *, const void*))
 {
 	if(ms_list_size(lc->friends) < lc->max_friend_list){
 		ms_return_if_fail(lf->lc==NULL);
 		ms_return_if_fail(lf->url!=NULL);
 		lc->friends=ms_list_insert_sorted(lc->friends,lf,compare_func);
-		write_friend_list_to_file(lc, k);
+		write_friend_list_to_file(lc, friend_list);
 		ipphone_friend_apply(lf,lc);
 		return 0;
 	}
@@ -328,7 +352,10 @@ int ipphone_core_add_friend_sorted(LinphoneCore *lc, LinphoneFriend *lf, int (*c
 }
 
 int ipphone_add_friend(LinphoneCore *lc, const char *url){
-	newFriend = linphone_friend_new_with_addr(url);
+	LinphoneFriend *newFriend = linphone_friend_new_with_addr(url);
+	if(!newFriend){
+		return 1;
+	}
 	return ipphone_core_add_friend_sorted(lc, newFriend, friend_cmp);
 }
 
@@ -340,10 +367,10 @@ int ipphone_delete_friend_all(LinphoneCore *lc){
 	while((elem = lc->friends) != NULL){
 		linphone_core_remove_friend(lc, elem->data);
 	}
-	write_friend_list_to_file(lc, k);
+	write_friend_list_to_file(lc, friend_list);
 }
 
-void sublist_friend_call(LinphoneCore *lc, Sublist *sub){
+void sublist_friend_call(LinphoneCore *lc, SubList *sub){
 	const char *addr;	
 		
 	addr = ipphone_friend_get_addr(sub->vet[sub->cursor]->data);
@@ -364,7 +391,7 @@ int sublist_friend_delete(LinphoneCore *lc, SubList *sub){
 	}
 	if(list_size < sub->length){
 		linphone_core_remove_friend(lc, delete_elem->data);
-		write_friend_list_to_file(lc, k);
+		write_friend_list_to_file(lc, friend_list);
 		sub->length = list_size;
 		if(sub->cursor >= sub->length){
 			sub->cursor = sub->length - 1;	
@@ -378,14 +405,14 @@ int sublist_friend_delete(LinphoneCore *lc, SubList *sub){
 		sub->vet[i] = sub->vet[i]->next; 
 	}
 	linphone_core_remove_friend(lc, delete_elem->data);
-	write_friend_list_to_file(lc, k);
+	write_friend_list_to_file(lc, friend_list);
 	return 0;
 }
 
 void sublist_edit_friend(LinphoneCore *lc, SubList *sub, const char *url){
 	linphone_core_remove_friend(lc, sub->vet[sub->cursor]->data);
-	ipphone_add_friend(lc, const char *url);
-	write_friend_list_to_file(lc, k);	
+	ipphone_add_friend(lc, url);
+	write_friend_list_to_file(lc, friend_list);	
 }
 char *ipphone_friend_get_addr(LinphoneFriend *lf){
 	return linphone_friend_get_addr(lf); 
@@ -409,15 +436,18 @@ SubList *sublist_new(){
 }
 
 void sublist_free(SubList *sub){
-	if(!vet)
+	if(!sub)
+		return;
+	if(!sub->vet)
 		free(sub->vet);	
 	free(sub);
 }
 StatusInitSubList sublist_init(MSList *list, SubList *sublist, int length){	
 	int i;
-	if(is_init){
+	if(sublist->is_init){
 		return SUCCESS;
 	}
+	printf("ENtrei\n");
 	if(ms_list_size(list)  == 0)
 		return EMPTY;
 	if(length > ms_list_size(list)){
@@ -444,6 +474,8 @@ void sublist_uninit(SubList *sub){
 }
 
 void sublist_update(MSList *list, SubList *sublist, Position pos){
+	if(sublist->length < 1)
+		return;
 	switch(pos){
 		case DOWN:	
 			if(++sublist->cursor > sublist->length - 1){
@@ -482,8 +514,12 @@ void sublist_update(MSList *list, SubList *sublist, Position pos){
 }
 void sublist_show(SubList *sublist){
 	int i;
+	LinphoneFriend *lf;
 	for(i = 0; i < sublist->length; i++){
-		printf("%s\n",linphone_call_log_to_str(sublist->vet[i]->data));	
+		lf = sublist->vet[i]->data;		
+		printf("%s\n",ipphone_friend_get_name(lf));
+		//printf("%s\n",ipphone_friend_get_addr(lf));
+		//printf("%s\n",ipphone_friend_get_url(lf));	
 	}
 	printf("Cursor:%d\n",sublist->cursor);
 }
@@ -531,7 +567,7 @@ static int write_friend_list(void *data, void *file_friend){
 	return 0; //repensar o valor de retorno de todas estas funções	
 	
 }
-static int MSList_to_file(MSList *list, char *path, int (*write_data)(void *, void *)){
+static int MSList_to_file(MSList *list, const char *path, int (*write_data)(void *, void *)){
 	FILE *file_log;
 	int count = 0;
 	if((file_log = fopen(path, "w+")) == NULL){
@@ -598,7 +634,7 @@ static void *read_friend_list(void *file_friend){
 	return (void *)friend;	
 }
 
-static MSList * MSList_from_file(MSList *list, char *path, void * (*read_data)(void *)){
+static MSList * MSList_from_file(MSList *list, const char *path, void * (*read_data)(void *)){
 	FILE *file;
 	void *data;
 
@@ -613,13 +649,13 @@ static MSList * MSList_from_file(MSList *list, char *path, void * (*read_data)(v
 	return list;		
 }
 
-void read_call_log_from_file(LinphoneCore *lc, char *path_missed, char *path_received, char *path_dialed){
+void read_call_log_from_file(LinphoneCore *lc, const char *path_missed, const char *path_received, const char *path_dialed){
 	lc->m_calls = MSList_from_file(lc->m_calls, path_missed, read_call_log);
 	lc->r_calls = MSList_from_file(lc->r_calls, path_received, read_call_log);
 	lc->d_numbers = MSList_from_file(lc->d_numbers, path_dialed, read_call_log);
 }
 
-void read_friend_list_from_file(LinphoneCore *lc, char *path){
+void read_friend_list_from_file(LinphoneCore *lc, const char *path){
 	MSList *elem;
 	
 	lc->friends = MSList_from_file(lc->friends, path, read_friend_list);
@@ -630,19 +666,20 @@ void read_friend_list_from_file(LinphoneCore *lc, char *path){
 	}
 }
 
-void write_call_log_to_file(LinphoneCore *lc, const char *received_file, const char *missed_file, const char *dialed_file){
-	char *path;
-	if(lc->data->type_call_log == lc->r_calls){
-		path = received_file;	
+void write_call_log_to_file(LinphoneCore *lc, MSList *list){
+	const char *path;
+
+	if(list == lc->r_calls){
+		path = received_calls;	
 	}else{
-		if(lc->data->type_call_log == lc->m_calls){
-			path = missed_file;
+		if(list == lc->m_calls){
+			path = missed_calls;
 		}		
 		else{
-			path = dialed_file;
+			path = dialed_numbers;
 		}
 	}
-	MSList_to_file(lc->data->type_call_log, path, write_call_log);
+	MSList_to_file(list, path, write_call_log);
 }
 
 void write_friend_list_to_file(LinphoneCore *lc, const char *friend_file){
@@ -663,9 +700,9 @@ void ipphone_call_log_free(LinphoneCore *lc, IPphoneCallLogList type){
 			cl = &(lc->d_numbers);
 			break;
 		case ALL:
-			ipphone_call_log_free(lc, MISSED);
-			ipphone_call_log_free(lc, RECEIVED);
-			ipphone_call_log_free(lc, DIALED);
+			ipphone_call_log_free(lc, IPphoneMissed);
+			ipphone_call_log_free(lc, IPphoneReceived);
+			ipphone_call_log_free(lc, IPphoneDialed);
 			return;		
 	}
 	elem = *cl;
@@ -707,7 +744,7 @@ char *ipphone_calllog_get_status(LinphoneCallLog *cl){
 			status = "Missed";
 			break;
 		default:
-			status = "unknown"
+			status = "unknown";
 	}
 	return status;
 }
