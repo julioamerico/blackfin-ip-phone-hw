@@ -228,9 +228,8 @@ void linphone_call_log_completed(LinphoneCallLog *calllog, LinphoneCall *call){
 		*tmp=ms_list_remove_link(*tmp,elem);
 	}
 	*tmp = ms_list_prepend(*tmp,(void *)calllog);
-	lc->data->type_call_log = *tmp;
 	if (lc->vtable.call_log_updated!=NULL){		
-		lc->vtable.call_log_updated(lc,calllog);
+		lc->vtable.call_log_updated(lc, calllog);
 	}
 
 }
