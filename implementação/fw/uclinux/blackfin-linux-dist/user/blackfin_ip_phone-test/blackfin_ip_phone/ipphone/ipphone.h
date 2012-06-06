@@ -51,8 +51,10 @@ typedef enum _IPphoneCallLogList{
 }IPphoneCallLogList;
 
 typedef enum _Position{
+	LEFT,
+	RIGHT,	
 	UP, 
-	DOWN
+	DOWN,
 }Position;
 
 typedef enum _ProxyEditType{
