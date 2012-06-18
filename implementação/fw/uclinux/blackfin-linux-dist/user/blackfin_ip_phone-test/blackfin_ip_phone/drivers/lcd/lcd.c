@@ -193,7 +193,7 @@ static void slicer_init(slicer *sl, int size){
 	sl->size = size;
 	sl->cursor = -1;
 }
-static void slicer_move_cursor(alphanumeric_buffer *strc_buffer, int pos){
+static void slicer_move_cursor(alphanumeric_buffer *strc_buffer, Position pos){
 	switch(pos){
 		case LEFT:
 			strc_buffer->slice.cursor--;
@@ -479,7 +479,6 @@ char *contacts_edit_fields[5] =
 	"Name:",
 	"Contact:",
 	"SIP Server:",
-	"TESTE:",
 };
 
 void edit_screen_init(edit_screen *edit, alphanumeric_buffer *buffer, int size_vet_buffer, int size_buffer, char **edit_fields){
@@ -505,8 +504,8 @@ void edit_screen_uninit(edit_screen *edit){
 }
 void print_edit_screen(edit_screen *edit){
 	int i, lcd_cursor_pos[] = {LCD_CURSOR_POS_R2_C1, LCD_CURSOR_POS_R3_C1};	
-	char *up = "A";
-	char *down = "V";
+	
+	drv_lcd_clear_screen();
 	lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 1, edit->fields[0]);
 
 	for(i = 0; i < 2; i++){
@@ -516,7 +515,7 @@ void print_edit_screen(edit_screen *edit){
 	print_text_type(edit->vet_buffer + edit->offset + edit->row);
 	print_cursor(edit->vet_buffer + edit->offset + edit->row, lcd_cursor_pos[edit->row] + strlen(edit->fields[edit->offset + edit->row + 1]));
 }
-void edit_screen_move_cursor(edit_screen *edit, int pos){
+void edit_screen_move_cursor(edit_screen *edit, Position pos){
 	switch(pos){
 		case UP:
 			if(edit->row == 0 && edit->offset > 0)
