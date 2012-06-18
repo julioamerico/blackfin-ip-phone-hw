@@ -8,35 +8,34 @@ const char *received_calls = "/received_calls";
 const char *dialed_numbers = "/dialed_numbers";
 const char *friend_list = "/friend_list";
 const char *config_path = "/home/.linphonerc";
-const char *password;
+const char *password = NULL;
+IPphoneAuthStack auth_stack;
+
 static void ipphone_call_received(LinphoneCore *lc, const char *from){
-	queue_insert((main_queue_t *)lc->data, FSM_EVNT_CALL_IN_INVITE);
+	//queue_insert((main_queue_t *)lc->data, FSM_EVNT_CALL_IN_INVITE);
 }
 void ipphone_set_passwd(const char *passwd){
 	password = passwd;
+	
 }
 const char *ipphone_get_passwd(){
 	return password;
 }
 static void ipphone_prompt_for_auth(LinphoneCore *lc, const char *realm, const char *username){
-	time_t dt, previous_time = time(NULL);
-	LinphoneAuthInfo *auth;
-	 
-	auth = linphone_auth_info_new(username,NULL,NULL,NULL,realm);
-	linphone_auth_info_set_passwd(auth, password);
-	linphone_core_add_auth_info(lc, auth);
-	linphone_core_iterate(lc);
-
-	while(1){
-		dt = time(NULL) - previous_time;
-		if(dt > 0.5)
-			break;
-		ipphone_iterate(lc);
-	}
+	LinphoneAuthInfo *pending_auth;
+	
+	if (auth_stack.nitems + 1 > MAX_PENDING_AUTH )
+	{
+		printf("Can't accept another authentication request.\n Consider incrementing MAX_PENDING_AUTH macro.\n");
+		return;
+	} 
+	
+	pending_auth = linphone_auth_info_new(username,NULL,NULL,NULL,realm);
+	auth_stack.elem[auth_stack.nitems++] = pending_auth;
 }
 
 static void ipphone_display_something(LinphoneCore *lc, const char *something){
-	fsm_evnt_t new_event;
+	fsm_evnt_t new_event = -1;
 	
 	if(!strcmp(something, "User is busy."))
 		new_event = FSM_EVNT_USER_BUSY;
@@ -46,7 +45,8 @@ static void ipphone_display_something(LinphoneCore *lc, const char *something){
 	else
 		if(!strcmp(something, "Could not reach destination."))
 			new_event = FSM_EVNT_COULD_NOT_REACH_DESTINATION;
-	queue_insert((main_queue_t *)lc->data, new_event);
+/*	if(new_event != -1)*/
+/*		queue_insert((main_queue_t *)lc->data, new_event);*/
 		
 }
 
@@ -61,14 +61,14 @@ static void ipphone_notify_received(LinphoneCore *lc,LinphoneFriend *lf, const c
 static void ipphone_new_unknown_subscriber(LinphoneCore *lc, LinphoneFriend *lf, const char *url){
 }
 static void ipphone_bye_received(LinphoneCore *lc, const char *from){
-	queue_insert((main_queue_t *)lc->data, FSM_EVNT_CALL_END);
+	//queue_insert((main_queue_t *)lc->data, FSM_EVNT_CALL_END);
 	//passar a informação from
 }
 static void ipphone_text_received(LinphoneCore *lc, LinphoneChatRoom *cr, const char *from, const char *msg){
 }
 
 static void ipphone_display_status(LinphoneCore *lc, const char *something){
-	fsm_evnt_t new_event;
+	fsm_evnt_t new_event = -1;
 	
 	if(!strcmp(something, "User is temporarily unavailable."))
 		new_event = FSM_EVNT_USER_UNAVAILABLE;
@@ -78,11 +78,13 @@ static void ipphone_display_status(LinphoneCore *lc, const char *something){
 	else
 	if(!strcmp(something, "Call declined."))
 		new_event = FSM_EVNT_CALL_DECLINED;
-	queue_insert((main_queue_t *)lc->data, new_event);
+/*	if(new_event != -1)*/
+/*		queue_insert((main_queue_t *)lc->data, new_event);*/
+	printf("something:%s\n",something);
 }
 
 static void ipphone_general_state(LinphoneCore *lc, LinphoneGeneralState *gstate){
-	fsm_evnt_t new_event;
+	fsm_evnt_t new_event = -1;
 	
 	switch(gstate->new_state) {
 		case GSTATE_POWER_OFF:
@@ -118,7 +120,8 @@ static void ipphone_general_state(LinphoneCore *lc, LinphoneGeneralState *gstate
 			break;
 	}
 	printf("estado: %d\n", gstate->new_state);
-	queue_insert((main_queue_t *)lc->data, new_event);
+/*	if(new_event != -1)*/
+/*		queue_insert((main_queue_t *)lc->data, new_event);*/
 }
 
 static void ipphone_dtmf_received(LinphoneCore *lc, int dtmf){
@@ -163,12 +166,21 @@ const LinphoneCoreVTable vtable = {
         .general_state = ipphone_general_state,
 	.dtmf_received = ipphone_dtmf_received
 };
+static void ipphone_auth_final(LinphoneCore *lc){
+	LinphoneAuthInfo *pending_auth = auth_stack.elem[auth_stack.nitems - 1];
+	if(password){
+		linphone_auth_info_set_passwd(pending_auth, password);
+		linphone_core_add_auth_info(lc, pending_auth);
+		--(auth_stack.nitems);
+	}
+}
 
 void ipphone_init(LinphoneCore *lc, void * userdata)
 {
+	auth_stack.nitems = 0;
 	linphone_core_init(lc, &vtable, config_path, userdata);
-	read_call_log_from_file(lc, missed_calls, received_calls, dialed_numbers);
-	read_friend_list_from_file(lc, friend_list);
+	//read_call_log_from_file(lc, missed_calls, received_calls, dialed_numbers);
+	//read_friend_list_from_file(lc, friend_list);
 }
 
 void ipphone_uninit(LinphoneCore *lc){
@@ -178,6 +190,13 @@ void ipphone_uninit(LinphoneCore *lc){
 
 void ipphone_iterate(LinphoneCore *lc){
 	linphone_core_iterate(lc);
+	if (auth_stack.nitems){
+		ipphone_auth_final(lc);
+	}
+	if (lp_config_needs_commit(lc->config)){
+		lp_config_sync(lc->config);
+		printf("back-up\n");
+	}
 }
 int ipphone_call(LinphoneCore *lc, const char *url){
 	if(lc->call != NULL){
@@ -447,7 +466,6 @@ StatusInitSubList sublist_init(MSList *list, SubList *sublist, int length){
 	if(sublist->is_init){
 		return SUCCESS;
 	}
-	printf("ENtrei\n");
 	if(ms_list_size(list)  == 0)
 		return EMPTY;
 	if(length > ms_list_size(list)){

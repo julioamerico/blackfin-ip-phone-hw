@@ -29,6 +29,12 @@
 #ifndef IP_PHONE_VERSION
 #define IP_PHONE_VERSION "1.0"
 #endif
+#define MAX_PENDING_AUTH 8
+
+typedef struct {
+	LinphoneAuthInfo *elem[MAX_PENDING_AUTH];
+	int nitems;
+}IPphoneAuthStack;
 
 typedef struct _SubList{
 	MSList **vet;
