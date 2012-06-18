@@ -37,10 +37,10 @@ typedef struct hor_scroll_screen_fields {
 	fsm_state_t *options_map;
 } hor_scroll_screen_fields_t;
 
-#define LEFT 0
-#define RIGHT 1
-#define UP 2
-#define DOWN 3
+//#define LEFT 0
+//#define RIGHT 1
+//#define UP 2
+//#define DOWN 3
 
 typedef struct _vertical_scroll{
 	char *key;
@@ -96,7 +96,7 @@ void lcd_screen_idle(char *name, char *identity, char *time, char *day, char *le
 void edit_screen_init(edit_screen *edit, alphanumeric_buffer *buffer, int size_vet_buffer, int size_buffer, char **edit_fields);
 void edit_screen_uninit(edit_screen *edit);
 void print_edit_screen(edit_screen *edit);
-void edit_screen_move_cursor(edit_screen *edit, int pos);
+void edit_screen_move_cursor(edit_screen *edit, Position pos);
 void edit_screen_add(edit_screen *edit, fsm_evnt_t event);
 void edit_screen_delete(edit_screen *edit);
 void edit_screen_text_transform(edit_screen *edit);
