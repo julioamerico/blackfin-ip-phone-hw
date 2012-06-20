@@ -473,9 +473,11 @@ static void print_buffer(alphanumeric_buffer *strc_buffer){
 	drv_lcd_send_command(LCD_CMD_SET_CURSOR, wData, 1);
 	return;
 }
-char *contacts_edit_fields[5] =
+char *contacts_edit_fields[CONTACTS_EDIT_SIZE] =
 {
 	"CONTACTS",
+	"SELECT",
+	"BACK",
 	"Name:",
 	"Contact:",
 	"SIP Server:",
@@ -484,14 +486,14 @@ char *contacts_edit_fields[5] =
 void edit_screen_init(edit_screen *edit, alphanumeric_buffer *buffer, int size_vet_buffer, int size_buffer, char **edit_fields){
 	int i, size_slice;
 	edit->vet_buffer = buffer;
+	edit->size = size_vet_buffer - 3;
 	printf("size_vet:%d\n",size_vet_buffer);
-	for(i = 0; i < size_vet_buffer; i++){
-		size_slice = LCD_MAX_COL - strlen(edit_fields[i + 1]) - 1;
+	for(i = 0; i < edit->size; i++){
+		size_slice = LCD_MAX_COL - strlen(edit_fields[i + 3]) - 1;
 		printf("size_slice:%d\n",size_slice);
 		if(!alphanumeric_buffer_init(edit->vet_buffer + i, size_buffer, size_slice))
 			return;
 	}
-	edit->size = size_vet_buffer;
 	edit->row = 0;
 	edit->offset = 0;
 	edit->fields = edit_fields;
@@ -507,13 +509,15 @@ void print_edit_screen(edit_screen *edit){
 	
 	drv_lcd_clear_screen();
 	lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 1, edit->fields[0]);
+	lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, 4, edit->fields[1]);
+	lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED, 4, edit->fields[2]);
 
 	for(i = 0; i < 2; i++){
-		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, i + 2, edit->fields[edit->offset + i + 1]);
-		print_slice(edit->vet_buffer + edit->offset + i, lcd_cursor_pos[i] + strlen(edit->fields[edit->offset + i + 1]));
+		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, i + 2, edit->fields[edit->offset + i + 3]);
+		print_slice(edit->vet_buffer + edit->offset + i, lcd_cursor_pos[i] + strlen(edit->fields[edit->offset + i + 3]));
 	}
 	print_text_type(edit->vet_buffer + edit->offset + edit->row);
-	print_cursor(edit->vet_buffer + edit->offset + edit->row, lcd_cursor_pos[edit->row] + strlen(edit->fields[edit->offset + edit->row + 1]));
+	print_cursor(edit->vet_buffer + edit->offset + edit->row, lcd_cursor_pos[edit->row] + strlen(edit->fields[edit->offset + edit->row + 3]));
 }
 void edit_screen_move_cursor(edit_screen *edit, Position pos){
 	switch(pos){

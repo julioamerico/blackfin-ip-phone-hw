@@ -28,7 +28,9 @@ typedef enum {
 }	hor_scroll_screen_t;
 
 #define MAX_HOR_SCREENS SCREEN_NULL
-
+#define CONTACTS_EDIT_SIZE 6
+#define BUFFER_SIZE(x) x - 3
+ 
 typedef struct hor_scroll_screen_fields {
 	char *screen_name;
 	char *left;
@@ -36,11 +38,6 @@ typedef struct hor_scroll_screen_fields {
 	char **screen_options;
 	fsm_state_t *options_map;
 } hor_scroll_screen_fields_t;
-
-//#define LEFT 0
-//#define RIGHT 1
-//#define UP 2
-//#define DOWN 3
 
 typedef struct _vertical_scroll{
 	char *key;
