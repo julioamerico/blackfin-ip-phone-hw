@@ -62,7 +62,7 @@ int lcd_write_justified(lcd_write_justified_t lcd_op, int row, char str[])
 }
 
 /*
- *	IDLE SCREEN
+ *	IDLE AND SAVE SCREENS
  */
 
 void lcd_screen_idle(char *name, char *identity, char *time, char *day, char *left, char *right)
@@ -74,6 +74,12 @@ void lcd_screen_idle(char *name, char *identity, char *time, char *day, char *le
   lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 3, day);
   lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED,		4, left);
   lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED, 	4, right);
+}
+
+void lcd_screen_save(void)
+{
+	drv_lcd_clear_screen();
+	lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 2, "SAVING ...");
 }
 
 /*
@@ -113,7 +119,7 @@ static fsm_state_t screen_contacts_options_map[3] =
 {
 	FSM_ST_CONTACTS_LIST,
 	FSM_ST_CONTACTS_EDIT,
-	FSM_ST_CONTACT_FIELDS,
+	FSM_ST_CONTACT_ADD,
 };
 
 static char *screen_call_logs_options[3] =
@@ -473,13 +479,23 @@ static void print_buffer(alphanumeric_buffer *strc_buffer){
 	drv_lcd_send_command(LCD_CMD_SET_CURSOR, wData, 1);
 	return;
 }
+
+char *dialing_edit_fields[DIALING_EDIT_SIZE] =
+{
+	"DIAL",
+	"CALL",
+	"EXIT",
+	"Username:",
+	"Server:",
+};
+
 char *contacts_edit_fields[CONTACTS_EDIT_SIZE] =
 {
 	"CONTACTS",
-	"SELECT",
+	"SAVE",
 	"BACK",
 	"Name:",
-	"Contact:",
+	"Number:",
 	"SIP Server:",
 };
 
@@ -536,7 +552,6 @@ void edit_screen_move_cursor(edit_screen *edit, Position pos){
 		default:
 			move_cursor(edit->vet_buffer + edit->offset + edit->row, pos);
 	}
-	
 }
 void edit_screen_delete(edit_screen *edit){
 	alphanumeric_buffer_delete(edit->vet_buffer + edit->offset + edit->row);	

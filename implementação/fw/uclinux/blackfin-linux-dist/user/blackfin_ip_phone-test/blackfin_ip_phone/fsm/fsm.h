@@ -12,7 +12,7 @@ typedef enum {
 
 	FSM_ST_INCOMING_CALL,
 	FSM_ST_DIALING,
-	FSM_ST_CALL_STARTED,
+	FSM_ST_OUTGOING_CALL,
 
 	FSM_ST_FILLING_FIELD,
 	FSM_ST_DELETE_CONTACT,	
@@ -24,7 +24,7 @@ typedef enum {
 
 	FSM_ST_CONTACTS_LIST,
 	FSM_ST_CONTACTS_EDIT,
-	FSM_ST_CONTACT_FIELDS,
+	FSM_ST_CONTACT_ADD,
 
 	FSM_ST_CALL_LOGS_MISSED,
 	FSM_ST_CALL_LOGS_RECEIVED,
@@ -37,8 +37,6 @@ typedef enum {
 	FSM_ST_SETTINGS_SIP_SERVER_TEST,
 	FSM_ST_SETTINGS_CLEAR_CONTACT_LIST,
 	FSM_ST_SETTINGS_FACTORY_SETTINGS,
-
-
 	
 	FSM_ST_NULL
 } fsm_state_t;
@@ -98,8 +96,10 @@ typedef struct state_machine {
 */
 void fsm_init(fsm_t *fsm);
 fsm_state_t fsm_st_idle(fsm_evnt_t evnt);
+fsm_state_t fsm_st_dialing(fsm_evnt_t evnt);
 fsm_state_t fsm_st_menu(fsm_evnt_t evnt);
 fsm_state_t fsm_st_menu_contacts(fsm_evnt_t evnt);
+fsm_state_t fsm_st_contact_add(fsm_evnt_t evnt);
 fsm_state_t fsm_st_menu_call_logs(fsm_evnt_t evnt);
 fsm_state_t fsm_st_menu_settings(fsm_evnt_t evnt);
 void fsm_error(fsm_state_t state);

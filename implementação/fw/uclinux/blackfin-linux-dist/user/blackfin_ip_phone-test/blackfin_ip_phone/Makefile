@@ -14,10 +14,11 @@ $(EXEC): $(OBJS) make_fsm make_drv_lcd make_drv_expander make_ipphone
 
 main.o: main.c make_ipphone
 	$(CC) $(LDFLAGS) -c main.c $(IDIR) 
-make_fsm:
+
+make_fsm: make_ipphone
 	(cd ./fsm;$(MAKE))
 	
-make_drv_lcd:make_ipphone
+make_drv_lcd: make_ipphone
 	(cd ./drivers/lcd;$(MAKE))
 
 make_drv_expander:
