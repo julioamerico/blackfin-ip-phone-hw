@@ -2,6 +2,7 @@
 #include "linphonecore.h"
 #include "ipphone.h"
 #include "queue.h"
+#include "lcd.h"
 
 const char *missed_calls = "/missed_calls";
 const char *received_calls = "/received_calls";
@@ -179,8 +180,8 @@ void ipphone_init(LinphoneCore *lc, void * userdata)
 {
 	auth_stack.nitems = 0;
 	linphone_core_init(lc, &vtable, config_path, userdata);
-	//read_call_log_from_file(lc, missed_calls, received_calls, dialed_numbers);
-	//read_friend_list_from_file(lc, friend_list);
+	read_call_log_from_file(lc, missed_calls, received_calls, dialed_numbers);
+	read_friend_list_from_file(lc, friend_list);
 }
 
 void ipphone_uninit(LinphoneCore *lc){
@@ -375,6 +376,7 @@ int ipphone_add_friend(LinphoneCore *lc, const char *url){
 	if(!newFriend){
 		return 1;
 	}
+
 	return ipphone_core_add_friend_sorted(lc, newFriend, friend_cmp);
 }
 
@@ -426,6 +428,14 @@ int sublist_friend_delete(LinphoneCore *lc, SubList *sub){
 	linphone_core_remove_friend(lc, delete_elem->data);
 	write_friend_list_to_file(lc, friend_list);
 	return 0;
+}
+
+int sublist_is_empty(SubList *sub)
+{
+	if (sub->cursor < 0)
+		return 1;
+	else
+		return 0;
 }
 
 void sublist_edit_friend(LinphoneCore *lc, SubList *sub, const char *url){
@@ -530,16 +540,14 @@ void sublist_update(MSList *list, SubList *sublist, Position pos){
 			break;
 	}	
 }
-void sublist_show(SubList *sublist){
+void print_sublist_contacts(SubList *sublist){
 	int i;
 	LinphoneFriend *lf;
 	for(i = 0; i < sublist->length; i++){
-		lf = sublist->vet[i]->data;		
-		printf("%s\n",ipphone_friend_get_name(lf));
-		//printf("%s\n",ipphone_friend_get_addr(lf));
-		//printf("%s\n",ipphone_friend_get_url(lf));	
+		lf = sublist->vet[i]->data;
+		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, (2+i), ipphone_friend_get_name(lf));
 	}
-	printf("Cursor:%d\n",sublist->cursor);
+	lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED, (2+sublist->cursor), "<");
 }
 
 /*Funções para escrita das listas nos arquivos*/

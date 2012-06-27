@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/time.h>
 
 #include "fsm.h"
 #include "queue.h"
@@ -23,7 +24,11 @@ void fsm_init(fsm_t *fsm)
 	fsm->function[FSM_ST_IDLE]						= fsm_st_idle;
 	fsm->function[FSM_ST_MENU] 						= fsm_st_menu;
 	fsm->function[FSM_ST_MENU_CONTACTS]		=	fsm_st_menu_contacts;
+	//fsm->function[FSM_ST_CALL_STATUS]			= fsm_st_call_status;
+	fsm->function[FSM_ST_CONTACTS_LIST]		= fsm_st_contacts_list;
+	fsm->function[FSM_ST_CONTACTS_EDIT]		= fsm_st_contacts_edit;
 	fsm->function[FSM_ST_CONTACT_ADD]			= fsm_st_contact_add;
+	fsm->function[FSM_ST_CONTACT_DELETE]	= fsm_st_contact_delete;
 	fsm->function[FSM_ST_MENU_CALL_LOGS]	= fsm_st_menu_call_logs;
 	fsm->function[FSM_ST_MENU_SETTINGS]		= fsm_st_menu_settings;
 	fsm->function[FSM_ST_DIALING]					= fsm_st_dialing;
@@ -33,7 +38,7 @@ void fsm_init(fsm_t *fsm)
 
 fsm_state_t fsm_st_idle(fsm_evnt_t evnt)
 {
-	char *name 			= "XUXA M.";
+	char *name 			= "GORDIM";
 	char *identity	= "1001";
 	char *time			= "17:05";
 	char *day				= "SUN, 10/05/2012";
@@ -56,8 +61,6 @@ fsm_state_t fsm_st_idle(fsm_evnt_t evnt)
 				queue_insert(&event_queue, evnt);
 				return FSM_ST_DIALING;
 			}
-			else
-				fsm_error(FSM_ST_IDLE);
 	}
 }
 
@@ -111,11 +114,7 @@ fsm_state_t fsm_st_dialing(fsm_evnt_t evnt)
       return FSM_ST_DIALING;
     default:
       if ((evnt >= FSM_EVNT_KEYPAD_1) && (evnt < FSM_EVNT_KEYPAD_SHARP))
-			{
 				edit_screen_add(&dialing_screen, evnt);        
-			}
-      else
-        fsm_error(FSM_ST_IDLE);
   }
 
 	print_edit_screen(&dialing_screen);
@@ -143,11 +142,10 @@ fsm_state_t fsm_st_menu(fsm_evnt_t evnt)
     case FSM_EVNT_NULL:
       break;
     default:
-      fsm_error(FSM_ST_MENU);
+      break;
   }
 	
 	lcd_screen_hor_scroll(SCREEN_MENU, option_index);
-
 	return FSM_ST_MENU;
 }
 
@@ -171,12 +169,85 @@ fsm_state_t fsm_st_menu_contacts(fsm_evnt_t evnt)
     case FSM_EVNT_NULL:
       break;
     default:
-      fsm_error(FSM_ST_MENU_CONTACTS);
+      break;
   }
 
   lcd_screen_hor_scroll(SCREEN_CONTACTS, option_index);
-
   return FSM_ST_MENU_CONTACTS;
+}
+/*
+fsm_state_t fsm_st_call_status(fsm_evnt_t evnt)
+{
+	static int aux = 0;
+	char lcd_line[3][20];
+	static time_t current_time;
+
+	current_time = time(NULL);
+	
+	printf("\n\n\n\n\nCURRENT TIME!!!!! %d\n\n\n\n", current_time);	
+	
+	if (call_time < 60segundos)
+	{
+		snprintf(lcd_line[3], 20, "TIME: %ds");
+	}
+	else if ((call_time >= 60segundos) && (call_time < 1hora))
+	{
+		snprintf(lcd_line[3], 20, "TIME: %dmin %dsec");
+	}
+	else if ((call_time >= 1hora) && (call_time < 9horas))
+	{
+		snprintf(lcd_line[3], 20, "TIME: %dh %dmin %dsec");
+	}	
+
+	if (!aux)
+	{
+		snprintf(lcd_line[1], 20, "STATUS: %s" , XXXXXX);
+		snprintf(lcd_line[2], 20, "CONTACT: %s", XXXXXX);
+		aux = 1;
+	}
+}
+*/
+fsm_state_t fsm_st_contacts_list(fsm_evnt_t evnt)
+{
+	static SubList contacts_list;
+
+	drv_lcd_clear_screen();
+	lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 1, "CONTACT LIST");
+	lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, 	4, "CALL");
+	lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED, 	4, "BACK");	
+
+	if (sublist_init(ipphone_core.friends, &contacts_list, 2)	== EMPTY)
+	{
+		lcd_screen_empty_list();
+		return FSM_ST_MENU_CONTACTS;
+	}
+
+	switch (evnt)
+  {
+    case FSM_EVNT_GPBUTTON_RIGHT:
+			sublist_uninit(&contacts_list);
+      return FSM_ST_MENU_CONTACTS;
+    case FSM_EVNT_GPBUTTON_LEFT:
+    	//sublist_friend_call(&ipphone_core, &contacts_list);
+			//return FSM_ST_CALL_STATUS;
+    case FSM_EVNT_NAVSWITCH_UP:
+      sublist_update(ipphone_core.friends, &contacts_list, UP);
+      break;
+    case FSM_EVNT_NAVSWITCH_DOWN:
+      sublist_update(ipphone_core.friends, &contacts_list, DOWN);
+      break;
+    case FSM_EVNT_NULL:
+      break;
+    default:
+      break;
+  }
+
+	print_sublist_contacts(&contacts_list);
+  return FSM_ST_CONTACTS_LIST;
+}
+
+fsm_state_t fsm_st_contacts_edit(fsm_evnt_t evnt)
+{
 }
 
 fsm_state_t fsm_st_contact_add(fsm_evnt_t evnt)
@@ -198,14 +269,12 @@ fsm_state_t fsm_st_contact_add(fsm_evnt_t evnt)
     case FSM_EVNT_GPBUTTON_LEFT:
       if ((buffer[0].buffer[0] != '\0') && (buffer[1].buffer[0] != '\0') && (buffer[2].buffer[0] != '\0'))
       {
-/*
-				drv_lcd_cursor(FALSE);
+				drv_lcd_cursor(LCD_TOGGLE_OFF);
 				lcd_screen_save();
 				snprintf(url, 70, "%s <sip:%s@%s>", buffer[0].buffer, buffer[1].buffer, buffer[2].buffer);
-				printf("XXXXXXXXXX: %d", ipphone_add_friend(&ipphone_core, url));
+				ipphone_add_friend(&ipphone_core, url);
 				edit_screen_uninit(&contact_screen);
         return FSM_ST_MENU_CONTACTS;
-*/
       }
 			break;
 		case FSM_EVNT_NAVSWITCH_LEFT:
@@ -230,15 +299,55 @@ fsm_state_t fsm_st_contact_add(fsm_evnt_t evnt)
       break;
     default:
       if ((evnt >= FSM_EVNT_KEYPAD_1) && (evnt < FSM_EVNT_KEYPAD_SHARP))
-			{
 				edit_screen_add(&contact_screen, evnt);        
-			}
-      else
-        fsm_error(FSM_ST_CONTACT_ADD);
   }
 
 	print_edit_screen(&contact_screen);
 	return FSM_ST_CONTACT_ADD;
+}
+
+fsm_state_t fsm_st_contact_delete(fsm_evnt_t evnt)
+{
+  static SubList contacts_del_list;
+
+  drv_lcd_clear_screen();
+  lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 1, "CONTACT LIST");
+  lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED,   4, "DELETE");
+  lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED,  4, "BACK");
+
+  if (sublist_init(ipphone_core.friends, &contacts_del_list, 2) == EMPTY)
+  {
+    lcd_screen_empty_list();
+    return FSM_ST_MENU_CONTACTS;
+  }
+
+  switch (evnt)
+  {
+    case FSM_EVNT_GPBUTTON_RIGHT:
+			sublist_uninit(&contacts_del_list);
+      return FSM_ST_MENU_CONTACTS;
+    case FSM_EVNT_GPBUTTON_LEFT:
+			sublist_friend_delete(&ipphone_core, &contacts_del_list);
+  		if (sublist_is_empty(&contacts_del_list))
+  		{
+    		lcd_screen_empty_list();
+    		return FSM_ST_MENU_CONTACTS;
+		  }
+			break;
+    case FSM_EVNT_NAVSWITCH_UP:
+      sublist_update(ipphone_core.friends, &contacts_del_list, UP);
+      break;
+    case FSM_EVNT_NAVSWITCH_DOWN:
+      sublist_update(ipphone_core.friends, &contacts_del_list, DOWN);
+      break;
+    case FSM_EVNT_NULL:
+      break;
+		default:
+			break;
+	}
+	
+	print_sublist_contacts(&contacts_del_list);
+	return FSM_ST_CONTACT_DELETE;
 }
 
 fsm_state_t fsm_st_menu_call_logs(fsm_evnt_t evnt)
@@ -260,7 +369,7 @@ fsm_state_t fsm_st_menu_call_logs(fsm_evnt_t evnt)
     case FSM_EVNT_NULL:
       break;
     default:
-      fsm_error(FSM_ST_MENU_CALL_LOGS);
+      break;
   }
 
   lcd_screen_hor_scroll(SCREEN_CALL_LOGS, option_index);
@@ -287,17 +396,10 @@ fsm_state_t fsm_st_menu_settings(fsm_evnt_t evnt)
     case FSM_EVNT_NULL:
       break;
     default:
-      fsm_error(FSM_ST_MENU_SETTINGS);
+      break;
   }
 
   lcd_screen_hor_scroll(SCREEN_SETTINGS, option_index);
 
   return FSM_ST_MENU_SETTINGS;
-}
-
-void fsm_error(fsm_state_t state)
-{
-	printf("ERROR!\n");
-	printf("State: %d\n", state);
-	exit(1);
 }

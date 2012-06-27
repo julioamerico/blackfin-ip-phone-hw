@@ -1,4 +1,4 @@
-IDIR = -I./linphone/linphone-3.1.2/coreapi -I../fsm
+IDIR = -I./linphone/linphone-3.1.2/coreapi -I../fsm -I../drivers/lcd -I./
 
 ipphone.o: ipphone.c Linphone
 	$(CC) $(LDFLAGS) -c ipphone.c $(IDIR)
