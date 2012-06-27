@@ -109,7 +109,7 @@ void sublist_free(SubList *sub);
 StatusInitSubList sublist_init(MSList *list, SubList *sublist, int length);
 void sublist_uninit(SubList *sub);
 void sublist_update(MSList *list, SubList *sublist, Position pos);
-void sublist_show(SubList *sublist);
+void print_sublist_contacts(SubList *sublist);
 
 /*Funções para escrita das listas nos arquivos*/
 void read_call_log_from_file(LinphoneCore *lc, const char *path_missed, const char *path_received, const char *path_dialed);

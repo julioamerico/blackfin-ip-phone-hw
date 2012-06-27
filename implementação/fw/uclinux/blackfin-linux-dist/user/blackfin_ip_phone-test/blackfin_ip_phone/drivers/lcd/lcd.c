@@ -62,7 +62,7 @@ int lcd_write_justified(lcd_write_justified_t lcd_op, int row, char str[])
 }
 
 /*
- *	IDLE AND SAVE SCREENS
+ *	PRE-DEFINED SCREENS
  */
 
 void lcd_screen_idle(char *name, char *identity, char *time, char *day, char *left, char *right)
@@ -80,6 +80,14 @@ void lcd_screen_save(void)
 {
 	drv_lcd_clear_screen();
 	lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 2, "SAVING ...");
+	usleep(800000);
+}
+
+void lcd_screen_empty_list(void)
+{
+	drv_lcd_clear_screen();
+	lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 2, "EMPTY LIST");
+	usleep(800000);
 }
 
 /*
@@ -89,7 +97,7 @@ void lcd_screen_save(void)
 int screen_option_qty[MAX_HOR_SCREENS] =
 {
   [SCREEN_MENU] 			= 3,
-  [SCREEN_CONTACTS] 	= 3,
+  [SCREEN_CONTACTS] 	= 4,
   [SCREEN_CALL_LOGS] 	= 3,
   [SCREEN_SETTINGS]		= 5,
 };
@@ -108,18 +116,20 @@ static fsm_state_t screen_menu_options_map[3] =
   FSM_ST_MENU_SETTINGS,
 };
 
-static char *screen_contacts_options[3] =
+static char *screen_contacts_options[4] =
 {
 	"LIST",
 	"EDIT",
 	"ADD",
+	"DELETE",
 };
 
-static fsm_state_t screen_contacts_options_map[3] =
+static fsm_state_t screen_contacts_options_map[4] =
 {
 	FSM_ST_CONTACTS_LIST,
 	FSM_ST_CONTACTS_EDIT,
 	FSM_ST_CONTACT_ADD,
+	FSM_ST_CONTACT_DELETE,
 };
 
 static char *screen_call_logs_options[3] =
