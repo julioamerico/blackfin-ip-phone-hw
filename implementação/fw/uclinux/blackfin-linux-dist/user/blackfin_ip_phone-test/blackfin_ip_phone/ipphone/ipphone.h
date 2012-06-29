@@ -71,6 +71,8 @@ typedef enum _ProxyEditType{
 	Route	
 }ProxyEditType;
 
+#define ipphone_free(ptr) if(!ptr) free(ptr)
+
 /*The main API*/
 void ipphone_init(LinphoneCore *lc, void * userdata);
 void ipphone_uninit(LinphoneCore *lc);
@@ -125,5 +127,7 @@ const char *ipphone_calllog_get_from(LinphoneCallLog *cl);
 const char *ipphone_calllog_get_to(LinphoneCallLog *cl);
 const char *ipphone_calllog_get_date(LinphoneCallLog *cl);
 int ipphone_calllog_get_duration(LinphoneCallLog *cl);
+
+int ipphone_call_get_contacts(LinphoneCore *lc, char **username);
 
 #endif/* IP_PHONE_H */

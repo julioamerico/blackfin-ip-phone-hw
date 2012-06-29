@@ -1,4 +1,5 @@
 #include <eXosip2/eXosip.h>
+#include <string.h>
 #include "linphonecore.h"
 #include "ipphone.h"
 #include "queue.h"
@@ -791,3 +792,43 @@ int ipphone_calllog_get_duration(LinphoneCallLog *cl){
 	return cl->duration;
 }
 /*END CALL LOG*/
+
+static int sip_uri_get_username(const char *uri, char **username){
+	char *str, *str2;
+	int length;	
+	str = strchr(uri, '<');
+	if(!str)
+		return 1;
+	length = str - uri - 1;
+	if(length > 0){
+		*username = strndup(uri, length);
+	}
+	else{
+		str = strstr(uri, "<sip:");
+		str2 = strchr(uri, '@');
+		if(!str || !str2)
+			return 1;
+		length = str2 - str - 5;
+		*username = strndup(str + 5, length);
+	} 
+	return 0;
+}
+
+int ipphone_call_get_contacts(LinphoneCore *lc, char **username){
+	char *uri = NULL;
+	LinphoneCallLog *calllog;
+
+	if(!lc->call)
+		return 1;
+
+	calllog = lc->call->log;
+	switch(calllog->dir){
+		case LinphoneCallIncoming:
+			uri = calllog->from; 	
+			break;
+		case LinphoneCallOutgoing:
+			uri = calllog->to;
+			break;
+	}
+	return sip_uri_get_username(uri, username);
+}
