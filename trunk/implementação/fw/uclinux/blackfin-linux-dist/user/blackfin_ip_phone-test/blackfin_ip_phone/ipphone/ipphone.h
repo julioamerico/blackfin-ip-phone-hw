@@ -128,6 +128,6 @@ const char *ipphone_calllog_get_to(LinphoneCallLog *cl);
 const char *ipphone_calllog_get_date(LinphoneCallLog *cl);
 int ipphone_calllog_get_duration(LinphoneCallLog *cl);
 
-int ipphone_call_get_contacts(LinphoneCore *lc, char **username);
+int ipphone_call_get_contacts(LinphoneCore *lc, char **username, int max_length);
 
 #endif/* IP_PHONE_H */
