@@ -792,8 +792,11 @@ int ipphone_calllog_get_duration(LinphoneCallLog *cl){
 	return cl->duration;
 }
 /*END CALL LOG*/
+static inline int min(int a, int b){ 
+	return (a < b) ? a : b; 
+}
 
-static int sip_uri_get_username(const char *uri, char **username){
+static int sip_uri_get_username(const char *uri, char **username, int max_length){
 	char *str, *str2;
 	int length;	
 	str = strchr(uri, '<');
@@ -801,7 +804,7 @@ static int sip_uri_get_username(const char *uri, char **username){
 		return 1;
 	length = str - uri - 1;
 	if(length > 0){
-		*username = strndup(uri, length);
+		*username = strndup(uri, min(length,max_length));
 	}
 	else{
 		str = strstr(uri, "<sip:");
@@ -809,12 +812,12 @@ static int sip_uri_get_username(const char *uri, char **username){
 		if(!str || !str2)
 			return 1;
 		length = str2 - str - 5;
-		*username = strndup(str + 5, length);
+		*username = strndup(str + 5, min(length,max_length));
 	} 
 	return 0;
 }
 
-int ipphone_call_get_contacts(LinphoneCore *lc, char **username){
+int ipphone_call_get_contacts(LinphoneCore *lc, char **username, int max_length){
 	char *uri = NULL;
 	LinphoneCallLog *calllog;
 
@@ -830,5 +833,5 @@ int ipphone_call_get_contacts(LinphoneCore *lc, char **username){
 			uri = calllog->to;
 			break;
 	}
-	return sip_uri_get_username(uri, username);
+	return sip_uri_get_username(uri, username, max_length);
 }
