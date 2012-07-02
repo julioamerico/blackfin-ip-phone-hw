@@ -14,7 +14,7 @@ const char *password = NULL;
 IPphoneAuthStack auth_stack;
 
 static void ipphone_call_received(LinphoneCore *lc, const char *from){
-	//queue_insert((main_queue_t *)lc->data, FSM_EVNT_CALL_IN_INVITE);
+	queue_insert((main_queue_t *)lc->data, FSM_EVNT_CALL_IN_INVITE);
 }
 void ipphone_set_passwd(const char *passwd){
 	password = passwd;
@@ -63,7 +63,7 @@ static void ipphone_notify_received(LinphoneCore *lc,LinphoneFriend *lf, const c
 static void ipphone_new_unknown_subscriber(LinphoneCore *lc, LinphoneFriend *lf, const char *url){
 }
 static void ipphone_bye_received(LinphoneCore *lc, const char *from){
-	//queue_insert((main_queue_t *)lc->data, FSM_EVNT_CALL_END);
+	queue_insert((main_queue_t *)lc->data, FSM_EVNT_CALL_END);
 	//passar a informação from
 }
 static void ipphone_text_received(LinphoneCore *lc, LinphoneChatRoom *cr, const char *from, const char *msg){
@@ -122,8 +122,8 @@ static void ipphone_general_state(LinphoneCore *lc, LinphoneGeneralState *gstate
 			break;
 	}
 	printf("estado: %d\n", gstate->new_state);
-/*	if(new_event != -1)*/
-/*		queue_insert((main_queue_t *)lc->data, new_event);*/
+	if(new_event != -1)
+		queue_insert((main_queue_t *)lc->data, new_event);
 }
 
 static void ipphone_dtmf_received(LinphoneCore *lc, int dtmf){
