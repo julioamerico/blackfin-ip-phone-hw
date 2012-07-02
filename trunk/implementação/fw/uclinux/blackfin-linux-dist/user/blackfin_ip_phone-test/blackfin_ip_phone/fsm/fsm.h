@@ -63,8 +63,6 @@ typedef enum {
 	FSM_EVNT_GPBUTTON_RIGHT,
 	FSM_EVNT_GPBUTTON_LEFT,
 
-	FSM_EVNT_LINPHONE,
-
 	FSM_EVNT_QUEUE_IS_EMPTY,
 
 	FSM_EVNT_CALL_IN_INVITE,
@@ -97,7 +95,7 @@ void fsm_init(fsm_t *fsm);
 fsm_state_t fsm_st_idle(fsm_evnt_t evnt);
 fsm_state_t fsm_st_menu(fsm_evnt_t evnt);
 fsm_state_t fsm_st_menu_contacts(fsm_evnt_t evnt);
-//fsm_state_t fsm_st_call_status(fsm_evnt_t evnt);
+fsm_state_t fsm_st_call_status(fsm_evnt_t evnt);
 fsm_state_t fsm_st_contacts_list(fsm_evnt_t evnt);
 fsm_state_t fsm_st_contacts_edit(fsm_evnt_t evnt);
 fsm_state_t fsm_st_contact_add(fsm_evnt_t evnt);

@@ -24,7 +24,7 @@ void fsm_init(fsm_t *fsm)
 	fsm->function[FSM_ST_IDLE]						= fsm_st_idle;
 	fsm->function[FSM_ST_MENU] 						= fsm_st_menu;
 	fsm->function[FSM_ST_MENU_CONTACTS]		=	fsm_st_menu_contacts;
-	//fsm->function[FSM_ST_CALL_STATUS]			= fsm_st_call_status;
+	fsm->function[FSM_ST_CALL_STATUS]			= fsm_st_call_status;
 	fsm->function[FSM_ST_CONTACTS_LIST]		= fsm_st_contacts_list;
 	fsm->function[FSM_ST_CONTACTS_EDIT]		= fsm_st_contacts_edit;
 	fsm->function[FSM_ST_CONTACT_ADD]			= fsm_st_contact_add;
@@ -62,6 +62,7 @@ fsm_state_t fsm_st_idle(fsm_evnt_t evnt)
 				return FSM_ST_DIALING;
 			}
 	}
+	return FSM_ST_IDLE;
 }
 
 fsm_state_t fsm_st_dialing(fsm_evnt_t evnt)
@@ -175,38 +176,114 @@ fsm_state_t fsm_st_menu_contacts(fsm_evnt_t evnt)
   lcd_screen_hor_scroll(SCREEN_CONTACTS, option_index);
   return FSM_ST_MENU_CONTACTS;
 }
-/*
+
 fsm_state_t fsm_st_call_status(fsm_evnt_t evnt)
 {
-	static int aux = 0;
+	static int aux1 = 0, aux2 = 0, aux3 = 0;
+	int delta_time_sec = 0;
+	static int delta_time_min = 0, delta_time_hour = 0;
+	static int initial_time_sec;
+	static int previous_time_sec = 0, previous_time_min = 0;
 	char lcd_line[3][20];
-	static time_t current_time;
+	struct tm *current_time;
+	time_t t;
+	char *username;
 
-	current_time = time(NULL);
+  if (!aux1)
+  {
+		if (ipphone_call_get_contacts(&ipphone_core, &username, 11))
+			username = "Error";
+		drv_lcd_clear_screen();
+    snprintf(lcd_line[0], 20, "STATUS: %s" , "CONNECTING");
+    snprintf(lcd_line[1], 20, "CONTACT: %s", username);
+		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED,  1, lcd_line[0]);
+		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED,  2, lcd_line[1]);
+		lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED, 4, "END CALL");
+		ipphone_free(username);
+		aux1 = 1;
+  }
 	
-	printf("\n\n\n\n\nCURRENT TIME!!!!! %d\n\n\n\n", current_time);	
-	
-	if (call_time < 60segundos)
+	if (aux2)
 	{
-		snprintf(lcd_line[3], 20, "TIME: %ds");
-	}
-	else if ((call_time >= 60segundos) && (call_time < 1hora))
-	{
-		snprintf(lcd_line[3], 20, "TIME: %dmin %dsec");
-	}
-	else if ((call_time >= 1hora) && (call_time < 9horas))
-	{
-		snprintf(lcd_line[3], 20, "TIME: %dh %dmin %dsec");
-	}	
+		t = time(NULL);
+		current_time = localtime(&t);
+		if (!aux3)
+		{
+			initial_time_sec = current_time->tm_sec;
+			aux3 = 1;
+		}
 
-	if (!aux)
-	{
-		snprintf(lcd_line[1], 20, "STATUS: %s" , XXXXXX);
-		snprintf(lcd_line[2], 20, "CONTACT: %s", XXXXXX);
-		aux = 1;
+	  if (current_time->tm_sec >= initial_time_sec)
+      delta_time_sec = current_time->tm_sec - initial_time_sec;
+    else
+      delta_time_sec = current_time->tm_sec + 60 - initial_time_sec;
+		
+		if (previous_time_sec != delta_time_sec)
+		{
+			if ((previous_time_sec == 59) && (delta_time_sec == 0))
+			{
+				if (previous_time_min < 59)
+					delta_time_min = delta_time_min + 1;
+				else
+				{
+					delta_time_min = 0;
+					delta_time_hour = delta_time_hour + 1;
+					if (delta_time_hour == 10)
+					{
+						delta_time_sec = 59;
+						delta_time_min = 59;
+						delta_time_hour = 9;
+						aux2 = 0;
+					}
+				}
+			}	
+		}
+
+		if (previous_time_sec != delta_time_sec)
+		{
+			if ((delta_time_min == 0) && (delta_time_hour == 0))
+				snprintf(lcd_line[2], 20, "TIME: %ds", delta_time_sec);
+			else if ((delta_time_min > 0) && (delta_time_hour == 0))
+				snprintf(lcd_line[2], 20, "TIME: %dmin %dsec", delta_time_min, delta_time_sec);
+			else if ((delta_time_hour > 0) && (delta_time_hour <= 9))
+				snprintf(lcd_line[2], 20, "TIME: %dh %dmin %dsec", delta_time_hour, delta_time_min, delta_time_sec);
+
+			lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, 3, lcd_line[2]);
+		}
+
+		previous_time_sec = delta_time_sec;
+    previous_time_min = delta_time_min;	
 	}
+
+	switch (evnt)
+	{
+		case FSM_EVNT_CALL_OUT_CONNECTED:
+			snprintf(lcd_line[1], 20, "STATUS: %s" , "IN PROGRESS");
+			lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, 1, lcd_line[1]);
+			aux2 = 1;
+			break;
+		case FSM_EVNT_GPBUTTON_RIGHT:
+		case FSM_EVNT_CALL_END:
+			snprintf(lcd_line[1], 20, "STATUS: %s" , "CALL ENDED ");
+			lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, 1, lcd_line[1]);
+			ipphone_terminate_call(&ipphone_core);
+			usleep(1000000);
+			aux1 = 0;
+			aux2 = 0;
+			aux3 = 0;
+			previous_time_sec = 0;
+			previous_time_min = 0;
+			delta_time_min = 0;
+			delta_time_hour = 0;
+			return FSM_ST_IDLE;
+    default:
+      break;
+	}
+
+	queue_insert(&event_queue, FSM_EVNT_NULL);
+	return FSM_ST_CALL_STATUS;
 }
-*/
+
 fsm_state_t fsm_st_contacts_list(fsm_evnt_t evnt)
 {
 	static SubList contacts_list;
@@ -228,8 +305,9 @@ fsm_state_t fsm_st_contacts_list(fsm_evnt_t evnt)
 			sublist_uninit(&contacts_list);
       return FSM_ST_MENU_CONTACTS;
     case FSM_EVNT_GPBUTTON_LEFT:
-    	//sublist_friend_call(&ipphone_core, &contacts_list);
-			//return FSM_ST_CALL_STATUS;
+    	sublist_friend_call(&ipphone_core, &contacts_list);
+			sublist_uninit(&contacts_list);
+			return FSM_ST_CALL_STATUS;
     case FSM_EVNT_NAVSWITCH_UP:
       sublist_update(ipphone_core.friends, &contacts_list, UP);
       break;
