@@ -84,14 +84,17 @@ fsm_state_t fsm_st_dialing(fsm_evnt_t evnt)
 					snprintf(url, 46, "sip:%s@%s", buffer[0].buffer, buffer[1].buffer);
 				else
 					url = buffer[0].buffer;
-				
+	     
+			  drv_lcd_cursor(LCD_TOGGLE_OFF);
+  		  edit_screen_uninit(&dialing_screen);
 				ipphone_call(&ipphone_core, url);
-				//return FSM_ST_OUTGOING_CALL;
+				return FSM_ST_CALL_STATUS;
 			}
 			break;
     case FSM_EVNT_GPBUTTON_RIGHT:
-			edit_screen_uninit(&dialing_screen);
 			drv_lcd_cursor(LCD_TOGGLE_OFF);
+			edit_screen_uninit(&dialing_screen);
+			ipphone_terminate_call(&ipphone_core);
       return FSM_ST_IDLE;
 		case FSM_EVNT_NAVSWITCH_LEFT:
 			edit_screen_move_cursor(&dialing_screen, LEFT);
@@ -192,7 +195,7 @@ fsm_state_t fsm_st_call_status(fsm_evnt_t evnt)
   if (!aux1)
   {
 		if (ipphone_call_get_contacts(&ipphone_core, &username, 11))
-			username = "Error";
+			username = "Unknown Contact";
 		drv_lcd_clear_screen();
     snprintf(lcd_line[0], 20, "STATUS: %s" , "CONNECTING");
     snprintf(lcd_line[1], 20, "CONTACT: %s", username);
@@ -276,6 +279,16 @@ fsm_state_t fsm_st_call_status(fsm_evnt_t evnt)
 			delta_time_min = 0;
 			delta_time_hour = 0;
 			return FSM_ST_IDLE;
+    case FSM_EVNT_LINPHONE_CALL_FAIL:
+      usleep(2000000);
+      aux1 = 0;
+      aux2 = 0;
+      aux3 = 0;
+      previous_time_sec = 0;
+      previous_time_min = 0;
+      delta_time_min = 0;
+      delta_time_hour = 0;
+      return FSM_ST_IDLE;
     default:
       break;
 	}
