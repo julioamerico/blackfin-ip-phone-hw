@@ -37,19 +37,22 @@ static void ipphone_prompt_for_auth(LinphoneCore *lc, const char *realm, const c
 }
 
 static void ipphone_display_something(LinphoneCore *lc, const char *something){
-	fsm_evnt_t new_event = -1;
-	
 	if(!strcmp(something, "User is busy."))
-		new_event = FSM_EVNT_USER_BUSY;
+		something = "STATUS: BUSY        ";
 	else
-		if(!strcmp(something, "User does not want to be disturbed."))
-			new_event = FSM_EVNT_USER_NO_WANT_DISTURBED;
+	if(!strcmp(something, "User does not want to be disturbed."))
+		something = "STATUS: DECLINED    ";
 	else
-		if(!strcmp(something, "Could not reach destination."))
-			new_event = FSM_EVNT_COULD_NOT_REACH_DESTINATION;
-/*	if(new_event != -1)*/
-/*		queue_insert((main_queue_t *)lc->data, new_event);*/
-		
+	if(!strcmp(something, "Could not reach destination."))
+		something = "STATUS: UNREACHABLE ";
+  else
+  {
+    printf("something_display:%s\n",something);
+    return;
+  }
+
+	lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, 1, something);
+	queue_insert((main_queue_t *)lc->data, FSM_EVNT_LINPHONE_CALL_FAIL);
 }
 
 static void ipphone_display_url(LinphoneCore *lc, const char *something, const char *url){
@@ -73,16 +76,27 @@ static void ipphone_display_status(LinphoneCore *lc, const char *something){
 	fsm_evnt_t new_event = -1;
 	
 	if(!strcmp(something, "User is temporarily unavailable."))
-		new_event = FSM_EVNT_USER_UNAVAILABLE;
+		something = "STATUS: UNAVAILABLE ";
 	else
 	if(!strcmp(something, "User cannot be found at given address."))
-		new_event = FSM_EVNT_USER_CANNOT_FOUND;
+		something = "STATUS: UNREACHABLE ";
 	else
 	if(!strcmp(something, "Call declined."))
-		new_event = FSM_EVNT_CALL_DECLINED;
-/*	if(new_event != -1)*/
-/*		queue_insert((main_queue_t *)lc->data, new_event);*/
-	printf("something:%s\n",something);
+		something = "STATUS: DECLINED    ";
+	else
+	if(!strcmp(something, "Service Unavailable"))
+		something = "STATUS: UNAVAILABLE ";
+	else
+	if(!strcmp(something, "Address Incomplete"))
+		something = "STATUS: UNREACHABLE ";
+  else
+	{
+    printf("something_status:%s\n",something);
+		return;
+	}
+
+  lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, 1, something);
+  queue_insert((main_queue_t *)lc->data, FSM_EVNT_LINPHONE_CALL_FAIL);
 }
 
 static void ipphone_general_state(LinphoneCore *lc, LinphoneGeneralState *gstate){
