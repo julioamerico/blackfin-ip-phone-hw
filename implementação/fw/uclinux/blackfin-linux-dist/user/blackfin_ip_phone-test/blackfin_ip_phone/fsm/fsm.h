@@ -22,6 +22,7 @@ typedef enum {
 
 	FSM_ST_CONTACTS_LIST,
 	FSM_ST_CONTACTS_EDIT,
+	FSM_ST_CONTACTS_EDIT_FIELDS,
 	FSM_ST_CONTACT_ADD,
 	FSM_ST_CONTACT_DELETE,
 
@@ -100,6 +101,7 @@ fsm_state_t fsm_st_menu_contacts(fsm_evnt_t evnt);
 fsm_state_t fsm_st_call_status(fsm_evnt_t evnt);
 fsm_state_t fsm_st_contacts_list(fsm_evnt_t evnt);
 fsm_state_t fsm_st_contacts_edit(fsm_evnt_t evnt);
+fsm_state_t fsm_st_contacts_edit_fields(fsm_evnt_t evnt);
 fsm_state_t fsm_st_contact_add(fsm_evnt_t evnt);
 fsm_state_t fsm_st_contact_delete(fsm_evnt_t evnt);
 fsm_state_t fsm_st_menu_call_logs(fsm_evnt_t evnt);
