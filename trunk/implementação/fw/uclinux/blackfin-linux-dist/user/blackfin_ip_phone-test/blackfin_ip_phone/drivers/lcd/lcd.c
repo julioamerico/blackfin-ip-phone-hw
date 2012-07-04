@@ -256,8 +256,7 @@ static void print_slice(alphanumeric_buffer *strc_buffer, int begin){
 	int length = strc_buffer->slice.size;
 	char wData[1];
 	wData[0] = begin;
-	printf("cursor slicer:%d\n",strc_buffer->slice.cursor);
-	printf("cursor buffer:%d\n",strc_buffer->cursor);
+
 	if(strc_buffer->last_element_position < strc_buffer->slice.size){
 		length = strlen(strc_buffer->buffer);	
 	}
@@ -374,7 +373,8 @@ static int alphanumeric_buffer_init(alphanumeric_buffer *strc_buffer, int size_b
 	return 2;
 }
 static void alphanumeric_buffer_uninit(alphanumeric_buffer *strc_buffer){
-	strc_buffer->is_init = FALSE;	
+	strc_buffer->is_init = FALSE;
+	ipphone_free(strc_buffer->buffer);	
 	return;
 }
 
@@ -410,7 +410,6 @@ static void alphanumeric_buffer_add(alphanumeric_buffer *strc_buffer, fsm_evnt_t
 		if(strc_buffer->cursor < strc_buffer->size_buffer - 1){
 			strc_buffer->cursor++;
 		}
-		printf("offset: %d\n",strc_buffer->slice.offset);
 		slicer_update(strc_buffer);
 	}
 	if(strc_buffer->text.type == ONLYNUMBERS)
@@ -474,7 +473,6 @@ static void move_cursor(alphanumeric_buffer *strc_buffer, int pos){
 			}
 			break;
 	}
-	printf("cursor:%d\n",strc_buffer->cursor);
 }
 static void change_text_transform(alphanumeric_buffer *strc_buffer){
 	strc_buffer->text.type = (++strc_buffer->text.type)%4;
@@ -509,14 +507,43 @@ char *contacts_edit_fields[CONTACTS_EDIT_SIZE] =
 	"SIP Server:",
 };
 
+static void alphanumeric_buffer_set(alphanumeric_buffer *strc_buffer, char *str){
+	int str_length = strlen(str) - 1;
+	if(str_length > strc_buffer->size_buffer - 1)
+		return;
+	strcpy(strc_buffer->buffer, str);	
+	strc_buffer->cursor = str_length;
+	strc_buffer->last_element_position = str_length;
+	strc_buffer->slice.offset = str_length - strc_buffer->slice.size + 1;
+	if(strc_buffer->slice.offset < 0){
+		strc_buffer->slice.offset = 0;
+		strc_buffer->slice.cursor = str_length;
+	}
+	else
+		strc_buffer->slice.cursor = strc_buffer->slice.size - 1;
+}
+
+void edit_screen_init_params(edit_screen *edit, alphanumeric_buffer *buffer, int size_vet_buffer, int size_buffer, char **edit_fields, void *data,void(*get_fields)(void*,char **,int)){
+	int i;
+	char *fields;
+	if(buffer[0].is_init)
+		return;
+	edit_screen_init(edit, buffer, size_vet_buffer, size_buffer, edit_fields);
+	for(i = 0; i < edit->size; i++){
+		get_fields(data, &fields, i);
+		alphanumeric_buffer_set(buffer + i,fields);
+	}
+	ipphone_free(fields);
+	
+}
+
 void edit_screen_init(edit_screen *edit, alphanumeric_buffer *buffer, int size_vet_buffer, int size_buffer, char **edit_fields){
 	int i, size_slice;
 	edit->vet_buffer = buffer;
 	edit->size = size_vet_buffer - 3;
-	printf("size_vet:%d\n",size_vet_buffer);
+
 	for(i = 0; i < edit->size; i++){
 		size_slice = LCD_MAX_COL - strlen(edit_fields[i + 3]) - 1;
-		printf("size_slice:%d\n",size_slice);
 		if(!alphanumeric_buffer_init(edit->vet_buffer + i, size_buffer, size_slice))
 			return;
 	}
