@@ -17,6 +17,7 @@ extern LinphoneCore ipphone_core;
 extern int screen_option_qty[MAX_HOR_SCREENS];
 extern hor_scroll_screen_fields_t screen[MAX_HOR_SCREENS];
 extern main_queue_t event_queue;
+LinphoneFriend *edit_lf;
 
 void fsm_init(fsm_t *fsm)
 {
@@ -27,6 +28,7 @@ void fsm_init(fsm_t *fsm)
 	fsm->function[FSM_ST_CALL_STATUS]			= fsm_st_call_status;
 	fsm->function[FSM_ST_CONTACTS_LIST]		= fsm_st_contacts_list;
 	fsm->function[FSM_ST_CONTACTS_EDIT]		= fsm_st_contacts_edit;
+	fsm->function[FSM_ST_CONTACTS_EDIT_FIELDS]		= fsm_st_contacts_edit_fields;
 	fsm->function[FSM_ST_CONTACT_ADD]			= fsm_st_contact_add;
 	fsm->function[FSM_ST_CONTACT_DELETE]	= fsm_st_contact_delete;
 	fsm->function[FSM_ST_MENU_CALL_LOGS]	= fsm_st_menu_call_logs;
@@ -337,10 +339,92 @@ fsm_state_t fsm_st_contacts_list(fsm_evnt_t evnt)
   return FSM_ST_CONTACTS_LIST;
 }
 
-fsm_state_t fsm_st_contacts_edit(fsm_evnt_t evnt)
-{
+fsm_state_t fsm_st_contacts_edit(fsm_evnt_t evnt){
+	static SubList contacts_list;
+	drv_lcd_clear_screen();
+	lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 1, "CONTACT LIST");
+	lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, 	4, "SELECT");
+	lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED, 	4, "BACK");	
+
+	if (sublist_init(ipphone_core.friends, &contacts_list, 2) == EMPTY){
+		lcd_screen_empty_list();
+		return FSM_ST_MENU_CONTACTS;
+	}
+
+	switch (evnt){
+		case FSM_EVNT_GPBUTTON_RIGHT:
+			sublist_uninit(&contacts_list);
+      			return FSM_ST_MENU_CONTACTS;
+    		case FSM_EVNT_GPBUTTON_LEFT:
+			edit_lf = contacts_list.vet[contacts_list.cursor]->data;
+			sublist_uninit(&contacts_list);
+			return FSM_ST_CONTACTS_EDIT_FIELDS;
+    		case FSM_EVNT_NAVSWITCH_UP:
+      			sublist_update(ipphone_core.friends, &contacts_list, UP);
+      			break;
+    		case FSM_EVNT_NAVSWITCH_DOWN:
+      			sublist_update(ipphone_core.friends, &contacts_list, DOWN);
+      			break;
+    		case FSM_EVNT_NULL:
+      			break;
+    		default:
+      			break;
+  	}
+
+	print_sublist_contacts(&contacts_list);
+	return FSM_ST_CONTACTS_EDIT;	
 }
 
+fsm_state_t fsm_st_contacts_edit_fields(fsm_evnt_t evnt){
+	extern char *contacts_edit_fields[CONTACTS_EDIT_SIZE];
+	static alphanumeric_buffer buffer[BUFFER_SIZE(CONTACTS_EDIT_SIZE)];
+	static edit_screen contact_screen;
+	char url[70];
+	drv_lcd_cursor(LCD_TOGGLE_ON);
+	edit_screen_init_params(&contact_screen, buffer, CONTACTS_EDIT_SIZE, 20, contacts_edit_fields, edit_lf, ipphone_get_friends_fields);
+
+	switch (evnt){
+		case FSM_EVNT_GPBUTTON_RIGHT:
+			edit_screen_uninit(&contact_screen);
+			drv_lcd_cursor(LCD_TOGGLE_OFF);
+	      		return FSM_ST_CONTACTS_EDIT;
+	    	case FSM_EVNT_GPBUTTON_LEFT:
+			if ((buffer[0].buffer[0] != '\0') && (buffer[1].buffer[0] != '\0') && (buffer[2].buffer[0] != '\0')){
+				drv_lcd_cursor(LCD_TOGGLE_OFF);
+				lcd_screen_save();
+				snprintf(url, 70, "%s <sip:%s@%s>", buffer[0].buffer, buffer[1].buffer, buffer[2].buffer);
+				ipphone_edit_friend(&ipphone_core, edit_lf, url);
+				edit_screen_uninit(&contact_screen);
+			}
+			return FSM_ST_CONTACTS_EDIT;
+		case FSM_EVNT_NAVSWITCH_LEFT:
+			edit_screen_move_cursor(&contact_screen, LEFT);
+			break;
+		case FSM_EVNT_NAVSWITCH_RIGHT:
+			edit_screen_move_cursor(&contact_screen, RIGHT);
+			break;
+		case FSM_EVNT_NAVSWITCH_UP:
+			edit_screen_move_cursor(&contact_screen, UP);
+			break;
+		case FSM_EVNT_NAVSWITCH_DOWN:
+			edit_screen_move_cursor(&contact_screen, DOWN);
+			break;
+		case FSM_EVNT_NAVSWITCH_SELECT:
+			edit_screen_delete(&contact_screen);
+			break;
+		case FSM_EVNT_KEYPAD_SHARP:
+			edit_screen_text_transform(&contact_screen);
+			break;
+	    case FSM_EVNT_NULL:
+	      		break;
+	    default:
+			if ((evnt >= FSM_EVNT_KEYPAD_1) && (evnt < FSM_EVNT_KEYPAD_SHARP))
+				edit_screen_add(&contact_screen, evnt);        
+	  }
+
+	print_edit_screen(&contact_screen);
+	return FSM_ST_CONTACTS_EDIT_FIELDS;	
+}
 fsm_state_t fsm_st_contact_add(fsm_evnt_t evnt)
 {
   extern char *contacts_edit_fields[CONTACTS_EDIT_SIZE];
