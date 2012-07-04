@@ -786,7 +786,7 @@ void ipphone_call_log_free(LinphoneCore *lc, IPphoneCallLogList type){
 	}
 	return;		
 }
-/*Após utilizar estas funções desalocar a string ??*/
+/*Após utilizar estas funções desalocar a string*/
 char *ipphone_calllog_get_dir(LinphoneCallLog *cl){
 	char *dir;	
 	switch(cl->dir){
@@ -843,28 +843,36 @@ static inline int min(int a, int b){
 
 static int sip_uri_get_username(const char *uri, char **username, int max_length){
 	char *str, *str2;
-	int length;	
-	str = strchr(uri, '<');
-	if(!str)
+	int length;
+	
+	str = strstr(uri, "<sip:");
+	str2 = strchr(uri, '@');
+	if(!str || !str2)
 		return 1;
-	length = str - uri - 1;
-	if(length > 0){
-		*username = strndup(uri, min(length,max_length));
-	}
-	else{
-		str = strstr(uri, "<sip:");
-		str2 = strchr(uri, '@');
-		if(!str || !str2)
-			return 1;
-		length = str2 - str - 5;
-		*username = strndup(str + 5, min(length,max_length));
-	} 
+	length = str2 - str - 5;
+	*username = strndup(str + 5, min(length,max_length));
 	return 0;
 }
-
+static int sip_uri_get_addr(const char *uri, char **addr){
+	char *begin, *end;
+	int length;	
+	begin = strchr(uri, '<');
+	end = strchr(uri, '>');
+	if(!begin || !end)
+		return 1;
+	length = end - begin - 1;
+	*addr = strndup(begin + 1, length);
+	return 0;
+}
+static int friend_cmp_addr(const void* data_list, const void *data){
+	char *addr = (char *)data;
+	LinphoneFriend *data_friend_list = (LinphoneFriend *)data_list;
+	return strcmp(addr, ipphone_friend_get_addr(data_friend_list));
+}
 int ipphone_call_get_contacts(LinphoneCore *lc, char **username, int max_length){
-	char *uri = NULL;
+	char *uri = NULL, *addr, *friend_name;
 	LinphoneCallLog *calllog;
+	MSList *friend;
 
 	if(!lc->call)
 		return 1;
@@ -878,5 +886,15 @@ int ipphone_call_get_contacts(LinphoneCore *lc, char **username, int max_length)
 			uri = calllog->to;
 			break;
 	}
-	return sip_uri_get_username(uri, username, max_length);
+	sip_uri_get_addr(uri,&addr);
+	friend = ms_list_find_custom(lc->friends, friend_cmp_addr, addr);
+	if(!friend){
+		sip_uri_get_username(uri,username,max_length);	
+	}
+	else{
+		friend_name = ipphone_friend_get_name(friend->data);
+		*username = strndup(friend_name, min(strlen(friend_name),max_length));
+	}
+	ipphone_free(addr);
+	return 0;
 }
