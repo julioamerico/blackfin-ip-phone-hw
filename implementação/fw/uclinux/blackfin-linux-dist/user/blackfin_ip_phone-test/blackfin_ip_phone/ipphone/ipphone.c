@@ -372,6 +372,9 @@ static int friend_cmp(const void *data, const void* data_list){
 	return strcmp(linphone_friend_get_name(data_friend), linphone_friend_get_name(data_friend_list));	
 }
 
+int is_friend_list_full(LinphoneCore *lc){
+	return (ms_list_size(lc->friends) >= lc->max_friend_list);
+}
 static int ipphone_core_add_friend_sorted(LinphoneCore *lc, LinphoneFriend *lf, int (*compare_func)(const void *, const void*))
 {
 	if(ms_list_size(lc->friends) < lc->max_friend_list){
@@ -389,7 +392,7 @@ static int ipphone_core_add_friend_sorted(LinphoneCore *lc, LinphoneFriend *lf, 
 int ipphone_add_friend(LinphoneCore *lc, const char *url){
 	LinphoneFriend *newFriend = linphone_friend_new_with_addr(url);
 	if(!newFriend){
-		return 1;
+		return -1;
 	}
 
 	return ipphone_core_add_friend_sorted(lc, newFriend, friend_cmp);
