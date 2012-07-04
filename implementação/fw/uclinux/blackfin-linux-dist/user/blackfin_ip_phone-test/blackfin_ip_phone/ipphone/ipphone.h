@@ -104,6 +104,8 @@ void sublist_edit_friend(LinphoneCore *lc, SubList *sub, const char *url);
 char *ipphone_friend_get_addr(LinphoneFriend *lf);
 char *ipphone_friend_get_name(LinphoneFriend *lf);
 char *ipphone_friend_get_url(LinphoneFriend *lf);
+void iphone_edit_friend(LinphoneCore *lc, LinphoneFriend *lf, const char *url);
+void ipphone_get_friends_fields(void *data, char **fields, int index);
 
 /*Manipulação de SubList*/
 SubList *sublist_new();
