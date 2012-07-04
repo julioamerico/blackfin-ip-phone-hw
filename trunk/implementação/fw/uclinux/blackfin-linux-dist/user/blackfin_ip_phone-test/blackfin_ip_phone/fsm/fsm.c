@@ -22,18 +22,20 @@ LinphoneFriend *edit_lf;
 void fsm_init(fsm_t *fsm)
 {
 	fsm->state = FSM_ST_IDLE;
-	fsm->function[FSM_ST_IDLE]						= fsm_st_idle;
-	fsm->function[FSM_ST_MENU] 						= fsm_st_menu;
-	fsm->function[FSM_ST_MENU_CONTACTS]		=	fsm_st_menu_contacts;
-	fsm->function[FSM_ST_CALL_STATUS]			= fsm_st_call_status;
-	fsm->function[FSM_ST_CONTACTS_LIST]		= fsm_st_contacts_list;
-	fsm->function[FSM_ST_CONTACTS_EDIT]		= fsm_st_contacts_edit;
-	fsm->function[FSM_ST_CONTACTS_EDIT_FIELDS]		= fsm_st_contacts_edit_fields;
-	fsm->function[FSM_ST_CONTACT_ADD]			= fsm_st_contact_add;
-	fsm->function[FSM_ST_CONTACT_DELETE]	= fsm_st_contact_delete;
-	fsm->function[FSM_ST_MENU_CALL_LOGS]	= fsm_st_menu_call_logs;
-	fsm->function[FSM_ST_MENU_SETTINGS]		= fsm_st_menu_settings;
-	fsm->function[FSM_ST_DIALING]					= fsm_st_dialing;
+	fsm->function[FSM_ST_IDLE]									= fsm_st_idle;
+	fsm->function[FSM_ST_MENU] 									= fsm_st_menu;
+	fsm->function[FSM_ST_MENU_CONTACTS]					=	fsm_st_menu_contacts;
+	fsm->function[FSM_ST_INCOMING_CALL]					= fsm_st_incoming_call;
+	fsm->function[FSM_ST_RECENT_LOST_CALLS]			= fsm_st_recent_lost_calls;
+	fsm->function[FSM_ST_CALL_STATUS]						= fsm_st_call_status;
+	fsm->function[FSM_ST_CONTACTS_LIST]					= fsm_st_contacts_list;
+	fsm->function[FSM_ST_CONTACTS_EDIT]					= fsm_st_contacts_edit;
+	fsm->function[FSM_ST_CONTACTS_EDIT_FIELDS]	= fsm_st_contacts_edit_fields;
+	fsm->function[FSM_ST_CONTACT_ADD]						= fsm_st_contact_add;
+	fsm->function[FSM_ST_CONTACT_DELETE]				= fsm_st_contact_delete;
+	fsm->function[FSM_ST_MENU_CALL_LOGS]				= fsm_st_menu_call_logs;
+	fsm->function[FSM_ST_MENU_SETTINGS]					= fsm_st_menu_settings;
+	fsm->function[FSM_ST_DIALING]								= fsm_st_dialing;
 
 	fsm_st_idle(FSM_EVNT_NULL);
 }
@@ -57,6 +59,8 @@ fsm_state_t fsm_st_idle(fsm_evnt_t evnt)
 			return FSM_ST_CONTACT_ADD;
 		case FSM_EVNT_NULL:
 			return FSM_ST_IDLE;
+		case FSM_EVNT_CALL_IN_INVITE:
+			return FSM_ST_INCOMING_CALL;
 		default:
 			if ((evnt >= FSM_EVNT_KEYPAD_1) && (evnt <= FSM_EVNT_KEYPAD_SHARP))
 			{
@@ -182,6 +186,87 @@ fsm_state_t fsm_st_menu_contacts(fsm_evnt_t evnt)
   return FSM_ST_MENU_CONTACTS;
 }
 
+fsm_state_t fsm_st_incoming_call(fsm_evnt_t evnt)
+{
+	static int aux = 0;
+	char *string;
+	//char *contact;
+
+	if (!aux)
+	{
+		drv_lcd_clear_screen();
+		ipphone_call_get_contacts(&ipphone_core, &string, 20);
+		lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 2, string);
+		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, 4, "ACCEPT");
+		lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED, 4, "REJECT");
+		ipphone_free(string);
+		aux = 1;
+	}
+
+  switch (evnt)
+  {
+    case FSM_EVNT_GPBUTTON_RIGHT:
+			ipphone_terminate_call(&ipphone_core);
+			aux = 0;
+      return FSM_ST_IDLE;
+    case FSM_EVNT_GPBUTTON_LEFT:
+			ipphone_accept_call(&ipphone_core);
+			aux = 0;
+			return FSM_ST_CALL_STATUS;
+		case FSM_EVNT_CALL_END:
+			aux = 0;
+			return FSM_ST_RECENT_LOST_CALLS;
+    case FSM_EVNT_NULL:
+      break;
+    default:
+      break;
+  }
+
+  return FSM_ST_INCOMING_CALL;
+}
+
+fsm_state_t fsm_st_recent_lost_calls(fsm_evnt_t evnt)
+{
+  static int aux = 0;
+	static int lost_calls = 0;
+	char string[20];
+
+  if (!aux)
+  {
+    drv_lcd_clear_screen();
+		lost_calls = lost_calls + 1;
+		if (lost_calls == 1)
+			snprintf(string, 20, "1 LOST CALL", lost_calls);
+		else
+			snprintf(string, 20, "%d LOST CALLS", lost_calls);
+		lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 2, string);
+    lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, 4, "LIST");
+    lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED, 4, "EXIT");
+    aux = 1;
+  }
+
+  switch (evnt)
+  {
+    case FSM_EVNT_GPBUTTON_RIGHT:
+     	lost_calls = 0; 
+      aux = 0;
+      return FSM_ST_IDLE;
+    case FSM_EVNT_GPBUTTON_LEFT:
+      lost_calls = 0;
+      aux = 0;
+      return FSM_ST_CALL_LOGS_MISSED;
+    case FSM_EVNT_NULL:
+      break;
+    case FSM_EVNT_CALL_IN_INVITE:
+			aux = 0;
+      return FSM_ST_INCOMING_CALL;
+    default:
+      break;
+  }
+
+  return FSM_ST_RECENT_LOST_CALLS;
+}
+
 fsm_state_t fsm_st_call_status(fsm_evnt_t evnt)
 {
 	static int aux1 = 0, aux2 = 0, aux3 = 0;
@@ -199,10 +284,9 @@ fsm_state_t fsm_st_call_status(fsm_evnt_t evnt)
 		if (ipphone_call_get_contacts(&ipphone_core, &username, 11))
 			username = "Unknown Contact";
 		drv_lcd_clear_screen();
-    snprintf(lcd_line[0], 20, "STATUS: %s" , "CONNECTING");
     snprintf(lcd_line[1], 20, "CONTACT: %s", username);
-		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED,  1, lcd_line[0]);
 		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED,  2, lcd_line[1]);
+		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED,  1, "STATUS: CONNECTING");
 		lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED, 4, "END CALL");
 		ipphone_free(username);
 		aux1 = 1;
@@ -431,6 +515,18 @@ fsm_state_t fsm_st_contact_add(fsm_evnt_t evnt)
 	static alphanumeric_buffer buffer[BUFFER_SIZE(CONTACTS_EDIT_SIZE)];
 	static edit_screen contact_screen;
 	char url[70];
+	static int aux = 0;
+
+	if (aux == 0)
+	{
+		if (is_friend_list_full(&ipphone_core))
+		{
+			drv_lcd_cursor(LCD_TOGGLE_OFF);
+			lcd_screen_full_list();		
+			return FSM_ST_MENU_CONTACTS;
+		}
+		aux = 1;
+	}
 
 	drv_lcd_cursor(LCD_TOGGLE_ON);
 	edit_screen_init(&contact_screen, buffer, CONTACTS_EDIT_SIZE, 20, contacts_edit_fields);
@@ -440,6 +536,7 @@ fsm_state_t fsm_st_contact_add(fsm_evnt_t evnt)
     case FSM_EVNT_GPBUTTON_RIGHT:
 			edit_screen_uninit(&contact_screen);
       drv_lcd_cursor(LCD_TOGGLE_OFF);
+			aux = 0;
       return FSM_ST_MENU_CONTACTS;
     case FSM_EVNT_GPBUTTON_LEFT:
       if ((buffer[0].buffer[0] != '\0') && (buffer[1].buffer[0] != '\0') && (buffer[2].buffer[0] != '\0'))
@@ -449,6 +546,7 @@ fsm_state_t fsm_st_contact_add(fsm_evnt_t evnt)
 				snprintf(url, 70, "%s <sip:%s@%s>", buffer[0].buffer, buffer[1].buffer, buffer[2].buffer);
 				ipphone_add_friend(&ipphone_core, url);
 				edit_screen_uninit(&contact_screen);
+				aux = 0;
         return FSM_ST_MENU_CONTACTS;
       }
 			break;
