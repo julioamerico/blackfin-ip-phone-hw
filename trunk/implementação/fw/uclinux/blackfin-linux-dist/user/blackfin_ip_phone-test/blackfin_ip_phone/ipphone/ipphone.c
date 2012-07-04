@@ -452,7 +452,35 @@ int sublist_is_empty(SubList *sub)
 	else
 		return 0;
 }
-
+void ipphone_edit_friend(LinphoneCore *lc, LinphoneFriend *lf, const char *url){
+	linphone_core_remove_friend(lc, lf);
+	ipphone_add_friend(lc, url);
+	write_friend_list_to_file(lc, friend_list);	
+}
+void ipphone_get_friends_fields(void *data, char **fields, int index){
+	LinphoneFriend *lf = (LinphoneFriend *)data;
+	osip_uri_t *uri;
+	if(osip_uri_init(&uri)){
+		printf("Erro ipphone_get_friends_fields\n");		
+		return;
+	}
+	if(osip_uri_parse(uri,ipphone_friend_get_addr(lf))){
+		printf("Erro ipphone_get_friends_fields\n");		
+		return;
+	}
+	switch(index){
+		case 0:
+			*fields = strdup(ipphone_friend_get_name(lf));
+			break;
+		case 1:
+			*fields = strdup(osip_uri_get_username(uri));
+			break;
+		case 2:
+			*fields = strdup(osip_uri_get_host(uri));
+			break;
+	}
+	osip_uri_free(uri); 
+}
 void sublist_edit_friend(LinphoneCore *lc, SubList *sub, const char *url){
 	linphone_core_remove_friend(lc, sub->vet[sub->cursor]->data);
 	ipphone_add_friend(lc, url);
