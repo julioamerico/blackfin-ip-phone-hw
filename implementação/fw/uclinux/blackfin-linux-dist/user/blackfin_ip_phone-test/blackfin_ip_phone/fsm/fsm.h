@@ -98,6 +98,8 @@ void fsm_init(fsm_t *fsm);
 fsm_state_t fsm_st_idle(fsm_evnt_t evnt);
 fsm_state_t fsm_st_menu(fsm_evnt_t evnt);
 fsm_state_t fsm_st_menu_contacts(fsm_evnt_t evnt);
+fsm_state_t fsm_st_incoming_call(fsm_evnt_t evnt);
+fsm_state_t fsm_st_recent_lost_calls(fsm_evnt_t evnt);
 fsm_state_t fsm_st_call_status(fsm_evnt_t evnt);
 fsm_state_t fsm_st_contacts_list(fsm_evnt_t evnt);
 fsm_state_t fsm_st_contacts_edit(fsm_evnt_t evnt);
