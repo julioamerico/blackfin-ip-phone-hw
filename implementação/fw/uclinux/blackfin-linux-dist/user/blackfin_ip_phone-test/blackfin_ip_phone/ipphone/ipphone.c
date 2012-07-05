@@ -89,6 +89,9 @@ static void ipphone_display_status(LinphoneCore *lc, const char *something){
 	else
 	if(!strcmp(something, "Address Incomplete"))
 		something = "STATUS: UNREACHABLE ";
+	else
+	if(!strcmp(something, "Could not reach destination."))
+		something = "STATUS: UNAVAILABLE ";
   else
 	{
     printf("something_status:%s\n",something);
@@ -214,7 +217,19 @@ void ipphone_iterate(LinphoneCore *lc){
 		printf("back-up\n");
 	}
 }
+static int friend_cmp_name(const void* data_list, const void *data){
+	char *name = (char *)data;
+	LinphoneFriend *data_friend_list = (LinphoneFriend *)data_list;
+	return strcmp(name, ipphone_friend_get_name(data_friend_list));
+}
 int ipphone_call(LinphoneCore *lc, const char *url){
+	MSList *friend;
+	if(!strchr(url, '@')){
+		friend = ms_list_find_custom(lc->friends, friend_cmp_name, url);
+		if(friend){
+			url = ipphone_friend_get_addr(friend->data);
+		}
+	}
 	if(lc->call != NULL){
 		return -1;	
 	}
@@ -864,6 +879,7 @@ static int sip_uri_get_addr(const char *uri, char **addr){
 	*addr = strndup(begin + 1, length);
 	return 0;
 }
+
 static int friend_cmp_addr(const void* data_list, const void *data){
 	char *addr = (char *)data;
 	LinphoneFriend *data_friend_list = (LinphoneFriend *)data_list;
