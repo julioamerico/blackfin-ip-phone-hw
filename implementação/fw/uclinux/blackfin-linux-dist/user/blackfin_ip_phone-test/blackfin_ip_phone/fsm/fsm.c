@@ -76,7 +76,7 @@ fsm_state_t fsm_st_dialing(fsm_evnt_t evnt)
 	extern char *dialing_edit_fields[DIALING_EDIT_SIZE];
 	static alphanumeric_buffer buffer[BUFFER_SIZE(DIALING_EDIT_SIZE)];
 	static edit_screen dialing_screen;
-	char *url;
+	char url[46];
 	
 	drv_lcd_cursor(LCD_TOGGLE_ON);
 	edit_screen_init(&dialing_screen, buffer, DIALING_EDIT_SIZE, 20, dialing_edit_fields);	
@@ -88,8 +88,10 @@ fsm_state_t fsm_st_dialing(fsm_evnt_t evnt)
 			{
 				if (buffer[1].buffer[0] != '\0')
 					snprintf(url, 46, "sip:%s@%s", buffer[0].buffer, buffer[1].buffer);
-				else
-					url = buffer[0].buffer;
+				else{
+					snprintf(url,46,"%s",buffer[0].buffer);
+		
+				}
 	     
 			  drv_lcd_cursor(LCD_TOGGLE_OFF);
   		  edit_screen_uninit(&dialing_screen);
