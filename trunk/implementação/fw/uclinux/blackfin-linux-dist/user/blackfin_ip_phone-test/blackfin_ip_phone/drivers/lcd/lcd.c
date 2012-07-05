@@ -90,6 +90,13 @@ void lcd_screen_empty_list(void)
 	usleep(800000);
 }
 
+void lcd_screen_full_list(void)
+{
+  drv_lcd_clear_screen();
+  lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 2, "LIST IS FULL");
+  usleep(800000);
+}
+
 /*
  *	HORIZONTAL SCROLL SCREENS
  */
