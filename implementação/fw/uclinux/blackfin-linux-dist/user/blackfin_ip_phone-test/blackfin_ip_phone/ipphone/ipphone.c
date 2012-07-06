@@ -132,6 +132,7 @@ static void ipphone_general_state(LinphoneCore *lc, LinphoneGeneralState *gstate
 		case GSTATE_CALL_IN_INVITE:
 			break;
 		case GSTATE_CALL_IN_CONNECTED:
+			new_event = FSM_EVNT_CALL_IN_CONNECTED;
 			break;
 		case GSTATE_CALL_END:
 			break;
