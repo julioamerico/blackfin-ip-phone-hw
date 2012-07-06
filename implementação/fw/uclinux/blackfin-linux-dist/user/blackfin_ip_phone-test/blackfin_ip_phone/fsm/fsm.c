@@ -42,32 +42,69 @@ void fsm_init(fsm_t *fsm)
 
 fsm_state_t fsm_st_idle(fsm_evnt_t evnt)
 {
-	char *name 			= "GORDIM";
-	char *identity	= "1001";
-	char *time			= "17:05";
-	char *day				= "SUN, 10/05/2012";
-	char *left			= "MENU";
-	char *right			= "CONTACTS";
+	static int aux = 0, previous_min = 0;
+	int current_min = 0;
+	char time_val[6];
+	char date [16];
+  struct tm *tm_ptr;
+  time_t t;
+	
+  t = time((time_t *)0);
+  tm_ptr = localtime(&t);
+	current_min = tm_ptr->tm_min;
 
-	lcd_screen_idle(name, identity, time, day, left, right);
+  if ((current_min != previous_min) && (aux == 1))
+  {
+    strftime(time_val, 6, "%H:%M", tm_ptr);
+    strftime(date, 16, "%a, %d/%m/%Y", tm_ptr);
 
+    lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 2, time_val);
+    lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 3, date);
+  }
+
+	previous_min = current_min;
+
+	if (!aux)
+	{
+    strftime(time_val, sizeof(time_val), "%H:%M", tm_ptr);
+    strftime(date, sizeof(date), "%a, %d/%m/%Y", tm_ptr);
+
+		drv_lcd_clear_screen();
+		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED,   1, "XXXXX");
+		lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED,  1, "XXXXX");
+		lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 2, time_val);
+		lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 3, date);
+		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED,   4, "MENU");
+		lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED,  4, "CONTACTS");
+
+		aux = 1;
+	}
+
+	previous_min = current_min;
+	
 	switch (evnt)
 	{
 		case FSM_EVNT_GPBUTTON_LEFT:
+			aux = 0;
 			return FSM_ST_MENU;
 		case FSM_EVNT_GPBUTTON_RIGHT:
+			aux = 0;
 			return FSM_ST_CONTACT_ADD;
-		case FSM_EVNT_NULL:
-			return FSM_ST_IDLE;
 		case FSM_EVNT_CALL_IN_INVITE:
+			aux = 0;
 			return FSM_ST_INCOMING_CALL;
+		case FSM_EVNT_NULL:
+			break;
 		default:
 			if ((evnt >= FSM_EVNT_KEYPAD_1) && (evnt <= FSM_EVNT_KEYPAD_SHARP))
 			{
+				aux = 0;
 				queue_insert(&event_queue, evnt);
 				return FSM_ST_DIALING;
 			}
 	}
+
+	queue_insert(&event_queue, FSM_EVNT_NULL);
 	return FSM_ST_IDLE;
 }
 
@@ -192,7 +229,6 @@ fsm_state_t fsm_st_incoming_call(fsm_evnt_t evnt)
 {
 	static int aux = 0;
 	char *string;
-	//char *contact;
 
 	if (!aux)
 	{
@@ -333,9 +369,9 @@ fsm_state_t fsm_st_call_status(fsm_evnt_t evnt)
 		if (previous_time_sec != delta_time_sec)
 		{
 			if ((delta_time_min == 0) && (delta_time_hour == 0))
-				snprintf(lcd_line[2], 20, "TIME: %ds", delta_time_sec);
+				snprintf(lcd_line[2], 20, "TIME: %ds ", delta_time_sec);
 			else if ((delta_time_min > 0) && (delta_time_hour == 0))
-				snprintf(lcd_line[2], 20, "TIME: %dmin %dsec", delta_time_min, delta_time_sec);
+				snprintf(lcd_line[2], 20, "TIME: %dmin %dsec  ", delta_time_min, delta_time_sec);
 			else if ((delta_time_hour > 0) && (delta_time_hour <= 9))
 				snprintf(lcd_line[2], 20, "TIME: %dh %dmin %dsec", delta_time_hour, delta_time_min, delta_time_sec);
 
@@ -348,6 +384,7 @@ fsm_state_t fsm_st_call_status(fsm_evnt_t evnt)
 
 	switch (evnt)
 	{
+		case FSM_EVNT_CALL_IN_CONNECTED:
 		case FSM_EVNT_CALL_OUT_CONNECTED:
 			snprintf(lcd_line[1], 20, "STATUS: %s" , "IN PROGRESS");
 			lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, 1, lcd_line[1]);
