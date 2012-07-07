@@ -92,9 +92,6 @@ typedef struct state_machine {
 	fsm_func_t		function[EVNT_QTY];
 } fsm_t;
 
-/*
-**	Function prototypes
-*/
 void fsm_init(fsm_t *fsm);
 fsm_state_t fsm_st_idle(fsm_evnt_t evnt);
 fsm_state_t fsm_st_menu(fsm_evnt_t evnt);
@@ -108,6 +105,9 @@ fsm_state_t fsm_st_contacts_edit_fields(fsm_evnt_t evnt);
 fsm_state_t fsm_st_contact_add(fsm_evnt_t evnt);
 fsm_state_t fsm_st_contact_delete(fsm_evnt_t evnt);
 fsm_state_t fsm_st_menu_call_logs(fsm_evnt_t evnt);
+fsm_state_t fsm_st_call_logs_missed(fsm_evnt_t evnt);
+fsm_state_t fsm_st_call_logs_received(fsm_evnt_t evnt);
+fsm_state_t fsm_st_call_logs_outgoing(fsm_evnt_t evnt);
 fsm_state_t fsm_st_menu_settings(fsm_evnt_t evnt);
 fsm_state_t fsm_st_dialing(fsm_evnt_t evnt);
 

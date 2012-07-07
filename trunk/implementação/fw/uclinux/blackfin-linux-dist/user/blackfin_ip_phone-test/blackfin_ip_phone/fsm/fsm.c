@@ -22,6 +22,7 @@ LinphoneFriend *edit_lf;
 void fsm_init(fsm_t *fsm)
 {
 	fsm->state = FSM_ST_IDLE;
+
 	fsm->function[FSM_ST_IDLE]									= fsm_st_idle;
 	fsm->function[FSM_ST_MENU] 									= fsm_st_menu;
 	fsm->function[FSM_ST_MENU_CONTACTS]					=	fsm_st_menu_contacts;
@@ -34,6 +35,9 @@ void fsm_init(fsm_t *fsm)
 	fsm->function[FSM_ST_CONTACT_ADD]						= fsm_st_contact_add;
 	fsm->function[FSM_ST_CONTACT_DELETE]				= fsm_st_contact_delete;
 	fsm->function[FSM_ST_MENU_CALL_LOGS]				= fsm_st_menu_call_logs;
+	fsm->function[FSM_ST_CALL_LOGS_MISSED]			= fsm_st_call_logs_missed;
+	fsm->function[FSM_ST_CALL_LOGS_RECEIVED]		= fsm_st_call_logs_received;
+	fsm->function[FSM_ST_CALL_LOGS_OUTGOING]		= fsm_st_call_logs_outgoing;
 	fsm->function[FSM_ST_MENU_SETTINGS]					= fsm_st_menu_settings;
 	fsm->function[FSM_ST_DIALING]								= fsm_st_dialing;
 
@@ -687,6 +691,147 @@ fsm_state_t fsm_st_menu_call_logs(fsm_evnt_t evnt)
   lcd_screen_hor_scroll(SCREEN_CALL_LOGS, option_index);
 
   return FSM_ST_MENU_CALL_LOGS;
+}
+
+fsm_state_t fsm_st_call_logs_missed(fsm_evnt_t evnt)
+{
+	static SubList call_logs_missed_list;
+	static int aux = 0;
+
+	if (!aux)
+	{
+		drv_lcd_clear_screen();
+		lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 1, "MISSED CALLS");
+		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, 	4, "CALL");
+		lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED, 	4, "BACK");
+		aux = 1;
+	}
+
+	if (sublist_init(ipphone_core.m_calls, &call_logs_missed_list, 2)	== EMPTY)
+	{
+		lcd_screen_empty_list();
+		return FSM_ST_MENU_CALL_LOGS;
+	}
+
+	switch (evnt)
+  {
+    case FSM_EVNT_GPBUTTON_RIGHT:
+			sublist_uninit(&call_logs_missed_list);
+			aux = 0;
+      return FSM_ST_MENU_CALL_LOGS;
+    case FSM_EVNT_GPBUTTON_LEFT:
+    	sublist_friend_call(&ipphone_core, &call_logs_missed_list);
+			sublist_uninit(&call_logs_missed_list);
+			aux = 0;
+			return FSM_ST_CALL_STATUS;
+    case FSM_EVNT_NAVSWITCH_UP:
+      sublist_update(ipphone_core.friends, &call_logs_missed_list, UP);
+      break;
+    case FSM_EVNT_NAVSWITCH_DOWN:
+      sublist_update(ipphone_core.friends, &call_logs_missed_list, DOWN);
+      break;
+    case FSM_EVNT_NULL:
+      break;
+    default:
+      break;
+  }
+
+	print_sublist_contacts(&call_logs_missed_list);
+  return FSM_ST_CALL_LOGS_MISSED;
+}
+
+fsm_state_t fsm_st_call_logs_received(fsm_evnt_t evnt)
+{
+	static SubList call_logs_received_list;
+	static int aux = 0;
+
+	if (!aux)
+	{
+		drv_lcd_clear_screen();
+		lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 1, "RECEIVED CALLS");
+		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, 	4, "CALL");
+		lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED, 	4, "BACK");
+		aux = 1;
+	}
+
+	if (sublist_init(ipphone_core.r_calls, &call_logs_received_list, 2)	== EMPTY)
+	{
+		lcd_screen_empty_list();
+		return FSM_ST_MENU_CALL_LOGS;
+	}
+
+	switch (evnt)
+  {
+    case FSM_EVNT_GPBUTTON_RIGHT:
+			sublist_uninit(&call_logs_received_list);
+			aux = 0;
+      return FSM_ST_MENU_CALL_LOGS;
+    case FSM_EVNT_GPBUTTON_LEFT:
+    	sublist_friend_call(&ipphone_core, &call_logs_received_list);
+			sublist_uninit(&call_logs_received_list);
+			aux = 0;
+			return FSM_ST_CALL_STATUS;
+    case FSM_EVNT_NAVSWITCH_UP:
+      sublist_update(ipphone_core.friends, &call_logs_received_list, UP);
+      break;
+    case FSM_EVNT_NAVSWITCH_DOWN:
+      sublist_update(ipphone_core.friends, &call_logs_received_list, DOWN);
+      break;
+    case FSM_EVNT_NULL:
+      break;
+    default:
+      break;
+  }
+
+	print_sublist_contacts(&call_logs_received_list);
+  return FSM_ST_CALL_LOGS_RECEIVED;
+}
+
+fsm_state_t fsm_st_call_logs_outgoing(fsm_evnt_t evnt)
+{
+	static SubList call_logs_outgoing_list;
+	static int aux = 0;
+
+	if (!aux)
+	{
+		drv_lcd_clear_screen();
+		lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 1, "OUTGOING CALLS");
+		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, 	4, "CALL");
+		lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED, 	4, "BACK");
+		aux = 1;
+	}
+
+	if (sublist_init(ipphone_core.d_numbers, &call_logs_outgoing_list, 2)	== EMPTY)
+	{
+		lcd_screen_empty_list();
+		return FSM_ST_MENU_CALL_LOGS;
+	}
+
+	switch (evnt)
+  {
+    case FSM_EVNT_GPBUTTON_RIGHT:
+			sublist_uninit(&call_logs_outgoing_list);
+			aux = 0;
+      return FSM_ST_MENU_CALL_LOGS;
+    case FSM_EVNT_GPBUTTON_LEFT:
+    	sublist_friend_call(&ipphone_core, &call_logs_outgoing_list);
+			sublist_uninit(&call_logs_outgoing_list);
+			aux = 0;
+			return FSM_ST_CALL_STATUS;
+    case FSM_EVNT_NAVSWITCH_UP:
+      sublist_update(ipphone_core.friends, &call_logs_outgoing_list, UP);
+      break;
+    case FSM_EVNT_NAVSWITCH_DOWN:
+      sublist_update(ipphone_core.friends, &call_logs_outgoing_list, DOWN);
+      break;
+    case FSM_EVNT_NULL:
+      break;
+    default:
+      break;
+  }
+
+	print_sublist_contacts(&call_logs_outgoing_list);
+  return FSM_ST_CALL_LOGS_OUTGOING;
 }
 
 fsm_state_t fsm_st_menu_settings(fsm_evnt_t evnt)
