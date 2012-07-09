@@ -669,6 +669,7 @@ fsm_state_t fsm_st_contact_delete(fsm_evnt_t evnt)
 fsm_state_t fsm_st_menu_call_logs(fsm_evnt_t evnt)
 {
   static int option_index = 0;
+	int option_index_copy;
 
   switch (evnt)
   {
@@ -681,7 +682,10 @@ fsm_state_t fsm_st_menu_call_logs(fsm_evnt_t evnt)
     case FSM_EVNT_GPBUTTON_RIGHT:
       option_index = 0;
       return FSM_ST_MENU;
-      break;
+		case FSM_EVNT_GPBUTTON_LEFT:
+			option_index_copy = option_index;
+			option_index = 0;
+			return screen[SCREEN_CALL_LOGS].options_map[option_index_copy];
     case FSM_EVNT_NULL:
       break;
     default:
@@ -725,10 +729,10 @@ fsm_state_t fsm_st_call_logs_missed(fsm_evnt_t evnt)
 			aux = 0;
 			return FSM_ST_CALL_STATUS;
     case FSM_EVNT_NAVSWITCH_UP:
-      sublist_update(ipphone_core.friends, &call_logs_missed_list, UP);
+      sublist_update(ipphone_core.m_calls, &call_logs_missed_list, UP);
       break;
     case FSM_EVNT_NAVSWITCH_DOWN:
-      sublist_update(ipphone_core.friends, &call_logs_missed_list, DOWN);
+      sublist_update(ipphone_core.m_calls, &call_logs_missed_list, DOWN);
       break;
     case FSM_EVNT_NULL:
       break;
@@ -736,7 +740,7 @@ fsm_state_t fsm_st_call_logs_missed(fsm_evnt_t evnt)
       break;
   }
 
-	print_sublist_contacts(&call_logs_missed_list);
+	print_sublist_call_logs(&ipphone_core, &call_logs_missed_list, ipphone_calllog_get_from);
   return FSM_ST_CALL_LOGS_MISSED;
 }
 
@@ -772,10 +776,10 @@ fsm_state_t fsm_st_call_logs_received(fsm_evnt_t evnt)
 			aux = 0;
 			return FSM_ST_CALL_STATUS;
     case FSM_EVNT_NAVSWITCH_UP:
-      sublist_update(ipphone_core.friends, &call_logs_received_list, UP);
+      sublist_update(ipphone_core.r_calls, &call_logs_received_list, UP);
       break;
     case FSM_EVNT_NAVSWITCH_DOWN:
-      sublist_update(ipphone_core.friends, &call_logs_received_list, DOWN);
+      sublist_update(ipphone_core.r_calls, &call_logs_received_list, DOWN);
       break;
     case FSM_EVNT_NULL:
       break;
@@ -783,7 +787,7 @@ fsm_state_t fsm_st_call_logs_received(fsm_evnt_t evnt)
       break;
   }
 
-	print_sublist_contacts(&call_logs_received_list);
+	print_sublist_call_logs(&ipphone_core, &call_logs_received_list, ipphone_calllog_get_from);
   return FSM_ST_CALL_LOGS_RECEIVED;
 }
 
@@ -819,10 +823,10 @@ fsm_state_t fsm_st_call_logs_outgoing(fsm_evnt_t evnt)
 			aux = 0;
 			return FSM_ST_CALL_STATUS;
     case FSM_EVNT_NAVSWITCH_UP:
-      sublist_update(ipphone_core.friends, &call_logs_outgoing_list, UP);
+      sublist_update(ipphone_core.d_numbers, &call_logs_outgoing_list, UP);
       break;
     case FSM_EVNT_NAVSWITCH_DOWN:
-      sublist_update(ipphone_core.friends, &call_logs_outgoing_list, DOWN);
+      sublist_update(ipphone_core.d_numbers, &call_logs_outgoing_list, DOWN);
       break;
     case FSM_EVNT_NULL:
       break;
@@ -830,7 +834,7 @@ fsm_state_t fsm_st_call_logs_outgoing(fsm_evnt_t evnt)
       break;
   }
 
-	print_sublist_contacts(&call_logs_outgoing_list);
+	print_sublist_call_logs(&ipphone_core, &call_logs_outgoing_list, ipphone_calllog_get_to);
   return FSM_ST_CALL_LOGS_OUTGOING;
 }
 
