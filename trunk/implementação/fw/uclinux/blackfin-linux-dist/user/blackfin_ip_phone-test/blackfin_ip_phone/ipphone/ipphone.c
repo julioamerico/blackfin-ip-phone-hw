@@ -625,11 +625,13 @@ void print_sublist_call_logs(LinphoneCore *lc, SubList *sublist, const char *(*i
 	int i;
 	LinphoneCallLog	*cl;
 	char *username;
-	
+		
 	for (i = 0; i < sublist->length; i++)
 	{
 		cl = sublist->vet[i]->data;
-		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, (2+i), search_contacts(lc, ipphone_calllog_get(cl), &username, 20));
+		search_contacts(lc, ipphone_calllog_get(cl), &username, 20);
+		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, (2+i), "                    ");
+		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, (2+i), username);
 		ipphone_free(username);
 	}
 	lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED, (2+sublist->cursor), "<");
@@ -649,7 +651,6 @@ static int write_call_log(void *data, void *file_log){
 	count += fprintf(file, "%s\n",log->start_date);
 	count += fprintf(file, "%d\n",log->duration);
 	return 0;
-	
 }
 
 static int write_friend_list(void *data, void *file_friend){
@@ -942,5 +943,6 @@ void search_contacts(LinphoneCore *lc, char *uri, char **username, int max_lengt
 		friend_name = ipphone_friend_get_name(friend->data);
 		*username = strndup(friend_name, min(strlen(friend_name),max_length));
 	}
+
 	ipphone_free(addr);
 }
