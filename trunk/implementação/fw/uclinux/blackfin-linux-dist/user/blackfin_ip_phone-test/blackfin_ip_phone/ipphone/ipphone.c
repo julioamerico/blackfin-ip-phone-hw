@@ -612,6 +612,19 @@ void print_sublist_contacts(SubList *sublist){
 	lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED, (2+sublist->cursor), "<");
 }
 
+void print_sublist_call_logs(SubList *sublist, const char *(*ipphone_calllog_get)(LinphoneCallLog*))
+{
+	int i;
+	LinphoneCallLog	*cl;
+	
+	for (i = 0; i < sublist->length; i++)
+	{
+		cl = sublist->vet[i]->data;
+		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, (2+i), ipphone_calllog_get(cl));
+	}
+	lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED, (2+sublist->cursor), "<");
+}
+
 /*Funções para escrita das listas nos arquivos*/
 static int write_call_log(void *data, void *file_log){
 	LinphoneCallLog *log = (LinphoneCallLog *)data;
