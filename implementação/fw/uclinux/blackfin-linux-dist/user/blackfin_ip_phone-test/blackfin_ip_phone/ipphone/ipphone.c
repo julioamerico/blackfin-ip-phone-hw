@@ -218,6 +218,14 @@ void ipphone_iterate(LinphoneCore *lc){
 		printf("back-up\n");
 	}
 }
+static inline int min(int a, int b){ 
+	return (a < b) ? a : b; 
+}
+static int friend_cmp_addr(const void* data_list, const void *data){
+	char *addr = (char *)data;
+	LinphoneFriend *data_friend_list = (LinphoneFriend *)data_list;
+	return strcmp(addr, ipphone_friend_get_addr(data_friend_list));
+}
 static int friend_cmp_name(const void* data_list, const void *data){
 	char *name = (char *)data;
 	LinphoneFriend *data_friend_list = (LinphoneFriend *)data_list;
@@ -612,15 +620,17 @@ void print_sublist_contacts(SubList *sublist){
 	lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED, (2+sublist->cursor), "<");
 }
 
-void print_sublist_call_logs(SubList *sublist, const char *(*ipphone_calllog_get)(LinphoneCallLog*))
+void print_sublist_call_logs(LinphoneCore *lc, SubList *sublist, const char *(*ipphone_calllog_get)(LinphoneCallLog*))
 {
 	int i;
 	LinphoneCallLog	*cl;
+	char *username;
 	
 	for (i = 0; i < sublist->length; i++)
 	{
 		cl = sublist->vet[i]->data;
-		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, (2+i), ipphone_calllog_get(cl));
+		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, (2+i), search_contacts(lc, ipphone_calllog_get(cl), &username, 20));
+		ipphone_free(username);
 	}
 	lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED, (2+sublist->cursor), "<");
 }
@@ -849,7 +859,6 @@ char *ipphone_calllog_get_status(LinphoneCallLog *cl){
 	}
 	return status;
 }
-
 const char *ipphone_calllog_get_from(LinphoneCallLog *cl){
 	return cl->from;
 }
@@ -866,9 +875,6 @@ int ipphone_calllog_get_duration(LinphoneCallLog *cl){
 	return cl->duration;
 }
 /*END CALL LOG*/
-static inline int min(int a, int b){ 
-	return (a < b) ? a : b; 
-}
 
 static int sip_uri_get_username(const char *uri, char **username, int max_length){
 	char *str, *str2;
@@ -894,11 +900,6 @@ static int sip_uri_get_addr(const char *uri, char **addr){
 	return 0;
 }
 
-static int friend_cmp_addr(const void* data_list, const void *data){
-	char *addr = (char *)data;
-	LinphoneFriend *data_friend_list = (LinphoneFriend *)data_list;
-	return strcmp(addr, ipphone_friend_get_addr(data_friend_list));
-}
 int ipphone_call_get_contacts(LinphoneCore *lc, char **username, int max_length){
 	char *uri = NULL, *addr, *friend_name;
 	LinphoneCallLog *calllog;
@@ -927,4 +928,19 @@ int ipphone_call_get_contacts(LinphoneCore *lc, char **username, int max_length)
 	}
 	ipphone_free(addr);
 	return 0;
+}
+void search_contacts(LinphoneCore *lc, char *uri, char **username, int max_length){
+	MSList *friend;
+	char *addr, *friend_name;	
+	sip_uri_get_addr(uri,&addr);
+	friend = ms_list_find_custom(lc->friends, friend_cmp_addr, addr);
+	
+	if(!friend){
+		sip_uri_get_username(uri,username,max_length);	
+	}
+	else{
+		friend_name = ipphone_friend_get_name(friend->data);
+		*username = strndup(friend_name, min(strlen(friend_name),max_length));
+	}
+	ipphone_free(addr);
 }
