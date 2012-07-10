@@ -39,6 +39,10 @@ void fsm_init(fsm_t *fsm)
 	fsm->function[FSM_ST_CALL_LOGS_RECEIVED]		= fsm_st_call_logs_received;
 	fsm->function[FSM_ST_CALL_LOGS_OUTGOING]		= fsm_st_call_logs_outgoing;
 	fsm->function[FSM_ST_MENU_SETTINGS]					= fsm_st_menu_settings;
+	fsm->function[FSM_ST_SETTINGS_ACCOUNT]			= fsm_st_settings_account;
+	fsm->function[FSM_ST_SETTINGS_NETWORK]			= fsm_st_settings_network;
+	fsm->function[FSM_ST_SETTINGS_DATE_TIME]		= fsm_st_settings_date_time;
+	fsm->function[FSM_ST_NETWORK_STATIC]				= fsm_st_network_static;
 	fsm->function[FSM_ST_DIALING]								= fsm_st_dialing;
 
 	fsm_st_idle(FSM_EVNT_NULL);
@@ -861,4 +865,20 @@ fsm_state_t fsm_st_menu_settings(fsm_evnt_t evnt)
   lcd_screen_hor_scroll(SCREEN_SETTINGS, option_index);
 
   return FSM_ST_MENU_SETTINGS;
+}
+
+fsm_state_t fsm_st_settings_account(fsm_evnt_t evnt)
+{
+}
+
+fsm_state_t fsm_st_settings_network(fsm_evnt_t evnt)
+{
+}
+
+fsm_state_t fsm_st_settings_date_time(fsm_evnt_t evnt)
+{
+}
+
+fsm_state_t fsm_st_network_static(fsm_evnt_t evnt)
+{
 }
