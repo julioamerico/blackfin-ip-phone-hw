@@ -83,8 +83,6 @@ fsm_state_t fsm_st_idle(fsm_evnt_t evnt)
 
 		aux = 1;
 	}
-
-	previous_min = current_min;
 	
 	switch (evnt)
 	{
@@ -93,7 +91,7 @@ fsm_state_t fsm_st_idle(fsm_evnt_t evnt)
 			return FSM_ST_MENU;
 		case FSM_EVNT_GPBUTTON_RIGHT:
 			aux = 0;
-			return FSM_ST_CONTACT_ADD;
+			return FSM_ST_CONTACTS_LIST;
 		case FSM_EVNT_CALL_IN_INVITE:
 			aux = 0;
 			return FSM_ST_INCOMING_CALL;
@@ -724,7 +722,7 @@ fsm_state_t fsm_st_call_logs_missed(fsm_evnt_t evnt)
 			aux = 0;
       return FSM_ST_MENU_CALL_LOGS;
     case FSM_EVNT_GPBUTTON_LEFT:
-    	sublist_friend_call(&ipphone_core, &call_logs_missed_list);
+    	sublist_call_log_call(&ipphone_core, &call_logs_missed_list, ipphone_calllog_get_from);
 			sublist_uninit(&call_logs_missed_list);
 			aux = 0;
 			return FSM_ST_CALL_STATUS;
@@ -771,7 +769,7 @@ fsm_state_t fsm_st_call_logs_received(fsm_evnt_t evnt)
 			aux = 0;
       return FSM_ST_MENU_CALL_LOGS;
     case FSM_EVNT_GPBUTTON_LEFT:
-    	sublist_friend_call(&ipphone_core, &call_logs_received_list);
+    	sublist_call_log_call(&ipphone_core, &call_logs_received_list, ipphone_calllog_get_from);
 			sublist_uninit(&call_logs_received_list);
 			aux = 0;
 			return FSM_ST_CALL_STATUS;
@@ -818,7 +816,7 @@ fsm_state_t fsm_st_call_logs_outgoing(fsm_evnt_t evnt)
 			aux = 0;
       return FSM_ST_MENU_CALL_LOGS;
     case FSM_EVNT_GPBUTTON_LEFT:
-    	sublist_friend_call(&ipphone_core, &call_logs_outgoing_list);
+    	sublist_call_log_call(&ipphone_core, &call_logs_outgoing_list, ipphone_calllog_get_to);
 			sublist_uninit(&call_logs_outgoing_list);
 			aux = 0;
 			return FSM_ST_CALL_STATUS;
