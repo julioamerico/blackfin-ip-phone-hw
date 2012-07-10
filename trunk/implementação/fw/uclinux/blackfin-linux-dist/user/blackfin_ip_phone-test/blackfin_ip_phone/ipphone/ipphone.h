@@ -116,6 +116,7 @@ void sublist_uninit(SubList *sub);
 void sublist_update(MSList *list, SubList *sublist, Position pos);
 void print_sublist_contacts(SubList *sublist);
 void print_sublist_call_logs(LinphoneCore *lc, SubList *sublist, const char *(*ipphone_calllog_get)(LinphoneCallLog*));
+void sublist_call_log_call(LinphoneCore *lc, SubList *sub, const char *(*ipphone_calllog_get)(LinphoneCallLog*));
 
 /*Funções para escrita das listas nos arquivos*/
 void read_call_log_from_file(LinphoneCore *lc, const char *path_missed, const char *path_received, const char *path_dialed);
