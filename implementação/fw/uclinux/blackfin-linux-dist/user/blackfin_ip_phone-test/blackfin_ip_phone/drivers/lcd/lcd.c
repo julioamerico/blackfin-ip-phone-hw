@@ -106,7 +106,7 @@ int screen_option_qty[MAX_HOR_SCREENS] =
   [SCREEN_MENU] 			= 3,
   [SCREEN_CONTACTS] 	= 4,
   [SCREEN_CALL_LOGS] 	= 3,
-  [SCREEN_SETTINGS]		= 5,
+  [SCREEN_SETTINGS]		= 3,
 };
 
 static char *screen_menu_options[3] =
@@ -153,23 +153,18 @@ static fsm_state_t screen_call_logs_options_map[3] =
 	FSM_ST_CALL_LOGS_OUTGOING,
 };
 
-static char *screen_settings_options[5] =
+static char *screen_settings_options[3] =
 {
-	"FW VERSION",
-	"FW UPDATE",
-	"SIP SERVER TEST",
-	"CLEAR CONTACT LIST",
-	"FACTORY SETTINGS",
+	"ACCOUNT",
+	"NETWORK",
+	"DATE & TIME",
 };
 
-static fsm_state_t screen_settings_options_map[5] =
+static fsm_state_t screen_settings_options_map[3] =
 {
-  FSM_ST_SETTINGS_FW_VERSION,
-  FSM_ST_SETTINGS_FW_UPDATE,
-  FSM_ST_SETTINGS_SIP_SERVER_TEST,
-  FSM_ST_SETTINGS_CLEAR_CONTACT_LIST,
-  FSM_ST_SETTINGS_FACTORY_SETTINGS,
-
+  FSM_ST_SETTINGS_ACCOUNT,
+  FSM_ST_SETTINGS_NETWORK,
+  FSM_ST_SETTINGS_DATE_TIME,
 };
 
 hor_scroll_screen_fields_t screen[MAX_HOR_SCREENS] =

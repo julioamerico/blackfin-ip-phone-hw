@@ -843,6 +843,7 @@ fsm_state_t fsm_st_call_logs_outgoing(fsm_evnt_t evnt)
 fsm_state_t fsm_st_menu_settings(fsm_evnt_t evnt)
 {
   static int option_index = 0;
+	int option_index_copy;
 
   switch (evnt)
   {
@@ -855,7 +856,10 @@ fsm_state_t fsm_st_menu_settings(fsm_evnt_t evnt)
     case FSM_EVNT_GPBUTTON_RIGHT:
       option_index = 0;
       return FSM_ST_MENU;
-      break;
+    case FSM_EVNT_GPBUTTON_LEFT:
+      option_index_copy = option_index;
+      option_index = 0;
+      return screen[SCREEN_SETTINGS].options_map[option_index_copy];
     case FSM_EVNT_NULL:
       break;
     default:
