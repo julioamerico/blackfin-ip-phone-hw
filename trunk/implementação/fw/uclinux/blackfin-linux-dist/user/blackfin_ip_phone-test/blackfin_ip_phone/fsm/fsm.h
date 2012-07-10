@@ -32,11 +32,11 @@ typedef enum {
 
 	FSM_ST_RECENT_LOST_CALLS,
 
-	FSM_ST_SETTINGS_FW_VERSION,
-	FSM_ST_SETTINGS_FW_UPDATE,
-	FSM_ST_SETTINGS_SIP_SERVER_TEST,
-	FSM_ST_SETTINGS_CLEAR_CONTACT_LIST,
-	FSM_ST_SETTINGS_FACTORY_SETTINGS,
+	FSM_ST_SETTINGS_ACCOUNT,
+	FSM_ST_SETTINGS_NETWORK,
+	FSM_ST_SETTINGS_DATE_TIME,
+
+	FSM_ST_NETWORK_STATIC,
 	
 	FSM_ST_NULL
 } fsm_state_t;
@@ -110,5 +110,9 @@ fsm_state_t fsm_st_call_logs_received(fsm_evnt_t evnt);
 fsm_state_t fsm_st_call_logs_outgoing(fsm_evnt_t evnt);
 fsm_state_t fsm_st_menu_settings(fsm_evnt_t evnt);
 fsm_state_t fsm_st_dialing(fsm_evnt_t evnt);
+fsm_state_t fsm_st_settings_account(fsm_evnt_t evnt);
+fsm_state_t fsm_st_settings_network(fsm_evnt_t evnt);
+fsm_state_t fsm_st_settings_date_time(fsm_evnt_t evnt);
+fsm_state_t fsm_st_network_static(fsm_evnt_t evnt);
 
 #endif /* BLACKFIN_IP_PHONE_FSM_H */
