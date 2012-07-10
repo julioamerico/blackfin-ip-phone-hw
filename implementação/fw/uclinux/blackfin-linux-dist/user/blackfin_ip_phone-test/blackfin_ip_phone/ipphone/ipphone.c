@@ -440,6 +440,13 @@ void sublist_friend_call(LinphoneCore *lc, SubList *sub){
 	ipphone_call(lc, addr);
 }
 
+void sublist_call_log_call(LinphoneCore *lc, SubList *sub, const char *(*ipphone_calllog_get)(LinphoneCallLog*))
+{
+  const char *addr;
+  addr = ipphone_calllog_get(sub->vet[sub->cursor]->data);
+  ipphone_call(lc, addr);
+}
+
 int sublist_friend_delete(LinphoneCore *lc, SubList *sub){
 	int list_size, i;
 	MSList *delete_elem;
