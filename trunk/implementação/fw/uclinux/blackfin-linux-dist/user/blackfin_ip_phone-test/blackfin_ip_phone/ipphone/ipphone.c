@@ -11,19 +11,12 @@ const char *dialed_numbers = "/dialed_numbers";
 const char *friend_list = "/friend_list";
 const char *config_path = "/home/.linphonerc";
 const char *phone_info_path = "/home/.phone_info";
-char *password = NULL;
 IPphoneAuthStack auth_stack;
 
 static void ipphone_call_received(LinphoneCore *lc, const char *from){
 	queue_insert((main_queue_t *)lc->data, FSM_EVNT_CALL_IN_INVITE);
 }
-void ipphone_set_passwd(const char *passwd){
-	password = passwd;
-	
-}
-const char *ipphone_get_passwd(){
-	return password;
-}
+
 static void ipphone_prompt_for_auth(LinphoneCore *lc, const char *realm, const char *username){
 	LinphoneAuthInfo *pending_auth;
 	
@@ -189,6 +182,16 @@ const LinphoneCoreVTable vtable = {
 };
 static void ipphone_auth_final(LinphoneCore *lc){
 	LinphoneAuthInfo *pending_auth = auth_stack.elem[auth_stack.nitems - 1];
+	char phone_name[20];
+	char password[20];
+	int fd;
+
+  if ((fd = fopen(phone_info_path, "r")) == NULL)
+    return;
+	fscanf(fd, "phone_name = %s\n", phone_name);
+  fscanf(fd, "password = %s", password);
+  fclose(fd);
+
 	if(password){
 		linphone_auth_info_set_passwd(pending_auth, password);
 		linphone_core_add_auth_info(lc, pending_auth);
@@ -521,7 +524,8 @@ void ipphone_get_account_fields(void *data, char **fields, int index)
 {
 	LinphoneProxyConfig *lp = (LinphoneProxyConfig *)data;
 	char string[1] = {'\0'};
-	char phone_name[20];
+	static char phone_name[20], password[20];
+	static int aux = 0;
 	osip_uri_t *uri;
 	FILE *fd;
 
@@ -542,27 +546,34 @@ void ipphone_get_account_fields(void *data, char **fields, int index)
     printf("Erro ipphone_get_account_fields\n");
     return;
   }
+	
+	if(!aux)
+	{
+	  if ((fd = fopen(phone_info_path, "r")) == NULL)
+  	{
+	  	*fields = strdup(string);
+    	return;
+ 	 	}
+		fscanf(fd, "phone_name = %s\n", phone_name);
+  	fscanf(fd, "password = %s", password);
+  	fclose(fd);
+		aux = 1;
+	}
 
 	switch(index)
 	{
 		case 0:
-			if ((fd = fopen(phone_info_path, "r")) == NULL)
-			{
-    		*fields = strdup(string);
-    		return;
-		  }
-			fscanf(fd, "phone_name = %s", phone_name);
-			fclose(fd);
 			*fields = strdup(phone_name);
 			break;
 		case 1:
 			*fields = strdup(osip_uri_get_username(uri));
 			break;
 		case 2:
-			*fields = strdup(ipphone_get_passwd());
+			*fields = strdup(password);
 			break;
 		case 3:
 			*fields = strdup(osip_uri_get_host(uri));
+			aux = 0;
 			break;
 	}
 }
