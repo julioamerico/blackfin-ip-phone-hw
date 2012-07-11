@@ -881,6 +881,8 @@ fsm_state_t fsm_st_settings_account(fsm_evnt_t evnt)
 	LinphoneProxyConfig *edit_account;
 	static int aux = 0;
 	char write_to_file[50];
+	char write_config_server[30];
+	char write_config_identity[30];
 	FILE *fd;
 	int i;
 
@@ -910,14 +912,22 @@ fsm_state_t fsm_st_settings_account(fsm_evnt_t evnt)
 				linphone_core_clear_all_auth_info(&ipphone_core);
 
 				// saving number and sip server
+				snprintf(write_config_server, 30, "sip:%s@%s", buffer[3].buffer, buffer[3].buffer);
+				snprintf(write_config_identity, 30, "sip:%s@%s", buffer[1].buffer, buffer[3].buffer);
+				edit_account = ipphone_proxy_config_new();
+  			ipphone_proxy_config_set_server_addr(edit_account, write_config_server);
+  			ipphone_proxy_config_set_identity(edit_account, write_config_identity);
+  			ipphone_proxy_config_enableregister(edit_account, TRUE);
+  			ipphone_proxy_config_expires(edit_account, 1);
+			  ipphone_add_proxy_config(&ipphone_core, edit_account);
 
         drv_lcd_cursor(LCD_TOGGLE_OFF);
         lcd_screen_save();
 				edit_screen_uninit(&account_screen);
-			aux = 0;
-      return FSM_ST_MENU_SETTINGS;
+				aux = 0;
+      	return FSM_ST_MENU_SETTINGS;
       }
-	break;
+			break;
     case FSM_EVNT_NAVSWITCH_LEFT:
       edit_screen_move_cursor(&account_screen, LEFT);
       break;
