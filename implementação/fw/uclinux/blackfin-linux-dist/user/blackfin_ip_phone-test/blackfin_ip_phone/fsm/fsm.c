@@ -875,9 +875,7 @@ fsm_state_t fsm_st_menu_settings(fsm_evnt_t evnt)
 fsm_state_t fsm_st_settings_account(fsm_evnt_t evnt)
 {
   extern char *account_edit_fields[ACCOUNT_EDIT_SIZE];
-	extern const char *phone_info_path;
-//	MSList *auth_list;
-//	LinphoneAuthInfo *auth_list;
+  extern const char *phone_info_path;
   static alphanumeric_buffer buffer[BUFFER_SIZE(ACCOUNT_EDIT_SIZE)];
   static edit_screen account_screen;
 	LinphoneProxyConfig *edit_account;
@@ -909,31 +907,17 @@ fsm_state_t fsm_st_settings_account(fsm_evnt_t evnt)
     			break;
 				fprintf(fd, write_to_file);
 				fclose(fd);
-				/*for (i = 0; i < ms_list_size(ipphone_core.auth_info); i++)
-				{
-					auth_list = linphone_auth_info_new(ipphone_core.auth_info->data->username, NULL, buffer[2].buffer, NULL, ipphone_core.auth_info->data->realm);
-					linphone_core_add_auth_info(&ipphone_core, auth_list);
-					sleep(1);
-					printf("\ni = %d\n", i);
-					sleep(1);
-				}*/
-
-				/*auth_list = ipphone_core.auth_info;
-				while (auth_list != NULL)
-				{
-					linphone_auth_info_set_passwd(auth_list->data, buffer[2].buffer);
-					linphone_core_add_auth_info(&ipphone_core, auth_list->data);
-					auth_list = ms_list_next(auth_list);
-				}*/
+				linphone_core_clear_all_auth_info(&ipphone_core);
 
 				// saving number and sip server
 
         drv_lcd_cursor(LCD_TOGGLE_OFF);
         lcd_screen_save();
 				edit_screen_uninit(&account_screen);
-      }
 			aux = 0;
       return FSM_ST_MENU_SETTINGS;
+      }
+	break;
     case FSM_EVNT_NAVSWITCH_LEFT:
       edit_screen_move_cursor(&account_screen, LEFT);
       break;
