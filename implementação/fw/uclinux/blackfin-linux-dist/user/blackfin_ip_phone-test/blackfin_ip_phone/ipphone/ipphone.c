@@ -10,7 +10,8 @@ const char *received_calls = "/received_calls";
 const char *dialed_numbers = "/dialed_numbers";
 const char *friend_list = "/friend_list";
 const char *config_path = "/home/.linphonerc";
-const char *password = NULL;
+const char *phone_info_path = "/home/.phone_info";
+char *password = NULL;
 IPphoneAuthStack auth_stack;
 
 static void ipphone_call_received(LinphoneCore *lc, const char *from){
@@ -515,6 +516,57 @@ void ipphone_get_friends_fields(void *data, char **fields, int index){
 	}
 	osip_uri_free(uri); 
 }
+
+void ipphone_get_account_fields(void *data, char **fields, int index)
+{
+	LinphoneProxyConfig *lp = (LinphoneProxyConfig *)data;
+	char string[1] = {'\0'};
+	char phone_name[20];
+	osip_uri_t *uri;
+	FILE *fd;
+
+	if(osip_uri_init(&uri))
+	{
+    printf("Erro ipphone_get_account_fields\n");
+    return;
+  }
+
+	if (lp == NULL)
+	{
+		*fields = strdup(string);
+		return;
+	}
+
+  if(osip_uri_parse(uri,lp->reg_identity))
+  {
+    printf("Erro ipphone_get_account_fields\n");
+    return;
+  }
+
+	switch(index)
+	{
+		case 0:
+			if ((fd = fopen(phone_info_path, "r")) == NULL)
+			{
+    		*fields = strdup(string);
+    		return;
+		  }
+			fscanf(fd, "phone_name = %s", phone_name);
+			fclose(fd);
+			*fields = strdup(phone_name);
+			break;
+		case 1:
+			*fields = strdup(osip_uri_get_username(uri));
+			break;
+		case 2:
+			*fields = strdup(ipphone_get_passwd());
+			break;
+		case 3:
+			*fields = strdup(osip_uri_get_host(uri));
+			break;
+	}
+}
+
 void sublist_edit_friend(LinphoneCore *lc, SubList *sub, const char *url){
 	linphone_core_remove_friend(lc, sub->vet[sub->cursor]->data);
 	ipphone_add_friend(lc, url);
