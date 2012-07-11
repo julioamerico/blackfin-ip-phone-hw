@@ -81,8 +81,6 @@ int ipphone_call(LinphoneCore *lc, const char *url);
 int ipphone_accept_call(LinphoneCore *lc);
 int ipphone_terminate_call(LinphoneCore *lc);
 const char *ipphone_core_get_version(void);
-const char *ipphone_get_passwd(void);
-void ipphone_set_passwd(const char *passwd);
 
 /*Configuração de Proxy*/
 LinphoneProxyConfig *ipphone_proxy_config_new(void);
