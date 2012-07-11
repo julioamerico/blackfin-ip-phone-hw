@@ -97,6 +97,13 @@ void lcd_screen_full_list(void)
   usleep(800000);
 }
 
+void lcd_screen_dhcp_enabled(void)
+{
+	drv_lcd_clear_screen();
+	lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 2, "DHCP ENABLED");
+	usleep(800000);
+}
+
 /*
  *	HORIZONTAL SCROLL SCREENS
  */
@@ -509,6 +516,17 @@ char *contacts_edit_fields[CONTACTS_EDIT_SIZE] =
 	"SIP Server:",
 };
 
+char *account_edit_fields[ACCOUNT_EDIT_SIZE] =
+{
+	"ACCOUNT",
+	"SAVE",
+	"BACK",
+	"Name:",
+	"Number:",
+	"Password:",
+	"SIP Server:",
+};
+
 static void alphanumeric_buffer_set(alphanumeric_buffer *strc_buffer, char *str){
 	int str_length = strlen(str) - 1;
 	if(str_length > strc_buffer->size_buffer - 1)
@@ -536,7 +554,6 @@ void edit_screen_init_params(edit_screen *edit, alphanumeric_buffer *buffer, int
 		alphanumeric_buffer_set(buffer + i,fields);
 	}
 	ipphone_free(fields);
-	
 }
 
 void edit_screen_init(edit_screen *edit, alphanumeric_buffer *buffer, int size_vet_buffer, int size_buffer, char **edit_fields){

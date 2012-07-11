@@ -28,6 +28,7 @@ typedef enum {
 
 #define MAX_HOR_SCREENS SCREEN_NULL
 #define CONTACTS_EDIT_SIZE 6
+#define ACCOUNT_EDIT_SIZE	 7 
 #define DIALING_EDIT_SIZE	 5
 #define BUFFER_SIZE(x) x - 3
  

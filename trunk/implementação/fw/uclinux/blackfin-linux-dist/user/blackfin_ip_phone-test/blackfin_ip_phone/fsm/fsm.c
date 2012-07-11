@@ -483,21 +483,21 @@ fsm_state_t fsm_st_contacts_edit(fsm_evnt_t evnt){
 	switch (evnt){
 		case FSM_EVNT_GPBUTTON_RIGHT:
 			sublist_uninit(&contacts_list);
-      			return FSM_ST_MENU_CONTACTS;
-    		case FSM_EVNT_GPBUTTON_LEFT:
+    	return FSM_ST_MENU_CONTACTS;
+    case FSM_EVNT_GPBUTTON_LEFT:
 			edit_lf = contacts_list.vet[contacts_list.cursor]->data;
 			sublist_uninit(&contacts_list);
 			return FSM_ST_CONTACTS_EDIT_FIELDS;
-    		case FSM_EVNT_NAVSWITCH_UP:
-      			sublist_update(ipphone_core.friends, &contacts_list, UP);
-      			break;
-    		case FSM_EVNT_NAVSWITCH_DOWN:
-      			sublist_update(ipphone_core.friends, &contacts_list, DOWN);
-      			break;
-    		case FSM_EVNT_NULL:
-      			break;
-    		default:
-      			break;
+    case FSM_EVNT_NAVSWITCH_UP:
+    	sublist_update(ipphone_core.friends, &contacts_list, UP);
+    	break;
+    case FSM_EVNT_NAVSWITCH_DOWN:
+    	sublist_update(ipphone_core.friends, &contacts_list, DOWN);
+    	break;
+    case FSM_EVNT_NULL:
+    	break;
+    default:
+    	break;
   	}
 
 	print_sublist_contacts(&contacts_list);
@@ -554,6 +554,7 @@ fsm_state_t fsm_st_contacts_edit_fields(fsm_evnt_t evnt){
 	print_edit_screen(&contact_screen);
 	return FSM_ST_CONTACTS_EDIT_FIELDS;	
 }
+
 fsm_state_t fsm_st_contact_add(fsm_evnt_t evnt)
 {
   extern char *contacts_edit_fields[CONTACTS_EDIT_SIZE];
@@ -873,6 +874,93 @@ fsm_state_t fsm_st_menu_settings(fsm_evnt_t evnt)
 
 fsm_state_t fsm_st_settings_account(fsm_evnt_t evnt)
 {
+  extern char *account_edit_fields[ACCOUNT_EDIT_SIZE];
+	extern const char *phone_info_path;
+//	MSList *auth_list;
+//	LinphoneAuthInfo *auth_list;
+  static alphanumeric_buffer buffer[BUFFER_SIZE(ACCOUNT_EDIT_SIZE)];
+  static edit_screen account_screen;
+	LinphoneProxyConfig *edit_account;
+	static int aux = 0;
+	char write_to_file[50];
+	FILE *fd;
+	int i;
+
+	if (!aux)
+	{
+  	drv_lcd_cursor(LCD_TOGGLE_ON);
+		edit_account = ipphone_core.default_proxy;
+		edit_screen_init_params(&account_screen, buffer, ACCOUNT_EDIT_SIZE, 20, account_edit_fields, edit_account, ipphone_get_account_fields);
+		aux = 1;
+	}
+
+	switch (evnt){
+    case FSM_EVNT_GPBUTTON_RIGHT:
+      edit_screen_uninit(&account_screen);
+      drv_lcd_cursor(LCD_TOGGLE_OFF);
+			aux = 0;
+      return FSM_ST_MENU_SETTINGS;
+    case FSM_EVNT_GPBUTTON_LEFT:
+      if ((buffer[0].buffer[0] != '\0') && (buffer[1].buffer[0] != '\0') && (buffer[2].buffer[0] != '\0') && (buffer[3].buffer[0] != '\0'))
+			{
+				// saving password and phone name
+				snprintf(write_to_file, 50, "phone_name = %s\npassword = %s", buffer[0].buffer, buffer[2].buffer);
+			  if ((fd = fopen(phone_info_path, "w")) == NULL)
+    			break;
+				fprintf(fd, write_to_file);
+				fclose(fd);
+				/*for (i = 0; i < ms_list_size(ipphone_core.auth_info); i++)
+				{
+					auth_list = linphone_auth_info_new(ipphone_core.auth_info->data->username, NULL, buffer[2].buffer, NULL, ipphone_core.auth_info->data->realm);
+					linphone_core_add_auth_info(&ipphone_core, auth_list);
+					sleep(1);
+					printf("\ni = %d\n", i);
+					sleep(1);
+				}*/
+
+				/*auth_list = ipphone_core.auth_info;
+				while (auth_list != NULL)
+				{
+					linphone_auth_info_set_passwd(auth_list->data, buffer[2].buffer);
+					linphone_core_add_auth_info(&ipphone_core, auth_list->data);
+					auth_list = ms_list_next(auth_list);
+				}*/
+
+				// saving number and sip server
+
+        drv_lcd_cursor(LCD_TOGGLE_OFF);
+        lcd_screen_save();
+				edit_screen_uninit(&account_screen);
+      }
+			aux = 0;
+      return FSM_ST_MENU_SETTINGS;
+    case FSM_EVNT_NAVSWITCH_LEFT:
+      edit_screen_move_cursor(&account_screen, LEFT);
+      break;
+    case FSM_EVNT_NAVSWITCH_RIGHT:
+      edit_screen_move_cursor(&account_screen, RIGHT);
+      break;
+    case FSM_EVNT_NAVSWITCH_UP:
+      edit_screen_move_cursor(&account_screen, UP);
+      break;
+    case FSM_EVNT_NAVSWITCH_DOWN:
+      edit_screen_move_cursor(&account_screen, DOWN);
+      break;
+    case FSM_EVNT_NAVSWITCH_SELECT:
+      edit_screen_delete(&account_screen);
+      break;
+    case FSM_EVNT_KEYPAD_SHARP:
+      edit_screen_text_transform(&account_screen);
+      break;
+      case FSM_EVNT_NULL:
+            break;
+      default:
+      if ((evnt >= FSM_EVNT_KEYPAD_1) && (evnt < FSM_EVNT_KEYPAD_SHARP))
+        edit_screen_add(&account_screen, evnt);
+    }
+
+  print_edit_screen(&account_screen);
+  return FSM_ST_SETTINGS_ACCOUNT;
 }
 
 fsm_state_t fsm_st_settings_network(fsm_evnt_t evnt)
