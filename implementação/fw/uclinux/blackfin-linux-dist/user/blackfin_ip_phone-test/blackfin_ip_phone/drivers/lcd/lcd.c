@@ -92,7 +92,21 @@ void lcd_screen_dhcp_enabled(void)
 	lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 2, "DHCP ENABLED");
 	usleep(800000);
 }
-
+void lcd_screen_static_nw_applied(void)
+{
+	drv_lcd_clear_screen();
+	lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 2, "STATIC SETTINGS");
+	lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 3, "APPLIED");
+	sleep(1);
+}
+void lcd_screen_invalid_ip(void)
+{
+	drv_lcd_cursor(LCD_TOGGLE_OFF);
+	drv_lcd_clear_screen();
+	lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 2, "INVALID IP");
+	usleep(800000);
+	drv_lcd_cursor(LCD_TOGGLE_ON);
+}
 /*
  *	HORIZONTAL SCROLL SCREENS
  */
@@ -533,6 +547,16 @@ char *account_edit_fields[ACCOUNT_EDIT_SIZE] =
 	"Number:",
 	"Password:",
 	"SIP Server:",
+};
+char *nw_static_edit_fields[NW_STATIC_EDIT_SIZE]=
+{
+	"STATIC",
+	"APPLY",
+	"BACK",
+	"IP:",
+	"NETMASK:",
+	"GATEWAY:",
+	"DNS:"
 };
 
 static void alphanumeric_buffer_set(alphanumeric_buffer *strc_buffer, char *str){

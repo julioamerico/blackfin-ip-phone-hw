@@ -31,6 +31,7 @@ typedef enum {
 #define CONTACTS_EDIT_SIZE 6
 #define ACCOUNT_EDIT_SIZE	 7 
 #define DIALING_EDIT_SIZE	 5
+#define NW_STATIC_EDIT_SIZE      7
 #define BUFFER_SIZE(x) x - 3
  
 typedef struct hor_scroll_screen_fields {
@@ -90,6 +91,9 @@ void lcd_init(void);
 int lcd_write_justified(lcd_write_justified_t lcd_op, int row, char str[]);
 void lcd_screen_save(void);
 void lcd_screen_empty_list(void);
+void lcd_screen_dhcp_enabled(void);
+void lcd_screen_static_nw_applied(void);
+void lcd_screen_invalid_ip(void);
 void lcd_screen_hor_scroll(hor_scroll_screen_t sc, int option_index);
 
 void edit_screen_init_params(edit_screen *, alphanumeric_buffer *, int, int, char **, void *, void(*get_fields)(void*,char **,int));
