@@ -168,7 +168,7 @@ fsm_state_t fsm_st_dialing(fsm_evnt_t evnt)
 			edit_screen_text_transform(&dialing_screen);
 			break;
     case FSM_EVNT_NULL:
-      return FSM_ST_DIALING;
+      break;
     default:
       if ((evnt >= FSM_EVNT_KEYPAD_1) && (evnt < FSM_EVNT_KEYPAD_SHARP))
 				edit_screen_add(&dialing_screen, evnt);        
@@ -306,6 +306,8 @@ fsm_state_t fsm_st_recent_lost_calls(fsm_evnt_t evnt)
     case FSM_EVNT_CALL_IN_INVITE:
 			aux = 0;
       return FSM_ST_INCOMING_CALL;
+		case FSM_EVNT_NULL:
+			break;
     default:
       break;
   }
@@ -422,6 +424,8 @@ fsm_state_t fsm_st_call_status(fsm_evnt_t evnt)
       delta_time_min = 0;
       delta_time_hour = 0;
       return FSM_ST_IDLE;
+		case FSM_EVNT_NULL:
+			break;
     default:
       break;
 	}
@@ -518,8 +522,8 @@ fsm_state_t fsm_st_contacts_edit_fields(fsm_evnt_t evnt){
 		case FSM_EVNT_GPBUTTON_RIGHT:
 			edit_screen_uninit(&contact_screen);
 			drv_lcd_cursor(LCD_TOGGLE_OFF);
-	      		return FSM_ST_CONTACTS_EDIT;
-	    	case FSM_EVNT_GPBUTTON_LEFT:
+   		return FSM_ST_CONTACTS_EDIT;
+   	case FSM_EVNT_GPBUTTON_LEFT:
 			if ((buffer[0].buffer[0] != '\0') && (buffer[1].buffer[0] != '\0') && (buffer[2].buffer[0] != '\0')){
 				drv_lcd_cursor(LCD_TOGGLE_OFF);
 				lcd_screen_save();
@@ -546,9 +550,9 @@ fsm_state_t fsm_st_contacts_edit_fields(fsm_evnt_t evnt){
 		case FSM_EVNT_KEYPAD_SHARP:
 			edit_screen_text_transform(&contact_screen);
 			break;
-	    case FSM_EVNT_NULL:
-	      		break;
-	    default:
+    case FSM_EVNT_NULL:
+   		break;
+    default:
 			if ((evnt >= FSM_EVNT_KEYPAD_1) && (evnt < FSM_EVNT_KEYPAD_SHARP))
 				edit_screen_add(&contact_screen, evnt);        
 	  }
@@ -948,9 +952,9 @@ fsm_state_t fsm_st_settings_account(fsm_evnt_t evnt)
     case FSM_EVNT_KEYPAD_SHARP:
       edit_screen_text_transform(&account_screen);
       break;
-      case FSM_EVNT_NULL:
-            break;
-      default:
+    case FSM_EVNT_NULL:
+      break;
+    default:
       if ((evnt >= FSM_EVNT_KEYPAD_1) && (evnt < FSM_EVNT_KEYPAD_SHARP))
         edit_screen_add(&account_screen, evnt);
     }
@@ -1081,13 +1085,13 @@ fsm_state_t fsm_st_edit_date(fsm_evnt_t evnt)
 			sprintf(str_year,  "%d", int_year);
 
 			while (strlen(str_day) < 2)
-				sprintf(str_day, "0%d", int_day);
+				sprintf(str_day, "0%s", str_day);
 			while (strlen(str_month) < 2)
-				sprintf(str_month, "0%d", int_month);
+				sprintf(str_month, "0%d", str_month);
       while (strlen(str_min) < 2)
-        sprintf(str_min, "0%d", int_min);
+        sprintf(str_min, "0%d", str_min);
       while (strlen(str_hour) < 2)
-        sprintf(str_hour, "0%d", int_hour);
+        sprintf(str_hour, "0%d", str_hour);
 
 			snprintf(str, 18, "date %s%s%s%s%s", str_month, str_day, str_hour, str_min, str_year);
 			system(str);
@@ -1100,6 +1104,8 @@ fsm_state_t fsm_st_edit_date(fsm_evnt_t evnt)
 			aux = 0;
 			cursor = 0;
 			return FSM_ST_SETTINGS_DATE_TIME;
+    case FSM_EVNT_NULL:
+      break;
 		default:
 			break;
 	}
@@ -1187,13 +1193,13 @@ fsm_state_t fsm_st_edit_time(fsm_evnt_t evnt)
 			sprintf(str_year,  "%d", int_year);
 
 			while (strlen(str_day) < 2)
-				sprintf(str_day, "0%d", int_day);
+				sprintf(str_day, "0%d", str_day);
 			while (strlen(str_month) < 2)
-				sprintf(str_month, "0%d", int_month);
+				sprintf(str_month, "0%d", str_month);
       while (strlen(str_min) < 2)
-        sprintf(str_min, "0%d", int_min);
+        sprintf(str_min, "0%d", str_min);
       while (strlen(str_hour) < 2)
-        sprintf(str_hour, "0%d", int_hour);
+        sprintf(str_hour, "0%d", str_hour);
 
 			snprintf(str, 18, "date %s%s%s%s%s", str_month, str_day, str_hour, str_min, str_year);
 			system(str);
@@ -1206,6 +1212,8 @@ fsm_state_t fsm_st_edit_time(fsm_evnt_t evnt)
 			aux = 0;
 			cursor = 0;
 			return FSM_ST_SETTINGS_DATE_TIME;
+    case FSM_EVNT_NULL:
+      break;
 		default:
 			break;
 	}
