@@ -44,6 +44,8 @@ void fsm_init(fsm_t *fsm)
 	fsm->function[FSM_ST_SETTINGS_DATE_TIME]		= fsm_st_settings_date_time;
 	fsm->function[FSM_ST_NETWORK_STATIC]				= fsm_st_network_static;
 	fsm->function[FSM_ST_DIALING]								= fsm_st_dialing;
+	fsm->function[FSM_ST_EDIT_DATE]							= fsm_st_edit_date;
+	fsm->function[FSM_ST_EDIT_TIME]							= fsm_st_edit_time;
 
 	fsm_st_idle(FSM_EVNT_NULL);
 }
@@ -961,10 +963,252 @@ fsm_state_t fsm_st_settings_network(fsm_evnt_t evnt)
 {
 }
 
-fsm_state_t fsm_st_settings_date_time(fsm_evnt_t evnt)
+fsm_state_t fsm_st_network_static(fsm_evnt_t evnt)
 {
 }
 
-fsm_state_t fsm_st_network_static(fsm_evnt_t evnt)
+fsm_state_t fsm_st_settings_date_time(fsm_evnt_t evnt)
 {
+  static int option_index = 0;
+
+  switch (evnt)
+  {
+    case FSM_EVNT_NAVSWITCH_LEFT:
+      option_index = option_index ? (option_index - 1) : (screen_option_qty[SCREEN_DATE_TIME] - 1);
+      break;
+    case FSM_EVNT_NAVSWITCH_RIGHT:
+      option_index = (option_index == (screen_option_qty[SCREEN_DATE_TIME] - 1)) ? 0 : (option_index + 1);
+      break;
+    case FSM_EVNT_GPBUTTON_LEFT:
+      return screen[SCREEN_DATE_TIME].options_map[option_index];
+    case FSM_EVNT_GPBUTTON_RIGHT:
+      option_index = 0;
+      return FSM_ST_MENU_SETTINGS;
+      break;
+    case FSM_EVNT_NULL:
+      break;
+    default:
+      break;
+  }
+
+  lcd_screen_hor_scroll(SCREEN_DATE_TIME, option_index);
+  return FSM_ST_SETTINGS_DATE_TIME;
+}
+
+fsm_state_t fsm_st_edit_date(fsm_evnt_t evnt)
+{
+	static int aux = 0, cursor = 0;
+	char str[20];
+	static int int_month, int_day, int_year;
+	int int_min, int_hour;
+	char str_month[2], str_day[2], str_year[4], str_min[2], str_hour[2];
+	struct tm *tm_ptr;
+	time_t t;
+
+	if(!aux)
+	{
+		t = time((time_t *)0);
+		tm_ptr = localtime(&t);
+		int_day 	= tm_ptr->tm_mday;
+		int_month = tm_ptr->tm_mon + 1;
+		int_year 	=	tm_ptr->tm_year + 1900;
+
+		snprintf(str, sizeof(str), "%d/%d/%d", int_day, int_month, int_year);
+		drv_lcd_clear_screen();
+		lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 3, str);
+		lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 1, "DATE");
+		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED,   4, "SAVE");
+		lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED,  4, "BACK");
+		aux = 1;
+	}
+
+	switch (evnt)
+	{
+		case FSM_EVNT_NAVSWITCH_LEFT:
+			cursor = cursor ? (cursor - 1) : 2;
+			break;
+		case FSM_EVNT_NAVSWITCH_RIGHT:
+			cursor = (cursor == 2) ? 0 : (cursor + 1);
+			break;
+		case FSM_EVNT_NAVSWITCH_UP:
+			switch (cursor)
+			{
+				case 0:
+					int_day = (int_day == 31) ? 1 : (int_day + 1);
+					break;
+				case 1:
+					int_month = (int_month == 12) ? 1 : (int_month + 1);
+					break;
+				case 2:
+					int_year = (int_year == 9999) ? 1 : (int_year + 1);
+					break;
+				default:
+					break;
+			}
+			snprintf(str, sizeof(str), "%d/%d/%d", int_day, int_month, int_year);
+			lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 3, "          ");
+			lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 3, str);
+			break;
+		case FSM_EVNT_NAVSWITCH_DOWN:
+			switch (cursor)
+			{
+        case 0:
+          int_day = (int_day == 1) ? 31 : (int_day - 1);
+          break;
+        case 1:
+          int_month = (int_month == 1) ? 12 : (int_month - 1);
+          break;
+        case 2:
+          int_year = (int_year == 1900) ? 2999 : (int_year - 1);
+          break;
+        default:
+          break;
+			}
+      snprintf(str, sizeof(str), "%d/%d/%d", int_day, int_month, int_year);
+			lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 3, "          ");
+      lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 3, str);
+      break;
+		case FSM_EVNT_GPBUTTON_LEFT:
+	    t = time((time_t *)0);
+	    tm_ptr = localtime(&t);
+  	  int_hour = tm_ptr->tm_hour; 
+			int_min = tm_ptr->tm_min;			
+
+			sprintf(str_day,   "%d", int_day);
+			sprintf(str_month, "%d", int_month);
+			sprintf(str_min,   "%d", int_min);
+			sprintf(str_hour,  "%d", int_hour);
+			sprintf(str_year,  "%d", int_year);
+
+			while (strlen(str_day) < 2)
+				sprintf(str_day, "0%d", int_day);
+			while (strlen(str_month) < 2)
+				sprintf(str_month, "0%d", int_month);
+      while (strlen(str_min) < 2)
+        sprintf(str_min, "0%d", int_min);
+      while (strlen(str_hour) < 2)
+        sprintf(str_hour, "0%d", int_hour);
+
+			snprintf(str, 18, "date %s%s%s%s%s", str_month, str_day, str_hour, str_min, str_year);
+			system(str);
+
+			lcd_screen_save();
+			aux = 0;
+			cursor = 0;
+			return FSM_ST_SETTINGS_DATE_TIME;			
+		case FSM_EVNT_GPBUTTON_RIGHT:
+			aux = 0;
+			cursor = 0;
+			return FSM_ST_SETTINGS_DATE_TIME;
+		default:
+			break;
+	}
+
+	return FSM_ST_EDIT_DATE;
+}
+
+fsm_state_t fsm_st_edit_time(fsm_evnt_t evnt)
+{
+	static int aux = 0, cursor = 0;
+	char str[20];
+	static int int_min, int_hour;
+	int int_month, int_day, int_year;
+	char str_month[2], str_day[2], str_year[4], str_min[2], str_hour[2];
+	struct tm *tm_ptr;
+	time_t t;
+
+	if(!aux)
+	{
+		t = time((time_t *)0);
+		tm_ptr = localtime(&t);
+		int_min  = tm_ptr->tm_min;
+		int_hour = tm_ptr->tm_hour;
+
+		snprintf(str, sizeof(str), "%d:%d", int_hour, int_min);
+		drv_lcd_clear_screen();
+		lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 3, str);
+		lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 1, "TIME");
+		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED,   4, "SAVE");
+		lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED,  4, "BACK");
+		aux = 1;
+	}
+
+	switch (evnt)
+	{
+		case FSM_EVNT_NAVSWITCH_LEFT:
+			cursor = cursor ? (cursor - 1) : 1;
+			break;
+		case FSM_EVNT_NAVSWITCH_RIGHT:
+			cursor = (cursor == 1) ? 0 : (cursor + 1);
+			break;
+		case FSM_EVNT_NAVSWITCH_UP:
+			switch (cursor)
+			{
+				case 0:
+					int_hour = (int_hour == 23) ? 1 : (int_hour + 1);
+					break;
+				case 1:
+					int_min = (int_min == 59) ? 1 : (int_min + 1);
+					break;
+				default:
+					break;
+			}
+			snprintf(str, sizeof(str), "%d:%d", int_hour, int_min);
+			lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 3, "          ");
+			lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 3, str);
+			break;
+		case FSM_EVNT_NAVSWITCH_DOWN:
+			switch (cursor)
+			{
+        case 0:
+          int_hour = (int_hour == 1) ? 31 : (int_hour - 1);
+          break;
+        case 1:
+          int_min = (int_min == 1) ? 12 : (int_min - 1);
+          break;
+        default:
+          break;
+			}
+      snprintf(str, sizeof(str), "%d:%d", int_hour, int_min);
+			lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 3, "          ");
+      lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 3, str);
+      break;
+		case FSM_EVNT_GPBUTTON_LEFT:
+	    t = time((time_t *)0);
+	    tm_ptr = localtime(&t);
+	    int_day   = tm_ptr->tm_mday;
+  	  int_month = tm_ptr->tm_mon + 1;
+    	int_year  = tm_ptr->tm_year + 1900;
+
+			sprintf(str_day,   "%d", int_day);
+			sprintf(str_month, "%d", int_month);
+			sprintf(str_min,   "%d", int_min);
+			sprintf(str_hour,  "%d", int_hour);
+			sprintf(str_year,  "%d", int_year);
+
+			while (strlen(str_day) < 2)
+				sprintf(str_day, "0%d", int_day);
+			while (strlen(str_month) < 2)
+				sprintf(str_month, "0%d", int_month);
+      while (strlen(str_min) < 2)
+        sprintf(str_min, "0%d", int_min);
+      while (strlen(str_hour) < 2)
+        sprintf(str_hour, "0%d", int_hour);
+
+			snprintf(str, 18, "date %s%s%s%s%s", str_month, str_day, str_hour, str_min, str_year);
+			system(str);
+
+			lcd_screen_save();
+			aux = 0;
+			cursor = 0;
+			return FSM_ST_SETTINGS_DATE_TIME;			
+		case FSM_EVNT_GPBUTTON_RIGHT:
+			aux = 0;
+			cursor = 0;
+			return FSM_ST_SETTINGS_DATE_TIME;
+		default:
+			break;
+	}
+
+	return FSM_ST_EDIT_TIME;
 }

@@ -23,6 +23,7 @@ typedef enum {
 	SCREEN_CONTACTS,
 	SCREEN_CALL_LOGS,
 	SCREEN_SETTINGS,
+	SCREEN_DATE_TIME,
 	SCREEN_NULL
 }	hor_scroll_screen_t;
 
@@ -87,7 +88,6 @@ typedef struct{
 
 void lcd_init(void);
 int lcd_write_justified(lcd_write_justified_t lcd_op, int row, char str[]);
-void lcd_screen_idle(char *name, char *identity, char *time, char *day, char *left, char *right);
 void lcd_screen_save(void);
 void lcd_screen_empty_list(void);
 void lcd_screen_hor_scroll(hor_scroll_screen_t sc, int option_index);
