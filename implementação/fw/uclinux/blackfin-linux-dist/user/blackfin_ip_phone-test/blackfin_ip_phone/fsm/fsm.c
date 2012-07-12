@@ -1118,7 +1118,7 @@ fsm_state_t fsm_st_edit_date(fsm_evnt_t evnt)
 	char str[20];
 	static int int_month, int_day, int_year;
 	int int_min, int_hour;
-	char str_month[2], str_day[2], str_year[4], str_min[2], str_hour[2];
+	char str_month[2], str_day[2], str_min[2], str_hour[2];
 	struct tm *tm_ptr;
 	time_t t;
 
@@ -1189,25 +1189,26 @@ fsm_state_t fsm_st_edit_date(fsm_evnt_t evnt)
 	    t = time((time_t *)0);
 	    tm_ptr = localtime(&t);
   	  int_hour = tm_ptr->tm_hour; 
-			int_min = tm_ptr->tm_min;			
+			int_min = tm_ptr->tm_min;
 
-			sprintf(str_day,   "%d", int_day);
-			sprintf(str_month, "%d", int_month);
-			sprintf(str_min,   "%d", int_min);
-			sprintf(str_hour,  "%d", int_hour);
-			sprintf(str_year,  "%d", int_year);
+			if (int_day < 10)
+				sprintf(str_day, "0%d", int_day);
+			else
+				sprintf(str_day, "%d", int_day);
+      if (int_month < 10)
+        sprintf(str_month, "0%d", int_month);
+      else
+        sprintf(str_month, "%d", int_month);
+      if (int_min < 10)
+        sprintf(str_min, "0%d", int_min);
+      else
+        sprintf(str_min, "%d", int_min);
+      if (int_hour < 10)
+        sprintf(str_hour, "0%d", int_hour);
+      else
+        sprintf(str_hour, "%d", int_hour);
 
-			while (strlen(str_day) < 2)
-				sprintf(str_day, "0%s", str_day);
-			while (strlen(str_month) < 2)
-				sprintf(str_month, "0%d", str_month);
-      while (strlen(str_min) < 2)
-        sprintf(str_min, "0%d", str_min);
-      while (strlen(str_hour) < 2)
-        sprintf(str_hour, "0%d", str_hour);
-
-			snprintf(str, 18, "date %s%s%s%s%s", str_month, str_day, str_hour, str_min, str_year);
-				printf("str = %s\n",str);
+			snprintf(str, 18, "date %s%s%s%s%d", str_month, str_day, str_hour, str_min, int_year);
 			system(str);
 
 			lcd_screen_save();
@@ -1233,7 +1234,7 @@ fsm_state_t fsm_st_edit_time(fsm_evnt_t evnt)
 	char str[20];
 	static int int_min, int_hour;
 	int int_month, int_day, int_year;
-	char str_month[2], str_day[2], str_year[4], str_min[2], str_hour[2];
+	char str_month[2], str_day[2], str_min[2], str_hour[2];
 	struct tm *tm_ptr;
 	time_t t;
 
@@ -1300,22 +1301,24 @@ fsm_state_t fsm_st_edit_time(fsm_evnt_t evnt)
   	  int_month = tm_ptr->tm_mon + 1;
     	int_year  = tm_ptr->tm_year + 1900;
 
-			sprintf(str_day,   "%d", int_day);
-			sprintf(str_month, "%d", int_month);
-			sprintf(str_min,   "%d", int_min);
-			sprintf(str_hour,  "%d", int_hour);
-			sprintf(str_year,  "%d", int_year);
+      if (int_day < 10)
+        sprintf(str_day, "0%d", int_day);
+      else
+        sprintf(str_day, "%d", int_day);
+      if (int_month < 10)
+        sprintf(str_month, "0%d", int_month);
+      else
+        sprintf(str_month, "%d", int_month);
+      if (int_min < 10)
+        sprintf(str_min, "0%d", int_min);
+      else
+        sprintf(str_min, "%d", int_min);
+      if (int_hour < 10)
+        sprintf(str_hour, "0%d", int_hour);
+      else
+        sprintf(str_hour, "%d", int_hour);
 
-			while (strlen(str_day) < 2)
-				sprintf(str_day, "0%d", str_day);
-			while (strlen(str_month) < 2)
-				sprintf(str_month, "0%d", str_month);
-      while (strlen(str_min) < 2)
-        sprintf(str_min, "0%d", str_min);
-      while (strlen(str_hour) < 2)
-        sprintf(str_hour, "0%d", str_hour);
-
-			snprintf(str, 18, "date %s%s%s%s%s", str_month, str_day, str_hour, str_min, str_year);
+			snprintf(str, 18, "date %s%s%s%s%d", str_month, str_day, str_hour, str_min, int_year);
 			system(str);
 
 			lcd_screen_save();
