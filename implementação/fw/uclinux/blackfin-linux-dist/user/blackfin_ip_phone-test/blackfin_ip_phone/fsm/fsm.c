@@ -17,7 +17,13 @@ extern LinphoneCore ipphone_core;
 extern int screen_option_qty[MAX_HOR_SCREENS];
 extern hor_scroll_screen_fields_t screen[MAX_HOR_SCREENS];
 extern main_queue_t event_queue;
+extern const char *nw_settings;
 LinphoneFriend *edit_lf;
+
+static void enable_dhcp();
+static bool_t is_valid_ip(edit_screen *edit);
+static void apply_static_nw_settings(alphanumeric_buffer *buffer);
+
 
 void fsm_init(fsm_t *fsm)
 {
@@ -301,8 +307,6 @@ fsm_state_t fsm_st_recent_lost_calls(fsm_evnt_t evnt)
       lost_calls = 0;
       aux = 0;
       return FSM_ST_CALL_LOGS_MISSED;
-    case FSM_EVNT_NULL:
-      break;
     case FSM_EVNT_CALL_IN_INVITE:
 			aux = 0;
       return FSM_ST_INCOMING_CALL;
@@ -965,10 +969,119 @@ fsm_state_t fsm_st_settings_account(fsm_evnt_t evnt)
 
 fsm_state_t fsm_st_settings_network(fsm_evnt_t evnt)
 {
+	static aux = 1;
+	static int cursor = 2;
+
+	if(aux){
+		drv_lcd_clear_screen();
+		lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 1, "NW SETTINGS");
+		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED,   2, "DHCP");
+		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED,   3, "STATIC");
+		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, 	4, "SELECT");
+		lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED, 	4, "EXIT");
+		aux = 0;
+	}
+
+	switch (evnt){
+		case FSM_EVNT_NAVSWITCH_UP:
+			if(cursor != 2)
+				cursor = 2;
+			break;
+		case FSM_EVNT_NAVSWITCH_DOWN:
+			if(cursor != 3)
+				cursor = 3;
+			break;
+    		case FSM_EVNT_GPBUTTON_LEFT:
+			if(cursor == 2){
+				enable_dhcp();
+				lcd_screen_dhcp_enabled(); 
+			}
+			else{
+				cursor = 2;
+				aux = 1;
+				return FSM_ST_NETWORK_STATIC;
+			}
+    		case FSM_EVNT_GPBUTTON_RIGHT:
+			cursor = 2;
+			aux = 1;
+			return FSM_ST_MENU_SETTINGS;
+    		case FSM_EVNT_NULL:
+      			break;
+    		default:
+      			break;
+	}
+	lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED,   2, " ");
+	lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED,   3, " ");
+	lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED, cursor, "<");
+	return FSM_ST_SETTINGS_NETWORK;
 }
 
 fsm_state_t fsm_st_network_static(fsm_evnt_t evnt)
 {
+	extern char *nw_static_edit_fields[NW_STATIC_EDIT_SIZE];
+	static alphanumeric_buffer buffer[BUFFER_SIZE(NW_STATIC_EDIT_SIZE)];
+	static edit_screen nw_static_screen;
+	char dhcp[2];
+	static int aux = 1;
+	FILE *file;
+
+	if(aux){
+		file = fopen(nw_settings, "r+");
+		fscanf(file,"DHCP_ENABLED:%s\n",dhcp);
+		drv_lcd_cursor(LCD_TOGGLE_ON);
+		edit_screen_init_params(&nw_static_screen, buffer, NW_STATIC_EDIT_SIZE, 20, nw_static_edit_fields, file, ipphone_get_nw_static_fields);
+		fclose(file);
+		aux = 0;
+	}
+
+	switch (evnt){
+		case FSM_EVNT_GPBUTTON_RIGHT:
+			edit_screen_uninit(&nw_static_screen);
+			drv_lcd_cursor(LCD_TOGGLE_OFF);
+			aux = 1;
+	      		return FSM_ST_MENU_SETTINGS;
+	    	case FSM_EVNT_GPBUTTON_LEFT:
+			if ((buffer[0].buffer[0] != '\0') && (buffer[1].buffer[0] != '\0') && (buffer[2].buffer[0] != '\0') && (buffer[3].buffer[0] != '\0')){
+				if(!is_valid_ip(&nw_static_screen)){
+					lcd_screen_invalid_ip();
+					queue_insert(&event_queue,FSM_EVNT_NULL);
+					return FSM_ST_NETWORK_STATIC;		
+				}
+				apply_static_nw_settings(buffer);
+				drv_lcd_cursor(LCD_TOGGLE_OFF);
+				edit_screen_uninit(&nw_static_screen);
+				aux = 1;
+				lcd_screen_static_nw_applied();
+				return FSM_ST_MENU_SETTINGS;
+			}
+			break;
+		case FSM_EVNT_NAVSWITCH_LEFT:
+			edit_screen_move_cursor(&nw_static_screen, LEFT);
+			break;
+		case FSM_EVNT_NAVSWITCH_RIGHT:
+			edit_screen_move_cursor(&nw_static_screen, RIGHT);
+			break;
+		case FSM_EVNT_NAVSWITCH_UP:
+			edit_screen_move_cursor(&nw_static_screen, UP);
+			break;
+		case FSM_EVNT_NAVSWITCH_DOWN:
+			edit_screen_move_cursor(&nw_static_screen, DOWN);
+			break;
+		case FSM_EVNT_NAVSWITCH_SELECT:
+			edit_screen_delete(&nw_static_screen);
+			break;
+		case FSM_EVNT_KEYPAD_SHARP:
+			edit_screen_text_transform(&nw_static_screen);
+			break;
+	    case FSM_EVNT_NULL:
+	      		break;
+	    default:
+			if ((evnt >= FSM_EVNT_KEYPAD_1) && (evnt < FSM_EVNT_KEYPAD_SHARP))
+				edit_screen_add(&nw_static_screen, evnt);        
+	  }
+
+	print_edit_screen(&nw_static_screen);
+	return FSM_ST_NETWORK_STATIC;
 }
 
 fsm_state_t fsm_st_settings_date_time(fsm_evnt_t evnt)
@@ -1094,6 +1207,7 @@ fsm_state_t fsm_st_edit_date(fsm_evnt_t evnt)
         sprintf(str_hour, "0%d", str_hour);
 
 			snprintf(str, 18, "date %s%s%s%s%s", str_month, str_day, str_hour, str_min, str_year);
+				printf("str = %s\n",str);
 			system(str);
 
 			lcd_screen_save();
@@ -1219,4 +1333,46 @@ fsm_state_t fsm_st_edit_time(fsm_evnt_t evnt)
 	}
 
 	return FSM_ST_EDIT_TIME;
+}
+static void enable_dhcp(){
+	FILE *file;
+	char dhcp[4];
+
+	if(file = fopen(nw_settings, "r+")){
+		fscanf(file,"DHCP_ENABLED:%s\n",dhcp);
+		if(strcmp(dhcp,"n") == 0){
+			system("dhcpcd &");
+			fseek(file,0,SEEK_SET);
+			fprintf(file,"DHCP_ENABLED:y\n");
+			fclose(file);
+		}
+	}
+}
+
+static bool_t is_valid_ip(edit_screen *edit){
+	int i;
+	unsigned long ip = 0;
+	alphanumeric_buffer *buffer;
+	for(i=0; i < edit->size;i++){
+		buffer = edit->vet_buffer + i;
+		if(inet_pton(AF_INET, buffer->buffer,&ip) == 0){
+			return FALSE;
+		}		
+	}
+	return TRUE;
+}
+static void apply_static_nw_settings(alphanumeric_buffer *buffer){
+	FILE *file;
+	char cmd[130];	
+	system("pkill dhcpcd");				
+	snprintf(cmd,130,"ifconfig eth0 %s netmask %s up;route add default gw %s",buffer[0].buffer, buffer[1].buffer,buffer[2].buffer);
+	system(cmd);
+	if(file = fopen(nw_settings, "r+")){
+		fprintf(file,"DHCP_ENABLED:n\n");
+		fprintf(file,"IP_ADDRESS:%s\n",buffer[0].buffer);
+		fprintf(file,"NETMASK:%s\n", buffer[1].buffer);
+		fprintf(file,"GATEWAY:%s\n", buffer[2].buffer);
+		fprintf(file,"DNS_DOMAIN:%s\n", buffer[3].buffer);
+		fclose(file);	
+	}
 }
