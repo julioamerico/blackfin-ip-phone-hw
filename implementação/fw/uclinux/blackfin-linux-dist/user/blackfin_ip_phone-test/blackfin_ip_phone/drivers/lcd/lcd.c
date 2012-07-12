@@ -65,17 +65,6 @@ int lcd_write_justified(lcd_write_justified_t lcd_op, int row, char str[])
  *	PRE-DEFINED SCREENS
  */
 
-void lcd_screen_idle(char *name, char *identity, char *time, char *day, char *left, char *right)
-{
-	drv_lcd_clear_screen();
-  lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, 	1, name);
-  lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED, 	1, identity);
-  lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 2, time);
-  lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 3, day);
-  lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED,		4, left);
-  lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED, 	4, right);
-}
-
 void lcd_screen_save(void)
 {
 	drv_lcd_clear_screen();
@@ -114,6 +103,7 @@ int screen_option_qty[MAX_HOR_SCREENS] =
   [SCREEN_CONTACTS] 	= 4,
   [SCREEN_CALL_LOGS] 	= 3,
   [SCREEN_SETTINGS]		= 3,
+	[SCREEN_DATE_TIME]	= 2,
 };
 
 static char *screen_menu_options[3] =
@@ -174,6 +164,18 @@ static fsm_state_t screen_settings_options_map[3] =
   FSM_ST_SETTINGS_DATE_TIME,
 };
 
+static char *screen_date_time_options[2] =
+{
+	"DATE",
+	"TIME",
+};
+
+static fsm_state_t screen_date_time_options_map[2] =
+{
+	FSM_ST_EDIT_DATE,
+	FSM_ST_EDIT_TIME,
+};
+
 hor_scroll_screen_fields_t screen[MAX_HOR_SCREENS] =
 {
 	{
@@ -200,7 +202,13 @@ hor_scroll_screen_fields_t screen[MAX_HOR_SCREENS] =
     .right          = "BACK",
     .screen_options = screen_settings_options,
 		.options_map		= screen_settings_options_map,
-  },
+	}, {
+		.screen_name		= "DATE & TIME",
+		.left						= "SELECT",
+		.right					= "BACK",
+		.screen_options = screen_date_time_options,
+		.options_map		= screen_date_time_options_map,
+	},
 };
 
 void lcd_screen_hor_scroll(hor_scroll_screen_t sc, int option_index)

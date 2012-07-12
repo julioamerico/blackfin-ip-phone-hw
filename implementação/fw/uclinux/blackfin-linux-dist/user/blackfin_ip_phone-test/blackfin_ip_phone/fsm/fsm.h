@@ -37,6 +37,9 @@ typedef enum {
 	FSM_ST_SETTINGS_DATE_TIME,
 
 	FSM_ST_NETWORK_STATIC,
+
+	FSM_ST_EDIT_DATE,
+	FSM_ST_EDIT_TIME,
 	
 	FSM_ST_NULL
 } fsm_state_t;
@@ -114,5 +117,7 @@ fsm_state_t fsm_st_settings_account(fsm_evnt_t evnt);
 fsm_state_t fsm_st_settings_network(fsm_evnt_t evnt);
 fsm_state_t fsm_st_settings_date_time(fsm_evnt_t evnt);
 fsm_state_t fsm_st_network_static(fsm_evnt_t evnt);
+fsm_state_t fsm_st_edit_date(fsm_evnt_t evnt);
+fsm_state_t fsm_st_edit_time(fsm_evnt_t evnt);
 
 #endif /* BLACKFIN_IP_PHONE_FSM_H */
