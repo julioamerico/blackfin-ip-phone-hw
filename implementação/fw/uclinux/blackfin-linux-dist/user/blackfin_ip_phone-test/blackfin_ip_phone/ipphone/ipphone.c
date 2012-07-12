@@ -11,6 +11,7 @@ const char *dialed_numbers = "/dialed_numbers";
 const char *friend_list = "/friend_list";
 const char *config_path = "/home/.linphonerc";
 const char *phone_info_path = "/home/.phone_info";
+const char *nw_settings = "/nw_settings";
 IPphoneAuthStack auth_stack;
 
 static void ipphone_call_received(LinphoneCore *lc, const char *from){
@@ -198,13 +199,49 @@ static void ipphone_auth_final(LinphoneCore *lc){
 		--(auth_stack.nitems);
 	}
 }
-
+static void init_nw_settings(){
+	FILE *file;
+	char dhcp[2];
+	char ip[16];
+	char netmask[16];
+	char gateway[16];
+	char dns[16];
+	char cmd[62];
+	if(!(file = fopen(nw_settings, "r"))){
+		if(!(file = fopen(nw_settings, "w+"))){		
+			return;	
+		}
+		fprintf(file,"DHCP_ENABLED:y\n");
+		fprintf(file,"IP_ADDRESS:10.1.1.118\n");
+		fprintf(file,"NETMASK:255.255.255.0\n");
+		fprintf(file,"GATEWAY:10.1.1.2\n");
+		fprintf(file,"DNS_DOMAIN:10.1.1.115\n");
+		fseek(file,0,SEEK_SET);
+	}
+	fscanf(file,"DHCP_ENABLED:%s\n",dhcp);
+	if(strcmp(dhcp,"y") == 0){
+		system("dhcpcd &");
+	}
+	else{
+		fscanf(file,"IP_ADDRESS:%s\n",ip);
+		fscanf(file,"NETMASK:%s\n",netmask);
+		fscanf(file,"GATEWAY:%s\n",gateway);
+		fscanf(file,"DNS_DOMAIN:%s\n",dns);
+	
+		snprintf(cmd,62,"ifconfig eth0 %s netmask %s up",ip, netmask);
+		system(cmd);
+		snprintf(cmd,62,"route add default gw %s",gateway);
+		system(cmd);
+	}
+	fclose(file);
+}
 void ipphone_init(LinphoneCore *lc, void * userdata)
 {
 	auth_stack.nitems = 0;
 	linphone_core_init(lc, &vtable, config_path, userdata);
 	read_call_log_from_file(lc, missed_calls, received_calls, dialed_numbers);
 	read_friend_list_from_file(lc, friend_list);
+	init_nw_settings();
 }
 
 void ipphone_uninit(LinphoneCore *lc){
@@ -689,7 +726,45 @@ void print_sublist_contacts(SubList *sublist){
 	}
 	lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED, (2+sublist->cursor), "<");
 }
+static int sip_uri_get_username(const char *uri, char **username, int max_length){
+	char *str, *str2;
+	int length;
+	
+	str = strstr(uri, "<sip:");
+	str2 = strchr(uri, '@');
+	if(!str || !str2)
+		return 1;
+	length = str2 - str - 5;
+	*username = strndup(str + 5, min(length,max_length));
+	return 0;
+}
+static int sip_uri_get_addr(const char *uri, char **addr){
+	char *begin, *end;
+	int length;	
+	begin = strchr(uri, '<');
+	end = strchr(uri, '>');
+	if(!begin || !end)
+		return 1;
+	length = end - begin - 1;
+	*addr = strndup(begin + 1, length);
+	return 0;
+}
+void search_contacts(LinphoneCore *lc, char *uri, char **username, int max_length){
+	MSList *friend;
+	char *addr, *friend_name;	
+	sip_uri_get_addr(uri,&addr);
+	friend = ms_list_find_custom(lc->friends, friend_cmp_addr, addr);
+	
+	if(!friend){
+		sip_uri_get_username(uri,username,max_length);	
+	}
+	else{
+		friend_name = ipphone_friend_get_name(friend->data);
+		*username = strndup(friend_name, min(strlen(friend_name),max_length));
+	}
 
+	ipphone_free(addr);
+}
 void print_sublist_call_logs(LinphoneCore *lc, SubList *sublist, const char *(*ipphone_calllog_get)(LinphoneCallLog*))
 {
 	int i;
@@ -947,30 +1022,6 @@ int ipphone_calllog_get_duration(LinphoneCallLog *cl){
 }
 /*END CALL LOG*/
 
-static int sip_uri_get_username(const char *uri, char **username, int max_length){
-	char *str, *str2;
-	int length;
-	
-	str = strstr(uri, "<sip:");
-	str2 = strchr(uri, '@');
-	if(!str || !str2)
-		return 1;
-	length = str2 - str - 5;
-	*username = strndup(str + 5, min(length,max_length));
-	return 0;
-}
-static int sip_uri_get_addr(const char *uri, char **addr){
-	char *begin, *end;
-	int length;	
-	begin = strchr(uri, '<');
-	end = strchr(uri, '>');
-	if(!begin || !end)
-		return 1;
-	length = end - begin - 1;
-	*addr = strndup(begin + 1, length);
-	return 0;
-}
-
 int ipphone_call_get_contacts(LinphoneCore *lc, char **username, int max_length){
 	char *uri = NULL, *addr, *friend_name;
 	LinphoneCallLog *calllog;
@@ -1000,19 +1051,30 @@ int ipphone_call_get_contacts(LinphoneCore *lc, char **username, int max_length)
 	ipphone_free(addr);
 	return 0;
 }
-void search_contacts(LinphoneCore *lc, char *uri, char **username, int max_length){
-	MSList *friend;
-	char *addr, *friend_name;	
-	sip_uri_get_addr(uri,&addr);
-	friend = ms_list_find_custom(lc->friends, friend_cmp_addr, addr);
-	
-	if(!friend){
-		sip_uri_get_username(uri,username,max_length);	
-	}
-	else{
-		friend_name = ipphone_friend_get_name(friend->data);
-		*username = strndup(friend_name, min(strlen(friend_name),max_length));
-	}
+void ipphone_get_nw_static_fields(void *data, char **fields, int index){
+	char str[] = {'\0'};
+	FILE *file = (FILE *)data;
+	char ip[16];
 
-	ipphone_free(addr);
+	if(!file){
+		*fields = strdup(str);
+		return;
+	}
+	switch(index){
+		case 0:
+			fscanf(file,"IP_ADDRESS:%s\n",ip);
+			break;
+		case 1:
+			fscanf(file,"NETMASK:%s\n",ip);
+			break;
+		case 2:
+			fscanf(file,"GATEWAY:%s\n",ip);
+			break;
+		case 3:
+			fscanf(file,"DNS_DOMAIN:%s\n",ip);
+			break;
+		default:
+			break;
+	}
+	*fields = strdup(ip);
 }

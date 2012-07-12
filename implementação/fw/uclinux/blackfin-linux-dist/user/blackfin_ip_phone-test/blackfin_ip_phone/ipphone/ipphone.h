@@ -105,6 +105,7 @@ char *ipphone_friend_get_url(LinphoneFriend *lf);
 void iphone_edit_friend(LinphoneCore *lc, LinphoneFriend *lf, const char *url);
 void ipphone_get_friends_fields(void *data, char **fields, int index);
 void ipphone_get_account_fields(void *data, char **fields, int index);
+void ipphone_get_nw_static_fields(void *data, char **fields, int index);
 int is_friend_list_full(LinphoneCore *lc);
 
 /*Manipulação de SubList*/
