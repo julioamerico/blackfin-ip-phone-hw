@@ -61,11 +61,13 @@ fsm_state_t fsm_st_idle(fsm_evnt_t evnt)
 	static int aux = 0, previous_min = 0;
 	int current_min = 0;
 	char time_val[6], username[10];
+	char *number;
+	char str_number[9];
 	char date [16];
   struct tm *tm_ptr;
   time_t t;
 	FILE *file;
-	
+
   t = time((time_t *)0);
   tm_ptr = localtime(&t);
 	current_min = tm_ptr->tm_min;
@@ -87,21 +89,25 @@ fsm_state_t fsm_st_idle(fsm_evnt_t evnt)
     strftime(date, sizeof(date), "%a, %d/%m/%Y", tm_ptr);
 
   	if (!(file = fopen(phone_info_path, "r")))
-    	strcpy(username, "XXX");
+    	strcpy(username, " ");
 		else
 		{
 			fscanf(file, "phone_name = %s", username);
 			fclose(file);
 		}
 
+		ipphone_get_account_fields(ipphone_core.default_proxy, &number, 1);
+		snprintf(str_number, 9, " %s", number);
+	
 		drv_lcd_clear_screen();
 		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED,   1, username);
-		lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED,  1, "XXXXX");
+		lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED,  1, str_number);
 		lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 2, time_val);
 		lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 3, date);
 		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED,   4, "MENU");
 		lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED,  4, "CONTACTS");
 
+		ipphone_free(number);
 		aux = 1;
 	}
 	
@@ -903,6 +909,7 @@ fsm_state_t fsm_st_settings_account(fsm_evnt_t evnt)
 	char write_config_server[30];
 	char write_config_identity[30];
 	FILE *fd;
+	int status;
 	int i;
 
 	if (!aux)
@@ -931,14 +938,24 @@ fsm_state_t fsm_st_settings_account(fsm_evnt_t evnt)
 				linphone_core_clear_all_auth_info(&ipphone_core);
 
 				// saving number and sip server
+				status = linphone_core_get_default_proxy(&ipphone_core, &edit_account);
+				if (status == -1)
+					edit_account = ipphone_proxy_config_new();
+				else
+				{
+					linphone_proxy_config_edit(edit_account);
+					ipphone_proxy_config_enableregister(edit_account, FALSE);
+				}
 				snprintf(write_config_server, 30, "sip:%s@%s", buffer[3].buffer, buffer[3].buffer);
 				snprintf(write_config_identity, 30, "sip:%s@%s", buffer[1].buffer, buffer[3].buffer);
-				edit_account = ipphone_proxy_config_new();
   			ipphone_proxy_config_set_server_addr(edit_account, write_config_server);
   			ipphone_proxy_config_set_identity(edit_account, write_config_identity);
   			ipphone_proxy_config_enableregister(edit_account, TRUE);
   			ipphone_proxy_config_expires(edit_account, 1);
-			  ipphone_add_proxy_config(&ipphone_core, edit_account);
+				if (status == -1)
+					ipphone_add_proxy_config(&ipphone_core, edit_account);
+				else
+					linphone_proxy_config_done(edit_account);
 
         drv_lcd_cursor(LCD_TOGGLE_OFF);
         lcd_screen_save();
