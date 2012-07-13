@@ -251,12 +251,12 @@ static void init_phone_info(void)
 
 void ipphone_init(LinphoneCore *lc, void * userdata)
 {
+	init_nw_settings();
+  init_phone_info();
 	auth_stack.nitems = 0;
 	linphone_core_init(lc, &vtable, config_path, userdata);
 	read_call_log_from_file(lc, missed_calls, received_calls, dialed_numbers);
 	read_friend_list_from_file(lc, friend_list);
-	init_nw_settings();
-	init_phone_info();
 }
 
 void ipphone_uninit(LinphoneCore *lc){
