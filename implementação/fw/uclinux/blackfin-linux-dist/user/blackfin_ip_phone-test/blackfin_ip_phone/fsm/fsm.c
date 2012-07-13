@@ -18,12 +18,12 @@ extern int screen_option_qty[MAX_HOR_SCREENS];
 extern hor_scroll_screen_fields_t screen[MAX_HOR_SCREENS];
 extern main_queue_t event_queue;
 extern const char *nw_settings;
+extern const char *phone_info_path;
 LinphoneFriend *edit_lf;
 
 static void enable_dhcp();
 static bool_t is_valid_ip(edit_screen *edit);
 static void apply_static_nw_settings(alphanumeric_buffer *buffer);
-
 
 void fsm_init(fsm_t *fsm)
 {
@@ -60,10 +60,11 @@ fsm_state_t fsm_st_idle(fsm_evnt_t evnt)
 {
 	static int aux = 0, previous_min = 0;
 	int current_min = 0;
-	char time_val[6];
+	char time_val[6], username[10];
 	char date [16];
   struct tm *tm_ptr;
   time_t t;
+	FILE *file;
 	
   t = time((time_t *)0);
   tm_ptr = localtime(&t);
@@ -85,8 +86,16 @@ fsm_state_t fsm_st_idle(fsm_evnt_t evnt)
     strftime(time_val, sizeof(time_val), "%H:%M", tm_ptr);
     strftime(date, sizeof(date), "%a, %d/%m/%Y", tm_ptr);
 
+  	if (!(file = fopen(phone_info_path, "r")))
+    	strcpy(username, "XXX");
+		else
+		{
+			fscanf(file, "phone_name = %s", username);
+			fclose(file);
+		}
+
 		drv_lcd_clear_screen();
-		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED,   1, "XXXXX");
+		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED,   1, username);
 		lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED,  1, "XXXXX");
 		lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 2, time_val);
 		lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 3, date);
