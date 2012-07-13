@@ -188,6 +188,10 @@ fsm_state_t fsm_st_dialing(fsm_evnt_t evnt)
 		case FSM_EVNT_KEYPAD_SHARP:
 			edit_screen_text_transform(&dialing_screen);
 			break;
+    case FSM_EVNT_CALL_IN_INVITE:
+      drv_lcd_cursor(LCD_TOGGLE_OFF);
+			edit_screen_uninit(&dialing_screen);
+      return FSM_ST_INCOMING_CALL;
     case FSM_EVNT_NULL:
       break;
     default:
@@ -216,7 +220,9 @@ fsm_state_t fsm_st_menu(fsm_evnt_t evnt)
 		case FSM_EVNT_GPBUTTON_RIGHT:
 			option_index = 0;
 			return FSM_ST_IDLE;
-			break;
+    case FSM_EVNT_CALL_IN_INVITE:
+      option_index = 0;
+      return FSM_ST_INCOMING_CALL;
     case FSM_EVNT_NULL:
       break;
     default:
@@ -244,6 +250,9 @@ fsm_state_t fsm_st_menu_contacts(fsm_evnt_t evnt)
       return FSM_ST_MENU;
 		case FSM_EVNT_GPBUTTON_LEFT:
 			return screen[SCREEN_CONTACTS].options_map[option_index];
+    case FSM_EVNT_CALL_IN_INVITE:
+      option_index = 0;
+      return FSM_ST_INCOMING_CALL;
     case FSM_EVNT_NULL:
       break;
     default:
@@ -483,6 +492,9 @@ fsm_state_t fsm_st_contacts_list(fsm_evnt_t evnt)
     case FSM_EVNT_NAVSWITCH_DOWN:
       sublist_update(ipphone_core.friends, &contacts_list, DOWN);
       break;
+    case FSM_EVNT_CALL_IN_INVITE:
+      sublist_uninit(&contacts_list);
+      return FSM_ST_INCOMING_CALL;
     case FSM_EVNT_NULL:
       break;
     default:
@@ -519,6 +531,9 @@ fsm_state_t fsm_st_contacts_edit(fsm_evnt_t evnt){
     case FSM_EVNT_NAVSWITCH_DOWN:
     	sublist_update(ipphone_core.friends, &contacts_list, DOWN);
     	break;
+    case FSM_EVNT_CALL_IN_INVITE:
+      sublist_uninit(&contacts_list);
+      return FSM_ST_INCOMING_CALL;
     case FSM_EVNT_NULL:
     	break;
     default:
@@ -569,6 +584,10 @@ fsm_state_t fsm_st_contacts_edit_fields(fsm_evnt_t evnt){
 		case FSM_EVNT_KEYPAD_SHARP:
 			edit_screen_text_transform(&contact_screen);
 			break;
+    case FSM_EVNT_CALL_IN_INVITE:
+      edit_screen_uninit(&contact_screen);
+      drv_lcd_cursor(LCD_TOGGLE_OFF);
+      return FSM_ST_INCOMING_CALL;
     case FSM_EVNT_NULL:
    		break;
     default:
@@ -639,6 +658,11 @@ fsm_state_t fsm_st_contact_add(fsm_evnt_t evnt)
 		case FSM_EVNT_KEYPAD_SHARP:
 			edit_screen_text_transform(&contact_screen);
 			break;
+    case FSM_EVNT_CALL_IN_INVITE:
+      edit_screen_uninit(&contact_screen);
+      drv_lcd_cursor(LCD_TOGGLE_OFF);
+      aux = 0;
+      return FSM_ST_INCOMING_CALL;
     case FSM_EVNT_NULL:
       break;
     default:
@@ -684,6 +708,9 @@ fsm_state_t fsm_st_contact_delete(fsm_evnt_t evnt)
     case FSM_EVNT_NAVSWITCH_DOWN:
       sublist_update(ipphone_core.friends, &contacts_del_list, DOWN);
       break;
+    case FSM_EVNT_CALL_IN_INVITE:
+      sublist_uninit(&contacts_del_list);
+      return FSM_ST_INCOMING_CALL;
     case FSM_EVNT_NULL:
       break;
 		default:
@@ -714,6 +741,9 @@ fsm_state_t fsm_st_menu_call_logs(fsm_evnt_t evnt)
 			option_index_copy = option_index;
 			option_index = 0;
 			return screen[SCREEN_CALL_LOGS].options_map[option_index_copy];
+    case FSM_EVNT_CALL_IN_INVITE:
+      option_index = 0;
+      return FSM_ST_INCOMING_CALL;
     case FSM_EVNT_NULL:
       break;
     default:
@@ -762,6 +792,10 @@ fsm_state_t fsm_st_call_logs_missed(fsm_evnt_t evnt)
     case FSM_EVNT_NAVSWITCH_DOWN:
       sublist_update(ipphone_core.m_calls, &call_logs_missed_list, DOWN);
       break;
+    case FSM_EVNT_CALL_IN_INVITE:
+      sublist_uninit(&call_logs_missed_list);
+      aux = 0;
+      return FSM_ST_INCOMING_CALL;
     case FSM_EVNT_NULL:
       break;
     default:
@@ -809,6 +843,10 @@ fsm_state_t fsm_st_call_logs_received(fsm_evnt_t evnt)
     case FSM_EVNT_NAVSWITCH_DOWN:
       sublist_update(ipphone_core.r_calls, &call_logs_received_list, DOWN);
       break;
+    case FSM_EVNT_CALL_IN_INVITE:
+      sublist_uninit(&call_logs_received_list);
+      aux = 0;
+      return FSM_ST_INCOMING_CALL;
     case FSM_EVNT_NULL:
       break;
     default:
@@ -856,6 +894,10 @@ fsm_state_t fsm_st_call_logs_outgoing(fsm_evnt_t evnt)
     case FSM_EVNT_NAVSWITCH_DOWN:
       sublist_update(ipphone_core.d_numbers, &call_logs_outgoing_list, DOWN);
       break;
+    case FSM_EVNT_CALL_IN_INVITE:
+      sublist_uninit(&call_logs_outgoing_list);
+      aux = 0;
+      return FSM_ST_INCOMING_CALL;
     case FSM_EVNT_NULL:
       break;
     default:
@@ -886,6 +928,9 @@ fsm_state_t fsm_st_menu_settings(fsm_evnt_t evnt)
       option_index_copy = option_index;
       option_index = 0;
       return screen[SCREEN_SETTINGS].options_map[option_index_copy];
+    case FSM_EVNT_CALL_IN_INVITE:
+      option_index = 0;
+      return FSM_ST_INCOMING_CALL;
     case FSM_EVNT_NULL:
       break;
     default:
@@ -982,6 +1027,11 @@ fsm_state_t fsm_st_settings_account(fsm_evnt_t evnt)
     case FSM_EVNT_KEYPAD_SHARP:
       edit_screen_text_transform(&account_screen);
       break;
+    case FSM_EVNT_CALL_IN_INVITE:
+      edit_screen_uninit(&account_screen);
+      drv_lcd_cursor(LCD_TOGGLE_OFF);
+      aux = 0;
+      return FSM_ST_INCOMING_CALL;
     case FSM_EVNT_NULL:
       break;
     default:
@@ -1017,7 +1067,7 @@ fsm_state_t fsm_st_settings_network(fsm_evnt_t evnt)
 			if(cursor != 3)
 				cursor = 3;
 			break;
-    		case FSM_EVNT_GPBUTTON_LEFT:
+ 		case FSM_EVNT_GPBUTTON_LEFT:
 			if(cursor == 2){
 				enable_dhcp();
 				lcd_screen_dhcp_enabled(); 
@@ -1027,14 +1077,19 @@ fsm_state_t fsm_st_settings_network(fsm_evnt_t evnt)
 				aux = 1;
 				return FSM_ST_NETWORK_STATIC;
 			}
-    		case FSM_EVNT_GPBUTTON_RIGHT:
+			break;
+   	case FSM_EVNT_GPBUTTON_RIGHT:
 			cursor = 2;
 			aux = 1;
 			return FSM_ST_MENU_SETTINGS;
-    		case FSM_EVNT_NULL:
-      			break;
-    		default:
-      			break;
+    case FSM_EVNT_CALL_IN_INVITE:
+      cursor = 2;
+      aux = 1;
+      return FSM_ST_INCOMING_CALL;
+    case FSM_EVNT_NULL:
+    	break;
+    default:
+    	break;
 	}
 	lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED,   2, " ");
 	lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED,   3, " ");
@@ -1065,8 +1120,8 @@ fsm_state_t fsm_st_network_static(fsm_evnt_t evnt)
 			edit_screen_uninit(&nw_static_screen);
 			drv_lcd_cursor(LCD_TOGGLE_OFF);
 			aux = 1;
-	      		return FSM_ST_MENU_SETTINGS;
-	    	case FSM_EVNT_GPBUTTON_LEFT:
+	    return FSM_ST_MENU_SETTINGS;
+	  case FSM_EVNT_GPBUTTON_LEFT:
 			if ((buffer[0].buffer[0] != '\0') && (buffer[1].buffer[0] != '\0') && (buffer[2].buffer[0] != '\0') && (buffer[3].buffer[0] != '\0')){
 				if(!is_valid_ip(&nw_static_screen)){
 					lcd_screen_invalid_ip();
@@ -1099,11 +1154,16 @@ fsm_state_t fsm_st_network_static(fsm_evnt_t evnt)
 		case FSM_EVNT_KEYPAD_SHARP:
 			edit_screen_text_transform(&nw_static_screen);
 			break;
-	    case FSM_EVNT_NULL:
-	      		break;
-	    default:
+    case FSM_EVNT_CALL_IN_INVITE:
+      edit_screen_uninit(&nw_static_screen);
+      drv_lcd_cursor(LCD_TOGGLE_OFF);
+      aux = 1;
+      return FSM_ST_INCOMING_CALL;
+    case FSM_EVNT_NULL:
+   		break;
+    default:
 			if ((evnt >= FSM_EVNT_KEYPAD_1) && (evnt < FSM_EVNT_KEYPAD_SHARP))
-				edit_screen_add(&nw_static_screen, evnt);        
+				edit_screen_add(&nw_static_screen, evnt);
 	  }
 
 	print_edit_screen(&nw_static_screen);
@@ -1128,6 +1188,9 @@ fsm_state_t fsm_st_settings_date_time(fsm_evnt_t evnt)
       option_index = 0;
       return FSM_ST_MENU_SETTINGS;
       break;
+    case FSM_EVNT_CALL_IN_INVITE:
+      option_index = 0;
+      return FSM_ST_INCOMING_CALL;
     case FSM_EVNT_NULL:
       break;
     default:
@@ -1245,6 +1308,10 @@ fsm_state_t fsm_st_edit_date(fsm_evnt_t evnt)
 			aux = 0;
 			cursor = 0;
 			return FSM_ST_SETTINGS_DATE_TIME;
+    case FSM_EVNT_CALL_IN_INVITE:
+      aux = 0;
+			cursor = 0;
+      return FSM_ST_INCOMING_CALL;
     case FSM_EVNT_NULL:
       break;
 		default:
@@ -1355,6 +1422,10 @@ fsm_state_t fsm_st_edit_time(fsm_evnt_t evnt)
 			aux = 0;
 			cursor = 0;
 			return FSM_ST_SETTINGS_DATE_TIME;
+    case FSM_EVNT_CALL_IN_INVITE:
+      aux = 0;
+			cursor = 0;
+      return FSM_ST_INCOMING_CALL;
     case FSM_EVNT_NULL:
       break;
 		default:
