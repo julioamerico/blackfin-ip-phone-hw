@@ -19,24 +19,11 @@ int main (void)
 {
 	fsm_t fsm;
 
-	//LinphoneProxyConfig *cfg;
-
 	lcd_init();
 	expander_init();
-	fsm_init(&fsm);
 	queue_init(&event_queue);
-	ipphone_init(&ipphone_core, NULL);
-
-/*
-	ipphone_set_passwd("120887");
-	cfg = ipphone_proxy_config_new();
-	ipphone_proxy_config_set_server_addr(cfg, "sip:10.1.1.114@10.1.1.114");
-	ipphone_proxy_config_set_identity(cfg, "sip:1002@10.1.1.114");
-	ipphone_proxy_config_enableregister(cfg, TRUE);
-	ipphone_add_proxy_config(&ipphone_core, cfg);
-
-	ipphone_add_friend(&ipphone_core, "julio <sip:romulo@david>");
-*/
+	ipphone_init(&ipphone_core, &event_queue);
+	fsm_init(&fsm);
 
 	while(1)
 	{		
