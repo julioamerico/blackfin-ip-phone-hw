@@ -235,6 +235,20 @@ static void init_nw_settings(){
 	}
 	fclose(file);
 }
+
+static void init_phone_info(void)
+{
+  FILE *file;
+  
+	if(!(file = fopen(phone_info_path, "r")))
+	{
+    if(!(file = fopen(phone_info_path, "w")))
+      return;
+    fprintf(file,"phone_name = USER\npassword = 123456");
+		fclose(file);
+  }
+}
+
 void ipphone_init(LinphoneCore *lc, void * userdata)
 {
 	auth_stack.nitems = 0;
@@ -242,6 +256,7 @@ void ipphone_init(LinphoneCore *lc, void * userdata)
 	read_call_log_from_file(lc, missed_calls, received_calls, dialed_numbers);
 	read_friend_list_from_file(lc, friend_list);
 	init_nw_settings();
+	init_phone_info();
 }
 
 void ipphone_uninit(LinphoneCore *lc){
