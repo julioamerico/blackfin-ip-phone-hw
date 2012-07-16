@@ -984,12 +984,17 @@ fsm_state_t fsm_st_settings_account(fsm_evnt_t evnt)
 
 				// saving number and sip server
 				status = linphone_core_get_default_proxy(&ipphone_core, &edit_account);
-				if (status == -1)
+				if (status == -1){
 					edit_account = ipphone_proxy_config_new();
+				}
 				else
 				{
 					linphone_proxy_config_edit(edit_account);
 					ipphone_proxy_config_enableregister(edit_account, FALSE);
+					linphone_proxy_config_done(edit_account);
+					eXosip_lock();
+					eXosip_register_remove(edit_account->rid);
+					eXosip_unlock(); 	
 				}
 				snprintf(write_config_server, 30, "sip:%s@%s", buffer[3].buffer, buffer[3].buffer);
 				snprintf(write_config_identity, 30, "sip:%s@%s", buffer[1].buffer, buffer[3].buffer);
@@ -997,10 +1002,14 @@ fsm_state_t fsm_st_settings_account(fsm_evnt_t evnt)
   			ipphone_proxy_config_set_identity(edit_account, write_config_identity);
   			ipphone_proxy_config_enableregister(edit_account, TRUE);
   			ipphone_proxy_config_expires(edit_account, 1);
-				if (status == -1)
+				if(status == -1){
 					ipphone_add_proxy_config(&ipphone_core, edit_account);
-				else
+				}
+				else{
+					printf("Done proxy\n");
 					linphone_proxy_config_done(edit_account);
+				}
+				
 
         drv_lcd_cursor(LCD_TOGGLE_OFF);
         lcd_screen_save();
