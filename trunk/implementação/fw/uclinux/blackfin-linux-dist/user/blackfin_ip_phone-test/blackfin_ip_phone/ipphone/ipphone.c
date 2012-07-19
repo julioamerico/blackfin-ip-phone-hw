@@ -363,8 +363,31 @@ void ipphone_add_proxy_config(LinphoneCore *lc, LinphoneProxyConfig *cfg){
 	linphone_proxy_config_enableregister(cfg, TRUE);
 	ipphone_core_add_proxy_config(lc, cfg);
 	linphone_core_set_default_proxy(lc, cfg);
+	lp_config_set_int(lc->config,"sip","default_proxy",linphone_core_get_default_proxy(lc,NULL));
 }
 
+int ipphone_get_default_proxy(LinphoneCore *lc, LinphoneProxyConfig **proxy){
+	int status;
+	
+	status = linphone_core_get_default_proxy(lc, proxy);
+	if(status == -1)
+		*proxy = ipphone_proxy_config_new();
+	return status;
+}
+void ipphone_proxy_unregister(LinphoneCore *lc, LinphoneProxyConfig *proxy){
+	linphone_proxy_config_edit(proxy);
+	ipphone_proxy_config_enableregister(proxy, FALSE);
+	linphone_proxy_config_done(proxy);
+	eXosip_lock();
+	eXosip_register_remove(proxy->rid);
+	eXosip_unlock();
+}
+void ipphone_proxy_config_done(LinphoneCore *lc, LinphoneProxyConfig *proxy){
+	if(!lc->default_proxy)
+		ipphone_add_proxy_config(lc, proxy);
+	else
+		linphone_proxy_config_done(proxy);
+}
 int ipphone_proxy_config_edit(LinphoneCore *lc, ProxyEditType proxy_edit_type, void *data_edit){
 	LinphoneProxyConfig* proxy_cfg;
 	int err;
@@ -496,10 +519,10 @@ void sublist_friend_call(LinphoneCore *lc, SubList *sub){
 	ipphone_call(lc, addr);
 }
 
-void sublist_call_log_call(LinphoneCore *lc, SubList *sub, const char *(*ipphone_calllog_get)(LinphoneCallLog*))
+void ipphone_call_log_call(LinphoneCore *lc, LinphoneCallLog *call_log, const char *(*ipphone_calllog_get)(LinphoneCallLog*))
 {
   const char *addr;
-  addr = ipphone_calllog_get(sub->vet[sub->cursor]->data);
+  addr = ipphone_calllog_get(call_log);
   ipphone_call(lc, addr);
 }
 
@@ -963,7 +986,7 @@ void ipphone_call_log_free(LinphoneCore *lc, IPphoneCallLogList type){
 	MSList *elem, **cl;	
 	switch(type){
 		case IPphoneMissed:
-			cl = &(lc->m_calls); //implementar função para retornar as listas EX.: linphone_core_get_missed_calls
+			cl = &(lc->m_calls);
 			break;
 		case IPphoneReceived:
 			cl = &(lc->r_calls);
@@ -1092,4 +1115,45 @@ void ipphone_get_nw_static_fields(void *data, char **fields, int index){
 			break;
 	}
 	*fields = strdup(ip);
+}
+void ipphone_get_call_log_fields(void *data, char **fields, int index){
+	char date[20];
+	char *uri;
+	void **vet = (void **)data;
+	int hr,min,sec;
+	struct tm tm;
+	LinphoneCallLog *cl = (LinphoneCallLog *)vet[1];
+	LinphoneCore *lc = (LinphoneCore *)vet[0]; 
+	MSList *friend;
+		
+	switch(index){
+		case 0:
+			switch(cl->dir){
+				case LinphoneCallIncoming:
+					uri = cl->from; 	
+					break;
+				case LinphoneCallOutgoing:
+					uri = cl->to;
+					break;
+			}
+			search_contacts(lc, uri, fields, 20);
+			break;
+		case 1:
+			strptime(cl->start_date,"%c",&tm);
+			snprintf(date,20,"%d/%d/%d",tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
+			*fields = strdup(date);
+			break;
+		case 2:
+			strptime(cl->start_date,"%c",&tm);
+			snprintf(date,20,"%d:%d",tm.tm_hour, tm.tm_min);
+			*fields = strdup(date);
+			break;
+		case 3:
+			sec = cl->duration%60;
+			hr = cl->duration/3600;
+			min = (cl->duration/60)%60;
+			snprintf(date,20,"%d:%d:%d",hr,min,sec);
+			*fields = strdup(date);
+			break;
+	}
 }

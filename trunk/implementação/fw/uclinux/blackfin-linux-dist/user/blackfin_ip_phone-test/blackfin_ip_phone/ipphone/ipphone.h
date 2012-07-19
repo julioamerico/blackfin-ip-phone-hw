@@ -92,6 +92,9 @@ int ipphone_proxy_config_set_route(LinphoneProxyConfig *cfg, const char *route);
 void ipphone_add_proxy_config(LinphoneCore *lc, LinphoneProxyConfig *cfg);
 int ipphone_proxy_config_edit(LinphoneCore *lc, ProxyEditType proxy_edit_type, void *data_edit);
 int ipphone_proxy_delete(LinphoneCore *lc);
+int ipphone_get_default_proxy(LinphoneCore *lc, LinphoneProxyConfig **proxy);
+void ipphone_proxy_unregister(LinphoneCore *lc, LinphoneProxyConfig *proxy);
+void ipphone_proxy_config_done(LinphoneCore *lc, LinphoneProxyConfig *proxy);
 
 /*Manipulação de Lista de Contatos*/
 int ipphone_add_friend(LinphoneCore *lc, const char *url); 
@@ -106,6 +109,7 @@ void iphone_edit_friend(LinphoneCore *lc, LinphoneFriend *lf, const char *url);
 void ipphone_get_friends_fields(void *data, char **fields, int index);
 void ipphone_get_account_fields(void *data, char **fields, int index);
 void ipphone_get_nw_static_fields(void *data, char **fields, int index);
+void ipphone_get_call_log_fields(void *data, char **fields, int index);
 int is_friend_list_full(LinphoneCore *lc);
 
 /*Manipulação de SubList*/
@@ -116,7 +120,7 @@ void sublist_uninit(SubList *sub);
 void sublist_update(MSList *list, SubList *sublist, Position pos);
 void print_sublist_contacts(SubList *sublist);
 void print_sublist_call_logs(LinphoneCore *lc, SubList *sublist, const char *(*ipphone_calllog_get)(LinphoneCallLog*));
-void sublist_call_log_call(LinphoneCore *lc, SubList *sub, const char *(*ipphone_calllog_get)(LinphoneCallLog*));
+void ipphone_call_log_call(LinphoneCore *lc, LinphoneCallLog *call_log, const char *(*ipphone_calllog_get)(LinphoneCallLog*));
 
 /*Funções para escrita das listas nos arquivos*/
 void read_call_log_from_file(LinphoneCore *lc, const char *path_missed, const char *path_received, const char *path_dialed);
