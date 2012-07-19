@@ -558,6 +558,16 @@ char *nw_static_edit_fields[NW_STATIC_EDIT_SIZE]=
 	"GATEWAY:",
 	"DNS:"
 };
+char *call_log_view_fields[CALLLOG_EDIT_SIZE] =
+{
+	"VIEW",
+	"CALL",
+	"BACK",
+	"NAME:",
+	"DATE:",
+	"TIME:",
+	"DURATION:"
+};
 
 static void alphanumeric_buffer_set(alphanumeric_buffer *strc_buffer, char *str){
 	int str_length = strlen(str) - 1;
@@ -578,8 +588,9 @@ static void alphanumeric_buffer_set(alphanumeric_buffer *strc_buffer, char *str)
 void edit_screen_init_params(edit_screen *edit, alphanumeric_buffer *buffer, int size_vet_buffer, int size_buffer, char **edit_fields, void *data,void(*get_fields)(void*,char **,int)){
 	int i;
 	char *fields;
-	if(buffer[0].is_init)
+	if(buffer[0].is_init){
 		return;
+	}
 	edit_screen_init(edit, buffer, size_vet_buffer, size_buffer, edit_fields);
 	for(i = 0; i < edit->size; i++){
 		get_fields(data, &fields, i);
@@ -608,7 +619,7 @@ void edit_screen_uninit(edit_screen *edit){
 		alphanumeric_buffer_uninit(edit->vet_buffer + i);
 	}
 }
-void print_edit_screen(edit_screen *edit){
+void print_edit_screen(edit_screen *edit, bool_t text_type){
 	int i, lcd_cursor_pos[] = {LCD_CURSOR_POS_R2_C1, LCD_CURSOR_POS_R3_C1};	
 	
 	drv_lcd_clear_screen();
@@ -620,7 +631,8 @@ void print_edit_screen(edit_screen *edit){
 		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, i + 2, edit->fields[edit->offset + i + 3]);
 		print_slice(edit->vet_buffer + edit->offset + i, lcd_cursor_pos[i] + strlen(edit->fields[edit->offset + i + 3]));
 	}
-	print_text_type(edit->vet_buffer + edit->offset + edit->row);
+	if(text_type)
+		print_text_type(edit->vet_buffer + edit->offset + edit->row);
 	print_cursor(edit->vet_buffer + edit->offset + edit->row, lcd_cursor_pos[edit->row] + strlen(edit->fields[edit->offset + edit->row + 3]));
 }
 void edit_screen_move_cursor(edit_screen *edit, Position pos){
