@@ -29,6 +29,7 @@ typedef enum {
 	FSM_ST_CALL_LOGS_MISSED,
 	FSM_ST_CALL_LOGS_RECEIVED,
 	FSM_ST_CALL_LOGS_OUTGOING,
+	FSM_ST_CALL_LOGS_VIEW,
 
 	FSM_ST_RECENT_LOST_CALLS,
 
@@ -108,6 +109,7 @@ fsm_state_t fsm_st_contacts_edit_fields(fsm_evnt_t evnt);
 fsm_state_t fsm_st_contact_add(fsm_evnt_t evnt);
 fsm_state_t fsm_st_contact_delete(fsm_evnt_t evnt);
 fsm_state_t fsm_st_menu_call_logs(fsm_evnt_t evnt);
+fsm_state_t fsm_st_call_logs_view(fsm_evnt_t evnt);
 fsm_state_t fsm_st_call_logs_missed(fsm_evnt_t evnt);
 fsm_state_t fsm_st_call_logs_received(fsm_evnt_t evnt);
 fsm_state_t fsm_st_call_logs_outgoing(fsm_evnt_t evnt);

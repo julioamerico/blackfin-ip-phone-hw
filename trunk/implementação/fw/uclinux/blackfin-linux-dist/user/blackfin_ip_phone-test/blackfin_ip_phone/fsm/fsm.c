@@ -20,10 +20,13 @@ extern main_queue_t event_queue;
 extern const char *nw_settings;
 extern const char *phone_info_path;
 LinphoneFriend *edit_lf;
+LinphoneCallLog *call_log;
+fsm_state_t call_log_state;
 
 static void enable_dhcp();
 static bool_t is_valid_ip(edit_screen *edit);
 static void apply_static_nw_settings(alphanumeric_buffer *buffer);
+static void buffer_set_is_init(alphanumeric_buffer *buffer, int size);
 
 void fsm_init(fsm_t *fsm)
 {
@@ -44,6 +47,7 @@ void fsm_init(fsm_t *fsm)
 	fsm->function[FSM_ST_CALL_LOGS_MISSED]			= fsm_st_call_logs_missed;
 	fsm->function[FSM_ST_CALL_LOGS_RECEIVED]		= fsm_st_call_logs_received;
 	fsm->function[FSM_ST_CALL_LOGS_OUTGOING]		= fsm_st_call_logs_outgoing;
+	fsm->function[FSM_ST_CALL_LOGS_VIEW]		    =	fsm_st_call_logs_view;
 	fsm->function[FSM_ST_MENU_SETTINGS]					= fsm_st_menu_settings;
 	fsm->function[FSM_ST_SETTINGS_ACCOUNT]			= fsm_st_settings_account;
 	fsm->function[FSM_ST_SETTINGS_NETWORK]			= fsm_st_settings_network;
@@ -199,7 +203,7 @@ fsm_state_t fsm_st_dialing(fsm_evnt_t evnt)
 				edit_screen_add(&dialing_screen, evnt);        
   }
 
-	print_edit_screen(&dialing_screen);
+	print_edit_screen(&dialing_screen, TRUE);
 	return FSM_ST_DIALING;
 }
 
@@ -595,7 +599,7 @@ fsm_state_t fsm_st_contacts_edit_fields(fsm_evnt_t evnt){
 				edit_screen_add(&contact_screen, evnt);        
 	  }
 
-	print_edit_screen(&contact_screen);
+	print_edit_screen(&contact_screen, TRUE);
 	return FSM_ST_CONTACTS_EDIT_FIELDS;	
 }
 
@@ -670,7 +674,7 @@ fsm_state_t fsm_st_contact_add(fsm_evnt_t evnt)
 				edit_screen_add(&contact_screen, evnt);        
   }
 
-	print_edit_screen(&contact_screen);
+	print_edit_screen(&contact_screen, TRUE);
 	return FSM_ST_CONTACT_ADD;
 }
 
@@ -782,10 +786,11 @@ fsm_state_t fsm_st_call_logs_missed(fsm_evnt_t evnt)
 			aux = 0;
       return FSM_ST_MENU_CALL_LOGS;
     case FSM_EVNT_GPBUTTON_LEFT:
-    	sublist_call_log_call(&ipphone_core, &call_logs_missed_list, ipphone_calllog_get_from);
+    	call_log = call_logs_missed_list.vet[call_logs_missed_list.cursor]->data;
+			call_log_state = FSM_ST_CALL_LOGS_MISSED;
 			sublist_uninit(&call_logs_missed_list);
 			aux = 0;
-			return FSM_ST_CALL_STATUS;
+			return FSM_ST_CALL_LOGS_VIEW;
     case FSM_EVNT_NAVSWITCH_UP:
       sublist_update(ipphone_core.m_calls, &call_logs_missed_list, UP);
       break;
@@ -833,10 +838,11 @@ fsm_state_t fsm_st_call_logs_received(fsm_evnt_t evnt)
 			aux = 0;
       return FSM_ST_MENU_CALL_LOGS;
     case FSM_EVNT_GPBUTTON_LEFT:
-    	sublist_call_log_call(&ipphone_core, &call_logs_received_list, ipphone_calllog_get_from);
+			call_log = call_logs_received_list.vet[call_logs_received_list.cursor]->data;
+			call_log_state = FSM_ST_CALL_LOGS_RECEIVED;
 			sublist_uninit(&call_logs_received_list);
 			aux = 0;
-			return FSM_ST_CALL_STATUS;
+			return FSM_ST_CALL_LOGS_VIEW;
     case FSM_EVNT_NAVSWITCH_UP:
       sublist_update(ipphone_core.r_calls, &call_logs_received_list, UP);
       break;
@@ -884,10 +890,11 @@ fsm_state_t fsm_st_call_logs_outgoing(fsm_evnt_t evnt)
 			aux = 0;
       return FSM_ST_MENU_CALL_LOGS;
     case FSM_EVNT_GPBUTTON_LEFT:
-    	sublist_call_log_call(&ipphone_core, &call_logs_outgoing_list, ipphone_calllog_get_to);
-			sublist_uninit(&call_logs_outgoing_list);
+    	call_log = call_logs_outgoing_list.vet[call_logs_outgoing_list.cursor]->data;
+    	call_log_state = FSM_ST_CALL_LOGS_OUTGOING; 
+    	sublist_uninit(&call_logs_outgoing_list);
 			aux = 0;
-			return FSM_ST_CALL_STATUS;
+			return FSM_ST_CALL_LOGS_VIEW;
     case FSM_EVNT_NAVSWITCH_UP:
       sublist_update(ipphone_core.d_numbers, &call_logs_outgoing_list, UP);
       break;
@@ -906,6 +913,57 @@ fsm_state_t fsm_st_call_logs_outgoing(fsm_evnt_t evnt)
 
 	print_sublist_call_logs(&ipphone_core, &call_logs_outgoing_list, ipphone_calllog_get_to);
   return FSM_ST_CALL_LOGS_OUTGOING;
+}
+fsm_state_t fsm_st_call_logs_view(fsm_evnt_t evnt){
+	extern char *call_log_view_fields[CALLLOG_EDIT_SIZE];
+	static alphanumeric_buffer buffer[BUFFER_SIZE(CALLLOG_EDIT_SIZE)];
+	static edit_screen call_log_screen;
+	static int aux = 1;
+	void *vet[] = {&ipphone_core, call_log};
+	if(aux){
+		drv_lcd_cursor(LCD_TOGGLE_ON);
+		buffer_set_is_init(buffer, BUFFER_SIZE(CALLLOG_EDIT_SIZE));
+		drv_lcd_clear_screen();
+		edit_screen_init_params(&call_log_screen, buffer, CALLLOG_EDIT_SIZE, 20, call_log_view_fields, vet, ipphone_get_call_log_fields);
+		aux = 0;
+	}
+	switch (evnt){
+		case FSM_EVNT_GPBUTTON_RIGHT:
+			edit_screen_uninit(&call_log_screen);
+			drv_lcd_cursor(LCD_TOGGLE_OFF);
+			aux = 1;
+   		return call_log_state;
+   	case FSM_EVNT_GPBUTTON_LEFT:
+   		if(call_log_state == FSM_ST_CALL_LOGS_OUTGOING)
+   			ipphone_call_log_call(&ipphone_core, call_log, ipphone_calllog_get_to);
+   		else
+   			ipphone_call_log_call(&ipphone_core, call_log, ipphone_calllog_get_from);	
+			edit_screen_uninit(&call_log_screen);
+			drv_lcd_cursor(LCD_TOGGLE_OFF);
+			aux = 1;
+			return FSM_ST_CALL_STATUS;
+		case FSM_EVNT_NAVSWITCH_LEFT:
+			edit_screen_move_cursor(&call_log_screen, LEFT);
+			break;
+		case FSM_EVNT_NAVSWITCH_RIGHT:
+			edit_screen_move_cursor(&call_log_screen, RIGHT);
+			break;
+		case FSM_EVNT_NAVSWITCH_UP:
+			edit_screen_move_cursor(&call_log_screen, UP);
+			break;
+		case FSM_EVNT_NAVSWITCH_DOWN:
+			edit_screen_move_cursor(&call_log_screen, DOWN);
+			break;
+    case FSM_EVNT_CALL_IN_INVITE:
+      edit_screen_uninit(&call_log_screen);
+      drv_lcd_cursor(LCD_TOGGLE_OFF);
+      aux = 1;
+      return FSM_ST_INCOMING_CALL;
+    default:
+   		break;      
+	  }
+	print_edit_screen(&call_log_screen, FALSE);
+	return FSM_ST_CALL_LOGS_VIEW;
 }
 
 fsm_state_t fsm_st_menu_settings(fsm_evnt_t evnt)
@@ -996,7 +1054,7 @@ fsm_state_t fsm_st_settings_account(fsm_evnt_t evnt)
 					eXosip_register_remove(edit_account->rid);
 					eXosip_unlock(); 	
 				}
-				snprintf(write_config_server, 30, "sip:%s@%s", buffer[3].buffer, buffer[3].buffer);
+				snprintf(write_config_server, 30, "sip:%s", buffer[3].buffer);
 				snprintf(write_config_identity, 30, "sip:%s@%s", buffer[1].buffer, buffer[3].buffer);
   			ipphone_proxy_config_set_server_addr(edit_account, write_config_server);
   			ipphone_proxy_config_set_identity(edit_account, write_config_identity);
@@ -1006,7 +1064,6 @@ fsm_state_t fsm_st_settings_account(fsm_evnt_t evnt)
 					ipphone_add_proxy_config(&ipphone_core, edit_account);
 				}
 				else{
-					printf("Done proxy\n");
 					linphone_proxy_config_done(edit_account);
 				}
 				
@@ -1048,7 +1105,7 @@ fsm_state_t fsm_st_settings_account(fsm_evnt_t evnt)
         edit_screen_add(&account_screen, evnt);
     }
 
-  print_edit_screen(&account_screen);
+  print_edit_screen(&account_screen, TRUE);
   return FSM_ST_SETTINGS_ACCOUNT;
 }
 
@@ -1079,14 +1136,15 @@ fsm_state_t fsm_st_settings_network(fsm_evnt_t evnt)
  		case FSM_EVNT_GPBUTTON_LEFT:
 			if(cursor == 2){
 				enable_dhcp();
-				lcd_screen_dhcp_enabled(); 
+				lcd_screen_dhcp_enabled();
+				aux = 1;
+				return FSM_ST_MENU_SETTINGS; 
 			}
 			else{
 				cursor = 2;
 				aux = 1;
 				return FSM_ST_NETWORK_STATIC;
 			}
-			break;
    	case FSM_EVNT_GPBUTTON_RIGHT:
 			cursor = 2;
 			aux = 1;
@@ -1175,7 +1233,7 @@ fsm_state_t fsm_st_network_static(fsm_evnt_t evnt)
 				edit_screen_add(&nw_static_screen, evnt);
 	  }
 
-	print_edit_screen(&nw_static_screen);
+	print_edit_screen(&nw_static_screen, TRUE);
 	return FSM_ST_NETWORK_STATIC;
 }
 
@@ -1484,4 +1542,10 @@ static void apply_static_nw_settings(alphanumeric_buffer *buffer){
 		fprintf(file,"DNS_DOMAIN:%s\n", buffer[3].buffer);
 		fclose(file);	
 	}
+}
+static void buffer_set_is_init(alphanumeric_buffer *buffer, int size){
+	int i;
+	for(i = 0; i < size; i++)
+		buffer[i].is_init = FALSE;
+	return;
 }
