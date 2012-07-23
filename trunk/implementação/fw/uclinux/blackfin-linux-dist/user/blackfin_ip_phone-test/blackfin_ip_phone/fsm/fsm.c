@@ -872,7 +872,7 @@ fsm_state_t fsm_st_call_logs_outgoing(fsm_evnt_t evnt)
 	{
 		drv_lcd_clear_screen();
 		lcd_write_justified(LCD_WRITE_CENTER_JUSTIFIED, 1, "OUTGOING CALLS");
-		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, 	4, "CALL");
+		lcd_write_justified(LCD_WRITE_LEFT_JUSTIFIED, 	4, "SELECT");
 		lcd_write_justified(LCD_WRITE_RIGHT_JUSTIFIED, 	4, "BACK");
 		aux = 1;
 	}
