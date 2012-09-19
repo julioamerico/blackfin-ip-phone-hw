@@ -9,6 +9,7 @@
 #include <linux/mtd/physmap.h>
 #include <linux/spi/spi.h>
 #include <linux/spi/flash.h>
+#include <linux/spi/mmc_spi.h>
 
 #include <linux/i2c.h>
 #include <linux/i2c/adp5588.h>
@@ -43,11 +44,11 @@ static struct mtd_partition ezbrd_partitions[] = {
 		.offset     = 0,
 	}, {
 		.name       = "linux kernel(nor)",
-		.size       = 0x1C0000,
+		.size       = 0x6C0000,
 		.offset     = MTDPART_OFS_APPEND,
-	}, {
-		.name       = "file system(nor)",
-		.size       = MTDPART_SIZ_FULL,
+	}, { 
+		.name       = "jffs2(nor)",
+		.size       = 0x100000,
 		.offset     = MTDPART_OFS_APPEND,
 	}
 };
@@ -63,7 +64,10 @@ static struct resource ezbrd_flash_resource = {
 #if defined(CONFIG_SPI_BFIN) || defined(CONFIG_SPI_BFIN_MODULE)
 	.end   = 0x202fffff,
 #else
+	.end = 0x207fffff,
+/*
 	.end   = 0x203fffff,
+*/
 #endif
 	.flags = IORESOURCE_MEM,
 };
@@ -139,9 +143,28 @@ static struct platform_device bfin_mac_device = {
 #endif
 
 #if defined(CONFIG_MMC_SPI) || defined(CONFIG_MMC_SPI_MODULE)
+#define MMC_SPI_CARD_DETECT_INT IRQ_PG11
+static int bfin_mmc_spi_init(struct device *dev,
+        irqreturn_t (*detect_int)(int, void *), void *data)
+{
+        return request_irq(MMC_SPI_CARD_DETECT_INT, detect_int,
+                IRQF_TRIGGER_FALLING, "mmc-spi-detect", data);
+}
+ 
+static void bfin_mmc_spi_exit(struct device *dev, void *data)
+{
+        free_irq(MMC_SPI_CARD_DETECT_INT, data);
+}
+ 
+static struct mmc_spi_platform_data bfin_mmc_spi_pdata = {
+        .init = bfin_mmc_spi_init,
+        .exit = bfin_mmc_spi_exit,
+        .detect_delay = 100, /* msecs */
+};
+ 
 static struct bfin5xx_spi_chip mmc_spi_chip_info = {
-	.enable_dma = 0,
-	.bits_per_word = 8,
+        .enable_dma = 0,
+        .bits_per_word = 8,
 };
 #endif
 
@@ -156,9 +179,10 @@ static struct spi_board_info bfin_spi_board_info[] __initdata = {
 #if defined(CONFIG_MMC_SPI) || defined(CONFIG_MMC_SPI_MODULE)
 	{
 		.modalias = "mmc_spi",
-		.max_speed_hz = 25000000,     /* max spi clock (SCK) speed in HZ */
+		.max_speed_hz = 20000000,     /* max spi clock (SCK) speed in HZ */
 		.bus_num = 0,
-		.chip_select = 5,
+		.chip_select = 1,
+		.platform_data = &bfin_mmc_spi_pdata,
 		.controller_data = &mmc_spi_chip_info,
 		.mode = SPI_MODE_3,
 	},
@@ -391,18 +415,18 @@ static struct platform_device i2c_bfin_twi_device = {
 
 #if defined(CONFIG_KEYBOARD_ADP5588) || defined(CONFIG_KEYBOARD_ADP5588_MODULE)
 static const unsigned short adp5588_keymap[ADP5588_KEYMAPSIZE] = {
-        [0]      = KEY_F1,
-        [1]      = KEY_F2,
-        [2]      = KEY_F3,
-	[10]     = KEY_F4,
-	[11]     = KEY_F5,
-        [12]     = KEY_F6,
-        [20]	 = KEY_F7,
-	[21]	 = KEY_F8,
-	[22]	 = KEY_F9,
-	[30]	 = KEY_KPASTERISK,
-	[31]	 = KEY_F10,
-	[32]	 = KEY_DOT,
+  [0]  = KEY_F1,
+  [1]  = KEY_F2,
+  [2]  = KEY_F3,
+	[10] = KEY_F4,
+	[11] = KEY_F5,
+  [12] = KEY_F6,
+  [20] = KEY_F7,
+	[21] = KEY_F8,
+	[22] = KEY_F9,
+	[30] = KEY_KPASTERISK,
+	[31] = KEY_F10,
+	[32] = KEY_DOT,
 };
 
 static const struct adp5588_gpi_map adp5588_gpimap[] = {
