@@ -35,7 +35,7 @@ const char bfin_board_name[] = "Blackfin IP Phone";
 /*
  *  Driver needs to know address, irq and flag pin.
  */
-
+/*
 #if defined(CONFIG_MTD_PHYSMAP) || defined(CONFIG_MTD_PHYSMAP_MODULE)
 static struct mtd_partition ezbrd_partitions[] = {
 	{
@@ -65,9 +65,6 @@ static struct resource ezbrd_flash_resource = {
 	.end   = 0x202fffff,
 #else
 	.end = 0x207fffff,
-/*
-	.end   = 0x203fffff,
-*/
 #endif
 	.flags = IORESOURCE_MEM,
 };
@@ -80,6 +77,37 @@ static struct platform_device ezbrd_flash_device = {
 	},
 	.num_resources = 1,
 	.resource      = &ezbrd_flash_resource,
+};
+#endif*/
+
+#if defined(CONFIG_MTD_M25P80) || defined(CONFIG_MTD_M25P80_MODULE)
+static struct mtd_partition bfin_spi_flash_partitions[] = {
+  {
+    .name       = "bootloader(nor)",
+    .size       = 0x40000,
+    .offset     = 0,
+  }, {
+    .name       = "linux kernel(nor)",
+    .size       = 0x6C0000,
+    .offset     = MTDPART_OFS_APPEND,
+  }, { 
+    .name       = "jffs2(nor)",
+    .size       = 0x100000,
+    .offset     = MTDPART_OFS_APPEND,
+  }
+};
+
+static struct flash_platform_data bfin_spi_flash_data = {
+  .name = "m25p80",
+  .parts = bfin_spi_flash_partitions,
+  .nr_parts = ARRAY_SIZE(bfin_spi_flash_partitions),
+  .type = "s25sl064a",
+};
+
+/* SPI flash chip (m25p64) */
+static struct bfin5xx_spi_chip spi_flash_chip_info = {
+  .enable_dma = 0,         /* use dma transfer with this chip*/
+  .bits_per_word = 8,
 };
 #endif
 
@@ -176,6 +204,18 @@ static struct bfin5xx_spi_chip spidev_chip_info = {
 #endif
 
 static struct spi_board_info bfin_spi_board_info[] __initdata = {
+#if defined(CONFIG_MTD_M25P80) || defined(CONFIG_MTD_M25P80_MODULE)
+  {
+    /* the modalias must be the same as spi device driver name */
+    .modalias = "m25p80", /* Name of spi_driver for this device */
+    .max_speed_hz = 25000000,     /* max spi clock (SCK) speed in HZ */
+    .bus_num = 0, /* Framework bus number */
+    .chip_select = 2, /* On BF518F-EZBRD it's SPI0_SSEL2 */
+    .platform_data = &bfin_spi_flash_data,
+    .controller_data = &spi_flash_chip_info,
+    .mode = SPI_MODE_3,
+  },
+#endif
 #if defined(CONFIG_MMC_SPI) || defined(CONFIG_MMC_SPI_MODULE)
 	{
 		.modalias = "mmc_spi",
@@ -609,7 +649,7 @@ static struct platform_device *stamp_devices[] __initdata = {
 	&bfin_mac_device,
 #endif
 
-#if defined(CONFIG_SPI_BFIN) || defined(CONFIG_SPI_BFIN_MODULE)
+#if defined(CONFIG_SPI_BFIN5XX) || defined(CONFIG_SPI_BFIN5XX_MODULE)
 	&bfin_spi0_device,
 #endif
 
@@ -634,11 +674,11 @@ static struct platform_device *stamp_devices[] __initdata = {
 #if defined(CONFIG_I2C_BLACKFIN_TWI) || defined(CONFIG_I2C_BLACKFIN_TWI_MODULE)
 	&i2c_bfin_twi_device,
 #endif
-
+/*
 #if defined(CONFIG_MTD_PHYSMAP) || defined(CONFIG_MTD_PHYSMAP_MODULE)
 	&ezbrd_flash_device,
 #endif
-
+*/
 #if defined(CONFIG_SND_BF5XX_I2S) || defined(CONFIG_SND_BF5XX_I2S_MODULE)
 	&bfin_i2s_pcm,
 #endif
@@ -665,7 +705,7 @@ static int __init ezbrd_init(void)
 	spi_register_board_info(bfin_spi_board_info, ARRAY_SIZE(bfin_spi_board_info));
 	/* setup BF518-EZBRD GPIO pin PG11 to AMS2, PG15 to AMS3. */
 	peripheral_request(P_AMS2, "ParaFlash");
-#if !defined(CONFIG_SPI_BFIN) && !defined(CONFIG_SPI_BFIN_MODULE)
+#if !defined(CONFIG_SPI_BFIN5XX) && !defined(CONFIG_SPI_BFIN5XX_MODULE)
 	peripheral_request(P_AMS3, "ParaFlash");
 #endif
 	return 0;
