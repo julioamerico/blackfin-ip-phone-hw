@@ -116,3 +116,15 @@ fi
 
 echo high > /sys/class/gpio/gpio22/direction
 echo 22 > /sys/class/gpio/unexport
+
+#
+#	FLASH AND SDCARD MOUNT
+#
+mount -t jffs2 /dev/mtdblock2 /etc/config/
+mount /dev/mmcblk0p1 /mnt/
+
+#
+# CALL MAIN APPLICATION
+#
+#chmod +x /bin/main
+#/bin/main
