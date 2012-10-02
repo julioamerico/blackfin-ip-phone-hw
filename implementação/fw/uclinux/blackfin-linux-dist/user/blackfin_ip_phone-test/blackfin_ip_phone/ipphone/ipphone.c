@@ -5,13 +5,13 @@
 #include "queue.h"
 #include "lcd.h"
 
-const char *missed_calls = "/missed_calls";
-const char *received_calls = "/received_calls";
-const char *dialed_numbers = "/dialed_numbers";
-const char *friend_list = "/friend_list";
-const char *config_path = "/home/.linphonerc";
-const char *phone_info_path = "/home/.phone_info";
-const char *nw_settings = "/nw_settings";
+const char *missed_calls = "/mnt/missed_calls";          /* sdcard */
+const char *received_calls = "/mnt/received_calls";      /* sdcard */
+const char *dialed_numbers = "/mnt/dialed_numbers";      /* sdcard */
+const char *friend_list = "/mnt/friend_list";            /* sdcard */
+const char *config_path = "/etc/config/.linphonerc";     /* flash  */
+const char *phone_info_path = "/etc/config/.phone_info"; /* flash  */
+const char *nw_settings = "/etc/config/nw_settings";     /* flash  */
 IPphoneAuthStack auth_stack;
 
 static void ipphone_call_received(LinphoneCore *lc, const char *from){
