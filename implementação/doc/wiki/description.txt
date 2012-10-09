@@ -1,0 +1,52 @@
+=*BLACKFIN IP PHONE*=
+
+This is the project of a hardware platform based on a Blackfin processor for applications in IP telephony. This is the Google Code page for the project's first version, what consists of a wired IP phone. Hardware and firmware were developed for the first version that can be seen below. A second version hardware was developed to make it work in a wireless network scenario (please, refer to http://code.google.com/p/blackfin-ip-phone). Both versions are being developed by graduate and postgraduate students from Teleinformatics Engineering Department of Federal University of Ceará.
+
+Feel free to research through all the project artifacts. It's open-source!
+
+Some important documentation:
+  * [http://blackfin-ip-phone-hw.googlecode.com/svn/trunk/implementa%C3%A7%C3%A3o/sch/blackfin.pdf Hardware Schematics]
+  * [http://blackfin-ip-phone-hw.googlecode.com/svn/trunk/implementa%C3%A7%C3%A3o/doc/Firmware/relatorio_fw.odt Firmware Development Report (in portuguese)]
+
+http://blackfin-ip-phone-hw.googlecode.com/svn/trunk/implementa%C3%A7%C3%A3o/doc/wiki/images/placa.png
+
+-----------------------------------------------------------------------------------------
+
+==BLACKFIN IP PHONE FEATURES==
+
+  * Embedded uClinux system
+  * Based on Liblinphone, free SIP VoIP SDK (http://www.linphone.org)
+  * Friendly user interface
+  * Stores contacts list
+  * Stores call logs (missed, received and outgoing calls)
+  * Date and time updated manually or by an NTP server
+  * Works with any SIP server (Asterisk, for example)
+  * Microphone and speaker on-board or headset optionally
+  * Edit account and network settings directly on telephone
+
+http://blackfin-ip-phone-hw.googlecode.com/svn/trunk/implementa%C3%A7%C3%A3o/doc/wiki/images/arquitetura_fw.png
+
+-----------------------------------------------------------------------------------------
+
+==HARDWARE DESCRIPTION==
+
+  * Blackfin Processor ADSP-BF518
+  * 32 MB SDRAM
+  * 8 MB Flash
+  * MicroSD card connector
+  * LCD Character Module
+  * Navigation Switches
+  * Headset connector
+  * Microphone and speaker on-board
+
+http://blackfin-ip-phone-hw.googlecode.com/svn/trunk/implementa%C3%A7%C3%A3o/doc/wiki/images/arquitetura_hw.png
+
+-----------------------------------------------------------------------------------------
+
+==DEVELOPMENT TEAM==
+
+David Freitas Moura Mota (davidfmmota@gmail.com)
+
+Júlio Cesar Soares Américo Filho (juliocesarsaf@gmail.com)
+
+Rômulo Costa Mendes (romulocmendes1@gmail.com)
