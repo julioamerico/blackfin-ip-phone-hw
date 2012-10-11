@@ -29,7 +29,7 @@ typedef enum {
 
 #define MAX_HOR_SCREENS SCREEN_NULL
 #define CONTACTS_EDIT_SIZE 6
-#define ACCOUNT_EDIT_SIZE	 7 
+#define ACCOUNT_EDIT_SIZE	 8
 #define DIALING_EDIT_SIZE	 5
 #define NW_STATIC_EDIT_SIZE      7
 #define CALLLOG_EDIT_SIZE  7

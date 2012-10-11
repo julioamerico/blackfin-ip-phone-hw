@@ -1062,11 +1062,13 @@ fsm_state_t fsm_st_settings_account(fsm_evnt_t evnt)
   			ipphone_proxy_config_expires(edit_account, 1);
 				if(status == -1){
 					ipphone_add_proxy_config(&ipphone_core, edit_account);
-				}
+			 }	
 				else{
 					linphone_proxy_config_done(edit_account);
 				}
 				
+				// saving stun server
+				ipphone_set_stun_server(&ipphone_core, buffer[4].buffer);
 
         drv_lcd_cursor(LCD_TOGGLE_OFF);
         lcd_screen_save();
