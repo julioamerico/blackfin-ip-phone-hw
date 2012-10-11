@@ -96,6 +96,9 @@ int ipphone_get_default_proxy(LinphoneCore *lc, LinphoneProxyConfig **proxy);
 void ipphone_proxy_unregister(LinphoneCore *lc, LinphoneProxyConfig *proxy);
 void ipphone_proxy_config_done(LinphoneCore *lc, LinphoneProxyConfig *proxy);
 
+/*Configuração de servidor STUN*/
+void ipphone_set_stun_server(LinphoneCore *lc, char *stun_server);
+
 /*Manipulação de Lista de Contatos*/
 int ipphone_add_friend(LinphoneCore *lc, const char *url); 
 int ipphone_delete_friend_all(LinphoneCore *lc);

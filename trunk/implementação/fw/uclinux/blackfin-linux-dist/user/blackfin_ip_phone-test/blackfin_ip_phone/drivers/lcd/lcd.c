@@ -547,6 +547,7 @@ char *account_edit_fields[ACCOUNT_EDIT_SIZE] =
 	"Number:",
 	"Password:",
 	"SIP Server:",
+	"STUN Server:",
 };
 char *nw_static_edit_fields[NW_STATIC_EDIT_SIZE]=
 {

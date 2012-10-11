@@ -5,6 +5,7 @@
 #include "queue.h"
 #include "lcd.h"
 
+
 const char *missed_calls = "/mnt/missed_calls";          /* sdcard */
 const char *received_calls = "/mnt/received_calls";      /* sdcard */
 const char *dialed_numbers = "/mnt/dialed_numbers";      /* sdcard */
@@ -598,6 +599,7 @@ void ipphone_get_friends_fields(void *data, char **fields, int index){
 void ipphone_get_account_fields(void *data, char **fields, int index)
 {
 	LinphoneProxyConfig *lp = (LinphoneProxyConfig *)data;
+	char *stun_server;
 	char string[1] = {'\0'};
 	static char phone_name[20], password[20];
 	static int aux = 0;
@@ -649,6 +651,13 @@ void ipphone_get_account_fields(void *data, char **fields, int index)
 		case 3:
 			*fields = strdup(osip_uri_get_host(uri));
 			aux = 0;
+			break;
+		case 4:
+			stun_server = linphone_core_get_stun_server(lp->lc);
+			if (stun_server)
+				*fields = strdup(stun_server);
+			else
+				*fields = strdup(string);
 			break;
 	}
 }
@@ -1157,3 +1166,21 @@ void ipphone_get_call_log_fields(void *data, char **fields, int index){
 			break;
 	}
 }
+void ipphone_set_stun_server(LinphoneCore *lc, char *stun_server)
+{
+	net_config_t *config=&lc->net_conf;
+	
+	if (stun_server)
+	{
+		linphone_core_set_stun_server(lc,stun_server);
+	  linphone_core_set_firewall_policy(lc,LINPHONE_POLICY_USE_STUN);
+		lp_config_set_string(lc->config,"net","stun_server",config->stun_server);
+	}
+	else
+	{
+		linphone_core_set_firewall_policy(lc,LINPHONE_POLICY_NO_FIREWALL);
+	}
+ 
+	 lp_config_set_int(lc->config,"net","firewall_policy",config->firewall_policy);
+}
+
